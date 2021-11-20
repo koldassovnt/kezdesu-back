@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sueta.iml" filepath="$PROJECT_DIR$/.idea/modules/sueta.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/admin-service/sueta.admin-service.iml" filepath="$PROJECT_DIR$/.idea/modules/admin-service/sueta.admin-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/admin-service/sueta.admin-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/admin-service/sueta.admin-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/admin-service/sueta.admin-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/admin-service/sueta.admin-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/api-gateway/sueta.api-gateway.iml" filepath="$PROJECT_DIR$/.idea/modules/api-gateway/sueta.api-gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-service/sueta.chat-service.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-service/sueta.chat-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-service/sueta.chat-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-service/sueta.chat-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-service/sueta.chat-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-service/sueta.chat-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client-service/sueta.client-service.iml" filepath="$PROJECT_DIR$/.idea/modules/client-service/sueta.client-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client-service/sueta.client-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/client-service/sueta.client-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client-service/sueta.client-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/client-service/sueta.client-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/event-service/sueta.event-service.iml" filepath="$PROJECT_DIR$/.idea/modules/event-service/sueta.event-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/event-service/sueta.event-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/event-service/sueta.event-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/event-service/sueta.event-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/event-service/sueta.event-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sueta.main.iml" filepath="$PROJECT_DIR$/.idea/modules/sueta.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/push-service/sueta.push-service.iml" filepath="$PROJECT_DIR$/.idea/modules/push-service/sueta.push-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/push-service/sueta.push-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/push-service/sueta.push-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/push-service/sueta.push-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/push-service/sueta.push-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sueta.test.iml" filepath="$PROJECT_DIR$/.idea/modules/sueta.test.iml" />
+    </modules>
+  </component>
+</project>

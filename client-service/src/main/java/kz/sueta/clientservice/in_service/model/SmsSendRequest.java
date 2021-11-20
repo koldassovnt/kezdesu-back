@@ -1,0 +1,13 @@
+package kz.sueta.clientservice.in_service.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class SmsSendRequest {
+    private String phoneNumber;
+    private String code;
+}
