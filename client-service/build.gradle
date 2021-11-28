@@ -17,6 +17,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.5.12'
+    implementation 'junit:junit:4.13.1'
+	implementation 'junit:junit:4.13.1'
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
