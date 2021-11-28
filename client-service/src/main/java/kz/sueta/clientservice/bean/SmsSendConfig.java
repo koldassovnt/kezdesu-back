@@ -1,11 +1,10 @@
 package kz.sueta.clientservice.bean;
 
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Description;
 
-@Component
+@Description("Configurations for sms send service")
 public interface SmsSendConfig {
 
-//    @Description("Use Fake Param")
-//    @DefaultBoolValue(false)
-//    boolean useFake();
+    @Description("Use Fake Param")
+    boolean useFake();
 }

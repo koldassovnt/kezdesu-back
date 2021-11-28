@@ -2,14 +2,24 @@ package kz.sueta.clientservice.bean;
 
 import kz.sueta.clientservice.in_service.SmsSendService;
 import kz.sueta.clientservice.in_service.fake.SmsSendServiceFake;
+import kz.sueta.clientservice.in_service.real.SmsSendServiceReal;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SmsSendServiceFactory {
 
+    @Autowired
+    private SmsSendConfig smsSendConfig;
+
     @Bean
     public SmsSendService createSmsSendService() {
-        return new SmsSendServiceFake();
+
+        if (smsSendConfig.useFake()) {
+            return new SmsSendServiceFake();
+        }
+
+        return new SmsSendServiceReal();
     }
 }

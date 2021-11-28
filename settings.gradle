@@ -1,7 +1,6 @@
 rootProject.name = 'sueta'
 
 include 'admin-service'
-include 'api-gateway'
 include 'client-service'
 include 'event-service'
 include 'push-service'
