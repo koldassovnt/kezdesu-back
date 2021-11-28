@@ -1,20 +1,19 @@
 package kz.sueta.clientservice.controller;
 
-import kz.sueta.clientservice.in_service.model.SmsSendRequest;
-import kz.sueta.clientservice.register.SmsRegister;
+import kz.sueta.clientservice.register.AuthenticationRegister;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AuthenticationController {
 
     @Autowired
-    private SmsRegister smsRegister;
+    private AuthenticationRegister authenticationRegister;
 
-    @GetMapping("/test")
-    public String test() {
-        SmsSendRequest request = new SmsSendRequest("751156465", "code");
-        return smsRegister.sendSms(request).getResponseText();
+    @PostMapping("/auth")
+    public void getPhoneNumberForAuth(@RequestBody(required = false) String phoneNumber) {
+        authenticationRegister.getPhoneNumberForAuth(phoneNumber);
     }
 }
