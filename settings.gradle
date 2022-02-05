@@ -1,8 +1,0 @@
-rootProject.name = 'sueta'
-
-include 'admin-service'
-include 'client-service'
-include 'event-service'
-include 'push-service'
-include 'chat-service'
-

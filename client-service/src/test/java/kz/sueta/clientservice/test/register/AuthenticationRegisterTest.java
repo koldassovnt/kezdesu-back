@@ -3,7 +3,7 @@ package kz.sueta.clientservice.test.register;
 import kz.sueta.clientservice.entity.SmsForAuth;
 import kz.sueta.clientservice.register.AuthenticationRegister;
 import kz.sueta.clientservice.repository.SmsForAuthDao;
-import kz.sueta.clientservice.rest_response.PhoneNumberInvalidException;
+import kz.sueta.clientservice.rest_exceptions.PhoneNumberInvalidException;
 import kz.sueta.clientservice.test.bean.TestBeanFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ public class AuthenticationRegisterTest {
         PhoneNumberInvalidException thrown = Assertions.assertThrows(PhoneNumberInvalidException.class, () -> {
             //
             //
-            register.getPhoneNumberForAuth(null);
+            register.postPhoneNumberForAuth(null);
             //
             //
         });
@@ -46,7 +46,7 @@ public class AuthenticationRegisterTest {
         PhoneNumberInvalidException thrown = Assertions.assertThrows(PhoneNumberInvalidException.class, () -> {
             //
             //
-            register.getPhoneNumberForAuth("");
+            register.postPhoneNumberForAuth("");
             //
             //
         });
@@ -59,7 +59,7 @@ public class AuthenticationRegisterTest {
         PhoneNumberInvalidException thrown = Assertions.assertThrows(PhoneNumberInvalidException.class, () -> {
             //
             //
-            register.getPhoneNumberForAuth("7777");
+            register.postPhoneNumberForAuth("7777");
             //
             //
         });
@@ -74,7 +74,7 @@ public class AuthenticationRegisterTest {
 
         //
         //
-        register.getPhoneNumberForAuth(phoneNumber);
+        register.postPhoneNumberForAuth(phoneNumber);
         //
         //
 
