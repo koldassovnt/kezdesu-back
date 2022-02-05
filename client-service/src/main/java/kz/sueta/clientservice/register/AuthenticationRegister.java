@@ -1,6 +1,6 @@
 package kz.sueta.clientservice.register;
 
-import kz.sueta.clientservice.dto.PhoneSmsRequest;
+import kz.sueta.clientservice.dto.ui.PhoneSmsRequest;
 
 public interface AuthenticationRegister {
 

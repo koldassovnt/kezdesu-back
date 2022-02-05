@@ -1,6 +1,6 @@
 package kz.sueta.clientservice.register.impl;
 
-import kz.sueta.clientservice.dto.PhoneSmsRequest;
+import kz.sueta.clientservice.dto.ui.PhoneSmsRequest;
 import kz.sueta.clientservice.entity.SmsForAuth;
 import kz.sueta.clientservice.in_service.model.SmsSendRequest;
 import kz.sueta.clientservice.register.AuthenticationRegister;

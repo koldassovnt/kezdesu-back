@@ -3,25 +3,25 @@ package kz.sueta.clientservice.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long client;
-    private String phone;
-    private String email;
-    private String password;
-    private Timestamp createdAt;
-    private Boolean actual;
+    public Long client;
+    @Column(name = "client_id")
+    public String clientId;
+    public String phone;
+    public String email;
+    public String password;
+    public Timestamp createdAt;
+    public Boolean actual;
 }

@@ -1,6 +1,6 @@
 package kz.sueta.clientservice.controller;
 
-import kz.sueta.clientservice.dto.PhoneSmsRequest;
+import kz.sueta.clientservice.dto.ui.PhoneSmsRequest;
 import kz.sueta.clientservice.register.AuthenticationRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
