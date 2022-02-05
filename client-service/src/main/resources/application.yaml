@@ -1,7 +1,0 @@
-spring:
-  application:
-    name: client-service
-  datasource:
-    url: jdbc:postgresql://${DATASOURCE_HOST:localhost}:5444/client-service
-    username: admin
-    password: admin
