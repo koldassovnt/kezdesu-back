@@ -3,6 +3,8 @@ package kz.sueta.clientservice.controller;
 import kz.sueta.clientservice.dto.ui.PhoneSmsRequest;
 import kz.sueta.clientservice.register.AuthenticationRegister;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,12 +18,16 @@ public class AuthenticationController {
     private AuthenticationRegister authenticationRegister;
 
     @PostMapping("/post-phone-number")
-    public void postPhoneNumberForAuth(@RequestBody(required = false) PhoneSmsRequest phoneSmsRequest) {
+    public ResponseEntity<PhoneSmsRequest> postPhoneNumberForAuth(
+            @RequestBody(required = false) PhoneSmsRequest phoneSmsRequest) {
         authenticationRegister.postPhoneNumberForAuth(phoneSmsRequest.getPhoneNumber());
+        return ResponseEntity.status(HttpStatus.OK).body(phoneSmsRequest);
     }
 
     @PostMapping("/post-sms-for-auth")
-    public void postSmsForAuth(@RequestBody(required = false) PhoneSmsRequest phoneSmsRequest) {
+    public ResponseEntity<PhoneSmsRequest> postSmsForAuth(
+            @RequestBody(required = false) PhoneSmsRequest phoneSmsRequest) {
         authenticationRegister.postSmsForAuth(phoneSmsRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(phoneSmsRequest);
     }
 }

@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 public class SmsSendResponse {
 
     public String responseText;
+    public String code;
 
-    public static SmsSendResponse of(String responseText) {
-        SmsSendResponse response = new SmsSendResponse();
-        response.responseText = responseText;
-        return response;
+    public static SmsSendResponse of(String responseText, String code) {
+        return new SmsSendResponse(responseText, code);
     }
 }

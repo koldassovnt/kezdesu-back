@@ -31,8 +31,10 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
-                .authorizeRequests().antMatchers("/auth/*")
-                .hasRole("USER")
-                .and().httpBasic();
+                .authorizeRequests()
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/actuator/**").permitAll();
+
+        httpSecurity.headers().frameOptions().disable();
     }
 }

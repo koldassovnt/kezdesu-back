@@ -9,5 +9,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SmsSendRequest {
     public String phoneNumber;
-    public String code;
 }

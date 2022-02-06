@@ -23,7 +23,7 @@ public class SmsRegisterTest {
 
     @Test
     public void testSmsSend() {
-        SmsSendRequest request = new SmsSendRequest("+77002589484", "4536");
+        SmsSendRequest request = new SmsSendRequest("+77002589484");
 
         //
         //
@@ -33,5 +33,6 @@ public class SmsRegisterTest {
 
         assertThat(response).isNotNull();
         assertThat(response.getResponseText()).isEqualTo("OK");
+        assertThat(response.getCode()).isEqualTo("0000");
     }
 }

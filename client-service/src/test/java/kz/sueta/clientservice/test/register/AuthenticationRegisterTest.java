@@ -3,7 +3,7 @@ package kz.sueta.clientservice.test.register;
 import kz.sueta.clientservice.entity.SmsForAuth;
 import kz.sueta.clientservice.register.AuthenticationRegister;
 import kz.sueta.clientservice.repository.SmsForAuthDao;
-import kz.sueta.clientservice.rest_exceptions.PhoneNumberInvalidException;
+import kz.sueta.clientservice.exceptions.ui.PhoneNumberInvalidException;
 import kz.sueta.clientservice.test.bean.TestBeanFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -80,6 +80,7 @@ public class AuthenticationRegisterTest {
 
         Optional<SmsForAuth> test = smsForAuthDao.findById(phoneNumber);
 
+        assertThat(test).isNotEmpty();
         assertThat(test.get()).isNotNull();
         assertThat(test.get().getPhone()).isEqualTo(phoneNumber);
         assertThat(test.get().getCode().length()).isEqualTo(4);

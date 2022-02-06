@@ -8,6 +8,6 @@ public class SmsSendServiceFake implements SmsSendService {
 
     @Override
     public SmsSendResponse sendSms(SmsSendRequest smsSendRequest) {
-        return SmsSendResponse.of("FAKE_SERVICE");
+        return SmsSendResponse.of("FAKE_SERVICE", "0000");
     }
 }

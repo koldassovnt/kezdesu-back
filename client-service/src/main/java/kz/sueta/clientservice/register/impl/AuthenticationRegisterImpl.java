@@ -6,10 +6,9 @@ import kz.sueta.clientservice.in_service.model.SmsSendRequest;
 import kz.sueta.clientservice.register.AuthenticationRegister;
 import kz.sueta.clientservice.register.SmsRegister;
 import kz.sueta.clientservice.repository.SmsForAuthDao;
-import kz.sueta.clientservice.rest_exceptions.PhoneNumberInvalidException;
-import kz.sueta.clientservice.rest_exceptions.SmsCodeInvalidException;
+import kz.sueta.clientservice.exceptions.ui.PhoneNumberInvalidException;
+import kz.sueta.clientservice.exceptions.ui.SmsCodeInvalidException;
 import kz.sueta.clientservice.util.PhoneNumberUtil;
-import kz.sueta.clientservice.util.RndUtil;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,10 +34,8 @@ public class AuthenticationRegisterImpl implements AuthenticationRegister {
             throw new PhoneNumberInvalidException();
         }
 
-        String code = RndUtil.getRndCodeForAuth();
-
-        SmsSendRequest request = new SmsSendRequest(phoneNumber, code);
-        smsRegister.sendSms(request);
+        SmsSendRequest request = new SmsSendRequest(phoneNumber);
+        String code = smsRegister.sendSms(request).code;
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(2));
         SmsForAuth smsForAuth = new SmsForAuth(phoneNumber, code, timestamp, false);
@@ -59,9 +56,13 @@ public class AuthenticationRegisterImpl implements AuthenticationRegister {
 
         Optional<SmsForAuth> smsForAuth = smsForAuthDao.findById(phoneSmsRequest.getPhoneNumber());
 
+        if (smsForAuth.isEmpty()) {
+            throw new SmsCodeInvalidException(HttpStatus.valueOf(400), "Данные по телефонному номеру не существуют в БД!");
+        }
+
         if (Objects.equals(smsForAuth.get().getCode(), phoneSmsRequest.getSmsCode()) &&
                 !smsForAuth.get().getIsValidated() &&
-                smsForAuth.get().getExpiredAt().before(new Timestamp(System.currentTimeMillis()))) {
+                smsForAuth.get().getExpiredAt().after(new Timestamp(System.currentTimeMillis()))) {
 
             smsForAuth.get().setIsValidated(true);
             smsForAuthDao.save(smsForAuth.get());
