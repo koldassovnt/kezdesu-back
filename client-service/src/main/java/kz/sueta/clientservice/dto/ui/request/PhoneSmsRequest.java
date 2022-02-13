@@ -1,4 +1,4 @@
-package kz.sueta.clientservice.dto.ui;
+package kz.sueta.clientservice.dto.ui.request;
 
 import lombok.*;
 
@@ -6,7 +6,6 @@ import lombok.*;
 @NoArgsConstructor
 @Data
 public class PhoneSmsRequest {
-
     public String phoneNumber;
     public String smsCode;
 }
