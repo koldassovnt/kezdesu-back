@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.Instant;
+import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor
@@ -20,6 +20,6 @@ public class RefreshToken {
     public String clientId;
     @Column(nullable = false, unique = true)
     public String token;
-    @Column(nullable = false)
-    private Instant expiryDate;
+    @Column(name = "expired_at", nullable = false)
+    private Timestamp expiredAt;
 }

@@ -12,4 +12,6 @@ public interface RefreshTokenDao extends CrudRepository<RefreshToken, Long> {
 
     @Modifying
     int deleteByClientId(String clientId);
+
+    RefreshToken findByClientId(String clientId);
 }

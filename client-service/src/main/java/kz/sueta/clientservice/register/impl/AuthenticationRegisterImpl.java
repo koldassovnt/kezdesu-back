@@ -10,7 +10,7 @@ import kz.sueta.clientservice.dto.ui.response.TokenRefreshResponse;
 import kz.sueta.clientservice.entity.Client;
 import kz.sueta.clientservice.entity.RefreshToken;
 import kz.sueta.clientservice.entity.SmsForAuth;
-import kz.sueta.clientservice.exceptions.server.TokenRefreshException;
+import kz.sueta.clientservice.exceptions.ui.TokenRefreshException;
 import kz.sueta.clientservice.exceptions.ui.PhoneNumberInvalidException;
 import kz.sueta.clientservice.exceptions.ui.SmsCodeInvalidException;
 import kz.sueta.clientservice.in_service.model.SmsSendRequest;
@@ -90,12 +90,12 @@ public class AuthenticationRegisterImpl implements AuthenticationRegister {
             Client existedClient = clientRegister.getClient(phoneSmsRequest);
 
             if (existedClient != null) {
-                return getJwtResponse(existedClient.phone, existedClient.password);
+                return getJwtResponse(existedClient);
             }
 
             Client client = clientRegister.saveClient(phoneSmsRequest);
 
-            return getJwtResponse(client.phone, client.password);
+            return getJwtResponse(client);
         } else {
             throw new SmsCodeInvalidException();
         }
@@ -116,15 +116,15 @@ public class AuthenticationRegisterImpl implements AuthenticationRegister {
                         "Refresh token is not in database!")).getBody();
     }
 
-    private Authentication getAuthentication(String phone, String password) {
+    private Authentication getAuthentication(String clientId, String password) {
         return authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken
-                        (phone, password));
+                        (clientId, password));
     }
 
-    private JwtResponse getJwtResponse(String phone, String password) {
+    private JwtResponse getJwtResponse(Client client) {
 
-        Authentication authentication = getAuthentication(phone, password);
+        Authentication authentication = getAuthentication(client.clientId, getPlainPassword(client));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -134,6 +134,10 @@ public class AuthenticationRegisterImpl implements AuthenticationRegister {
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(clientDetails.getUsername());
 
-        return JwtResponse.of(jwt, refreshToken.token, clientDetails.getUsername(), clientDetails.getPhone());
+        return JwtResponse.of(jwt, refreshToken.token, clientDetails.getUsername(), client.phone);
+    }
+
+    private String getPlainPassword(Client client) {
+        return client.phone + client.clientId;
     }
 }

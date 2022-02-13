@@ -14,12 +14,11 @@ import java.util.Collection;
 public class CustomUserDetails implements UserDetails {
 
     private String clientId;
-    private String phone;
     @JsonIgnore
     private String password;
 
     public static CustomUserDetails of(Client client) {
-        return new CustomUserDetails(client.clientId, client.phone, client.password);
+        return new CustomUserDetails(client.clientId, client.password);
     }
 
     @Override
@@ -35,10 +34,6 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public String getUsername() {
         return clientId;
-    }
-
-    public String getPhone() {
-        return phone;
     }
 
     @Override
