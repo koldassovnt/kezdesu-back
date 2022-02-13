@@ -10,6 +10,6 @@ public class PhoneNumberInvalidException extends ResponseStatusException {
     }
 
     public PhoneNumberInvalidException() {
-        super(HttpStatus.valueOf(400), "Не корректный мобильный номер!");
+        super(HttpStatus.valueOf(400), "Z4AvAXiJ1S :: Не корректный мобильный номер!");
     }
 }

@@ -40,7 +40,7 @@ public class RefreshTokenService {
         Client client = clientDao.findClientByClientIdAndActual(clientId, true);
 
         if (client == null) {
-            throw new RuntimeException("Client not found with clientId: " + clientId);
+            throw new RuntimeException("Fj8R68f9uU :: Client not found with clientId: " + clientId);
         }
 
         refreshToken.setClientId(client.clientId);
@@ -58,7 +58,7 @@ public class RefreshTokenService {
         if (token.getExpiredAt().before(new Timestamp(System.currentTimeMillis()))) {
             refreshTokenDao.delete(token);
             throw new TokenRefreshException(token.getToken(),
-                    "Refresh token was expired. Please make a new request");
+                    "D8kPWTysMU :: Refresh token was expired. Please make a new request");
         }
 
         return token;
@@ -78,7 +78,7 @@ public class RefreshTokenService {
         Client client = clientDao.findClientByClientIdAndActual(clientId, true);
 
         if (client == null) {
-            throw new RuntimeException("Client not found with clientId: " + clientId);
+            throw new RuntimeException("yBgJQa12t6 :: Client not found with clientId: " + clientId);
         }
 
         return refreshTokenDao.deleteByClientId(client.clientId);
@@ -89,12 +89,12 @@ public class RefreshTokenService {
             String refreshExpTime = environment.getProperty("refreshtoken.expiration_time");
 
             if (Strings.isNullOrEmpty(refreshExpTime)) {
-                throw new RuntimeException("REFRESH TOKEN EXPIRATION TIME is null or empty");
+                throw new RuntimeException("c303XUgNox :: REFRESH TOKEN EXPIRATION TIME is null or empty");
             }
 
             return Long.valueOf(refreshExpTime);
         } catch (Exception e) {
-            throw new RuntimeException("Exception while getting REFRESH TOKEN EXPIRATION TIME");
+            throw new RuntimeException("A6o3mwitd5 :: Exception while getting REFRESH TOKEN EXPIRATION TIME");
         }
     }
 }

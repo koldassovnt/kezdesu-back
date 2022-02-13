@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Client client = clientDao.findClientByClientIdAndActual(clientId, true);
 
         if (client == null) {
-            throw new UsernameNotFoundException("Client not found with clientId: " + clientId);
+            throw new UsernameNotFoundException("kPjy3wQCks :: Client not found with clientId: " + clientId);
         }
 
         return CustomUserDetails.of(client);

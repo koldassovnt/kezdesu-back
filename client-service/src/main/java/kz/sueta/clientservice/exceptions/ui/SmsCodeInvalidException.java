@@ -10,6 +10,6 @@ public class SmsCodeInvalidException extends ResponseStatusException {
     }
 
     public SmsCodeInvalidException() {
-        super(HttpStatus.valueOf(400), "Ошибка при верификации при помощи смс кода!");
+        super(HttpStatus.valueOf(400), "u6N6q48npW :: Ошибка при верификации при помощи смс кода!");
     }
 }

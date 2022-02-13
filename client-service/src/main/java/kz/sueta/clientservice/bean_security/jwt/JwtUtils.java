@@ -6,7 +6,6 @@ import kz.sueta.clientservice.bean_security.services.CustomUserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
@@ -45,15 +44,15 @@ public class JwtUtils {
             Jwts.parser().setSigningKey(getJwtToken()).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException e) {
-            logger.error("Invalid JWT signature: {}", e.getMessage());
+            logger.error("V44L0hAc74 :: Invalid JWT signature: {}", e.getMessage());
         } catch (MalformedJwtException e) {
-            logger.error("Invalid JWT token: {}", e.getMessage());
+            logger.error("BU3M5qlOrY :: Invalid JWT token: {}", e.getMessage());
         } catch (ExpiredJwtException e) {
-            logger.error("JWT token is expired: {}", e.getMessage());
+            logger.error("44cz5RXOcP :: JWT token is expired: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
-            logger.error("JWT token is unsupported: {}", e.getMessage());
+            logger.error("wdy618R5Vh :: JWT token is unsupported: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
-            logger.error("JWT claims string is empty: {}", e.getMessage());
+            logger.error("HFvvL9xgGO :: JWT claims string is empty: {}", e.getMessage());
         }
 
         return false;
@@ -63,7 +62,7 @@ public class JwtUtils {
         String jwt = environment.getProperty("token.secret");
 
         if (Strings.isNullOrEmpty(jwt)) {
-            throw new RuntimeException("JWT token is null or empty");
+            throw new RuntimeException("Hs1Z35YA6R :: JWT token is null or empty");
         }
 
         return jwt;
@@ -74,12 +73,12 @@ public class JwtUtils {
           String accessExpTime = environment.getProperty("acessetoken.expiration_time");
 
           if (Strings.isNullOrEmpty(accessExpTime)) {
-            throw new RuntimeException("ACCESS TOKEN EXPIRATION TIME is null or empty");
+            throw new RuntimeException("18Uz1UBLgP :: ACCESS TOKEN EXPIRATION TIME is null or empty");
           }
 
           return Long.valueOf(accessExpTime);
         } catch (Exception e) {
-            throw new RuntimeException("Exception while getting ACCESS TOKEN EXPIRATION TIME");
+            throw new RuntimeException("6d9bGazm3Q :: Exception while getting ACCESS TOKEN EXPIRATION TIME");
         }
     }
 

@@ -43,7 +43,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            logger.error("Cannot set client authentication: {}", e.getMessage());
+            logger.error("L6cLmW6dL6 :: Cannot set client authentication: {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);

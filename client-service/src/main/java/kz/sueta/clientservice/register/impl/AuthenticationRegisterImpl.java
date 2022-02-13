@@ -10,9 +10,9 @@ import kz.sueta.clientservice.dto.ui.response.TokenRefreshResponse;
 import kz.sueta.clientservice.entity.Client;
 import kz.sueta.clientservice.entity.RefreshToken;
 import kz.sueta.clientservice.entity.SmsForAuth;
-import kz.sueta.clientservice.exceptions.ui.TokenRefreshException;
 import kz.sueta.clientservice.exceptions.ui.PhoneNumberInvalidException;
 import kz.sueta.clientservice.exceptions.ui.SmsCodeInvalidException;
+import kz.sueta.clientservice.exceptions.ui.TokenRefreshException;
 import kz.sueta.clientservice.in_service.model.SmsSendRequest;
 import kz.sueta.clientservice.register.AuthenticationRegister;
 import kz.sueta.clientservice.register.ClientRegister;
@@ -68,18 +68,21 @@ public class AuthenticationRegisterImpl implements AuthenticationRegister {
     public JwtResponse postSmsForAuth(PhoneSmsRequest phoneSmsRequest) {
 
         if (phoneSmsRequest == null) {
-            throw new SmsCodeInvalidException(HttpStatus.valueOf(400), "Пришел пустой request body!");
+            throw new SmsCodeInvalidException(HttpStatus.valueOf(400),
+                    "1UdI5ZPiyA :: Пришел пустой request body!");
         }
 
         if (!Strings.isNotEmpty(phoneSmsRequest.getPhoneNumber()) ||
                 !Strings.isNotEmpty(phoneSmsRequest.getSmsCode())) {
-            throw new SmsCodeInvalidException(HttpStatus.valueOf(400), "Код или телефонный номер пришел как пустое значение!");
+            throw new SmsCodeInvalidException(HttpStatus.valueOf(400),
+                    "uUlfcCmw9j :: Код или телефонный номер пришел как пустое значение!");
         }
 
         Optional<SmsForAuth> smsForAuth = smsRegister.getSmsForAuth(phoneSmsRequest);
 
         if (smsForAuth.isEmpty()) {
-            throw new SmsCodeInvalidException(HttpStatus.valueOf(400), "Данные по телефонному номеру не существуют в БД!");
+            throw new SmsCodeInvalidException(HttpStatus.valueOf(400),
+                    "CXSLkkyC0F :: Данные по телефонному номеру не существуют в БД!");
         }
 
         if (smsRegister.validateSmsCode(smsForAuth.get(), phoneSmsRequest)) {
@@ -113,7 +116,7 @@ public class AuthenticationRegisterImpl implements AuthenticationRegister {
                     return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
                 })
                 .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
-                        "Refresh token is not in database!")).getBody();
+                        "oH0N1lcn3K :: Refresh token is not in database!")).getBody();
     }
 
     private Authentication getAuthentication(String clientId, String password) {
