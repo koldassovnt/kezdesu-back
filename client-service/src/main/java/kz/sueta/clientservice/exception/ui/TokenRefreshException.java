@@ -1,4 +1,4 @@
-package kz.sueta.clientservice.exceptions.ui;
+package kz.sueta.clientservice.exception.ui;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

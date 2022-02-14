@@ -3,7 +3,7 @@ package kz.sueta.clientservice.bean_security.services;
 import com.google.common.base.Strings;
 import kz.sueta.clientservice.entity.Client;
 import kz.sueta.clientservice.entity.RefreshToken;
-import kz.sueta.clientservice.exceptions.ui.TokenRefreshException;
+import kz.sueta.clientservice.exception.ui.TokenRefreshException;
 import kz.sueta.clientservice.repository.ClientDao;
 import kz.sueta.clientservice.repository.RefreshTokenDao;
 import org.springframework.beans.factory.annotation.Autowired;
