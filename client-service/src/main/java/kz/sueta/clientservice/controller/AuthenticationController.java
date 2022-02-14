@@ -7,6 +7,7 @@ import kz.sueta.clientservice.dto.ui.response.TokenRefreshResponse;
 import kz.sueta.clientservice.register.AuthenticationRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,21 +25,27 @@ public class AuthenticationController {
         this.authenticationRegister = authenticationRegister;
     }
 
-    @PostMapping("/post-phone-number")
+    @PostMapping(value = "/post-phone-number",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<PhoneSmsRequest> postPhoneNumberForAuth(
             @RequestBody(required = false) PhoneSmsRequest phoneSmsRequest) {
         authenticationRegister.postPhoneNumberForAuth(phoneSmsRequest.getPhoneNumber());
         return ResponseEntity.status(HttpStatus.OK).body(phoneSmsRequest);
     }
 
-    @PostMapping("/post-sms-for-auth")
+    @PostMapping(value = "/post-sms-for-auth",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<JwtResponse> postSmsForAuth(
             @RequestBody(required = false) PhoneSmsRequest phoneSmsRequest) {
         JwtResponse response = authenticationRegister.postSmsForAuth(phoneSmsRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/refresh_token")
+    @PostMapping(value = "/refresh_token",
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<TokenRefreshResponse> refreshToken(
             @RequestBody TokenRefreshRequest request) {
         TokenRefreshResponse response = authenticationRegister.refreshToken(request);
