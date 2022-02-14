@@ -3,7 +3,7 @@ package kz.sueta.clientservice.test.register;
 import kz.sueta.clientservice.entity.SmsForAuth;
 import kz.sueta.clientservice.register.AuthenticationRegister;
 import kz.sueta.clientservice.repository.SmsForAuthDao;
-import kz.sueta.clientservice.exceptions.ui.PhoneNumberInvalidException;
+import kz.sueta.clientservice.exception.ui.PhoneNumberInvalidException;
 import kz.sueta.clientservice.test.bean.TestBeanFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
