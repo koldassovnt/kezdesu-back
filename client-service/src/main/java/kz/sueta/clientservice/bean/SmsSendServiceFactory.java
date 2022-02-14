@@ -10,8 +10,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SmsSendServiceFactory {
 
+    private final SmsSendConfig smsSendConfig;
+
     @Autowired
-    private SmsSendConfig smsSendConfig;
+    public SmsSendServiceFactory(SmsSendConfig smsSendConfig) {
+        this.smsSendConfig = smsSendConfig;
+    }
 
     @Bean
     public SmsSendService createSmsSendService() {
