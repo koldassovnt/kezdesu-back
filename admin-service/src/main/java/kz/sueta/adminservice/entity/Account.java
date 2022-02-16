@@ -23,6 +23,7 @@ public class Account {
     public String phone;
     public String email;
     public String password;
+    @Column(name = "created_at")
     public Timestamp createdAt;
     public Boolean actual;
 }

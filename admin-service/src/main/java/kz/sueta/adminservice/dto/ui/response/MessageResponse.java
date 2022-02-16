@@ -1,4 +1,4 @@
-package kz.sueta.clientservice.dto.ui.response;
+package kz.sueta.adminservice.dto.ui.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

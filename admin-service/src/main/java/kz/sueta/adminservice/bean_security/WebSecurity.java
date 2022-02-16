@@ -1,5 +1,8 @@
 package kz.sueta.adminservice.bean_security;
 
+import kz.sueta.adminservice.bean_security.jwt.AuthEntryPointJwt;
+import kz.sueta.adminservice.bean_security.jwt.AuthTokenFilter;
+import kz.sueta.adminservice.bean_security.services.CustomAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +23,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
         prePostEnabled = true)
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
+    private final CustomAccountService customAccountService;
+
+    private final AuthEntryPointJwt unauthorizedHandler;
+
+    @Autowired
+    public WebSecurity(CustomAccountService customAccountService,
+                       AuthEntryPointJwt unauthorizedHandler) {
+        this.customAccountService = customAccountService;
+        this.unauthorizedHandler = unauthorizedHandler;
+    }
+
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public AuthTokenFilter authenticationJwtTokenFilter() {
+        return new AuthTokenFilter();
+    }
+
+    @Override
+    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+        authenticationManagerBuilder.userDetailsService(customAccountService).passwordEncoder(passwordEncoder());
     }
 
     @Bean
@@ -31,6 +50,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable().cors().disable()
@@ -38,7 +63,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/account/**").permitAll()
                 .antMatchers("/actuator/**").permitAll()
                 .anyRequest().authenticated().and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        httpSecurity.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

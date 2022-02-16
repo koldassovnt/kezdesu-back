@@ -3,6 +3,7 @@ package kz.sueta.adminservice.controller;
 import kz.sueta.adminservice.dto.ui.request.LoginRequest;
 import kz.sueta.adminservice.dto.ui.request.RegisterRequest;
 import kz.sueta.adminservice.dto.ui.response.JwtResponse;
+import kz.sueta.adminservice.dto.ui.response.MessageResponse;
 import kz.sueta.adminservice.register.AccountRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,6 @@ public class AccountController {
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         accountRegister.register(request);
-        return ResponseEntity.status(HttpStatus.OK).body(request);
+        return ResponseEntity.status(HttpStatus.OK).body(MessageResponse.of("Account registered successfully!"));
     }
 }
