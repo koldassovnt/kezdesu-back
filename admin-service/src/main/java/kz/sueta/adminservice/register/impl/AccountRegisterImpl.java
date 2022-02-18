@@ -7,7 +7,6 @@ import kz.sueta.adminservice.dto.ui.request.LoginRequest;
 import kz.sueta.adminservice.dto.ui.request.RegisterRequest;
 import kz.sueta.adminservice.dto.ui.response.JwtResponse;
 import kz.sueta.adminservice.entity.Account;
-import kz.sueta.adminservice.exception.ui.LoginException;
 import kz.sueta.adminservice.exception.ui.RegisterException;
 import kz.sueta.adminservice.register.AccountRegister;
 import kz.sueta.adminservice.repository.AccountDao;
@@ -20,7 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -46,8 +44,6 @@ public class AccountRegisterImpl implements AccountRegister {
     @Override
     public JwtResponse login(LoginRequest loginRequest) {
 
-        checkRequestObject(loginRequest);
-
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
                         loginRequest.email, loginRequest.password));
@@ -64,7 +60,10 @@ public class AccountRegisterImpl implements AccountRegister {
     @Override
     public void register(RegisterRequest request) {
 
-        checkRequestObject(request);
+        if (accountDao.findAccountByEmailAndActual(request.email, true) != null) {
+            throw new RegisterException(HttpStatus.valueOf(400),
+                    "hOsZ6cprj9 :: Account with that email already exists!");
+        }
 
         Account account = new Account();
         account.accountId = UUID.randomUUID().toString();
@@ -81,38 +80,5 @@ public class AccountRegisterImpl implements AccountRegister {
 
         accountDao.save(account);
     }
-
-    private void checkRequestObject(Object obj) {
-
-        if (obj == null) {
-            throw new ResponseStatusException(HttpStatus.valueOf(400), "Request model was null");
-        }
-
-        if (obj instanceof LoginRequest) {
-
-            if (!Strings.isNullOrEmpty(((LoginRequest) obj).email) &&
-                    !Strings.isNullOrEmpty(((LoginRequest) obj).password)) {
-                return;
-            }
-
-            throw new LoginException();
-        }
-
-        if (obj instanceof RegisterRequest) {
-
-            if (!Strings.isNullOrEmpty(((RegisterRequest) obj).email) &&
-                    !Strings.isNullOrEmpty(((RegisterRequest) obj).password)) {
-                return;
-            }
-
-            if (accountDao.findAccountByEmailAndActual(((RegisterRequest) obj).email, true) != null) {
-                throw new RegisterException(HttpStatus.valueOf(400),
-                        "hOsZ6cprj9 :: Account with that email already exists!");
-            }
-
-            throw new RegisterException();
-        }
-    }
-
 
 }

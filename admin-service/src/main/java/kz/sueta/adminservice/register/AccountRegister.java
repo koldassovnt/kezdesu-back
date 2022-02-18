@@ -6,7 +6,7 @@ import kz.sueta.adminservice.dto.ui.response.JwtResponse;
 
 public interface AccountRegister {
 
-    JwtResponse login(LoginRequest loginRequest); //todo TEST
+    JwtResponse login(LoginRequest loginRequest);
 
-    void register(RegisterRequest request); //todo TEST
+    void register(RegisterRequest request);
 }
