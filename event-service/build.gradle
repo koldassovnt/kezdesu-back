@@ -22,6 +22,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
@@ -34,10 +35,9 @@ dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.0.0'
 	implementation group: 'io.github.resilience4j', name: 'resilience4j-spring-boot2', version: '1.7.0'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.0'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
-
-	implementation group: 'kz.greetgo.conf', name: 'greetgo.conf', version: '2.0.0'
 }
 
 dependencyManagement {
