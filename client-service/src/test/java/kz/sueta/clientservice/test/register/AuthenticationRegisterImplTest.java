@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Import(TestBeanFactory.class)
-public class AuthenticationRegisterTest {
+public class AuthenticationRegisterImplTest {
 
     @Autowired
     private AuthenticationRegister register;

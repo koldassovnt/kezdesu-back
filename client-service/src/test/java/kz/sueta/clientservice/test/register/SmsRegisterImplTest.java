@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Import(TestBeanFactory.class)
-public class SmsRegisterTest {
+public class SmsRegisterImplTest {
 
     @Autowired
     private SmsRegister smsRegister;

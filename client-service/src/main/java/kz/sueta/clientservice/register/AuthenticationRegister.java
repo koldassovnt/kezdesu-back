@@ -9,7 +9,7 @@ public interface AuthenticationRegister {
 
     void postPhoneNumberForAuth(String phoneNumber);
 
-    JwtResponse postSmsForAuth(PhoneSmsRequest phoneSmsRequest); //todo TEST only exceptions
+    JwtResponse postSmsForAuth(PhoneSmsRequest phoneSmsRequest);
 
     TokenRefreshResponse refreshToken(TokenRefreshRequest request);
 }
