@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
@@ -29,7 +31,7 @@ public class AuthenticationController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<PhoneSmsRequest> postPhoneNumberForAuth(
-            @RequestBody(required = false) PhoneSmsRequest phoneSmsRequest) {
+            @Valid @RequestBody(required = false) PhoneSmsRequest phoneSmsRequest) {
         authenticationRegister.postPhoneNumberForAuth(phoneSmsRequest.getPhoneNumber());
         return ResponseEntity.status(HttpStatus.OK).body(phoneSmsRequest);
     }
@@ -38,7 +40,7 @@ public class AuthenticationController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<JwtResponse> postSmsForAuth(
-            @RequestBody(required = false) PhoneSmsRequest phoneSmsRequest) {
+            @Valid @RequestBody(required = false) PhoneSmsRequest phoneSmsRequest) {
         JwtResponse response = authenticationRegister.postSmsForAuth(phoneSmsRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -47,7 +49,7 @@ public class AuthenticationController {
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<TokenRefreshResponse> refreshToken(
-            @RequestBody TokenRefreshRequest request) {
+            @Valid @RequestBody TokenRefreshRequest request) {
         TokenRefreshResponse response = authenticationRegister.refreshToken(request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

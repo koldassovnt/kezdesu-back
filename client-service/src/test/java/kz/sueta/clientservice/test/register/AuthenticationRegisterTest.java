@@ -38,7 +38,7 @@ public class AuthenticationRegisterTest {
             //
         });
 
-        Assertions.assertEquals("Не корректный мобильный номер!", thrown.getMessage());
+        Assertions.assertEquals("400 BAD_REQUEST \"Z4AvAXiJ1S :: Phone number is not appropriate!\"", thrown.getMessage());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class AuthenticationRegisterTest {
             //
         });
 
-        Assertions.assertEquals("Не корректный мобильный номер!", thrown.getMessage());
+        Assertions.assertEquals("400 BAD_REQUEST \"Z4AvAXiJ1S :: Phone number is not appropriate!\"", thrown.getMessage());
     }
 
     @Test
@@ -64,11 +64,12 @@ public class AuthenticationRegisterTest {
             //
         });
 
-        Assertions.assertEquals("Не корректный мобильный номер!", thrown.getMessage());
+        Assertions.assertEquals("400 BAD_REQUEST \"Z4AvAXiJ1S :: Phone number is not appropriate!\"", thrown.getMessage());
     }
 
     @Test
     public void getPhoneNumberForAuth_insIntoTable() {
+        smsForAuthDao.deleteAll();
 
         String phoneNumber = "+77005326898";
 

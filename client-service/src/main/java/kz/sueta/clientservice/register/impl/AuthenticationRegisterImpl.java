@@ -67,22 +67,11 @@ public class AuthenticationRegisterImpl implements AuthenticationRegister {
     @Override
     public JwtResponse postSmsForAuth(PhoneSmsRequest phoneSmsRequest) {
 
-        if (phoneSmsRequest == null) {
-            throw new SmsCodeInvalidException(HttpStatus.valueOf(400),
-                    "1UdI5ZPiyA :: Пришел пустой request body!");
-        }
-
-        if (!Strings.isNotEmpty(phoneSmsRequest.getPhoneNumber()) ||
-                !Strings.isNotEmpty(phoneSmsRequest.getSmsCode())) {
-            throw new SmsCodeInvalidException(HttpStatus.valueOf(400),
-                    "uUlfcCmw9j :: Код или телефонный номер пришел как пустое значение!");
-        }
-
         Optional<SmsForAuth> smsForAuth = smsRegister.getSmsForAuth(phoneSmsRequest);
 
         if (smsForAuth.isEmpty()) {
             throw new SmsCodeInvalidException(HttpStatus.valueOf(400),
-                    "CXSLkkyC0F :: Данные по телефонному номеру не существуют в БД!");
+                    "CXSLkkyC0F :: These mobile phone does not exists in DB!");
         }
 
         if (smsRegister.validateSmsCode(smsForAuth.get(), phoneSmsRequest)) {
