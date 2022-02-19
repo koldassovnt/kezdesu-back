@@ -7,6 +7,6 @@ create table account
     email        varchar(255) unique,
     password     text,
     created_at   timestamp default now(),
-    actual       boolean
+    actual       boolean default false
 );
 

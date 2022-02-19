@@ -6,7 +6,7 @@ create table client
     email      varchar(255) unique,
     password   text,
     created_at timestamp default now(),
-    actual     boolean
+    actual     boolean default false
 );
 
 create table client_detail
