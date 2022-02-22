@@ -17,6 +17,7 @@ public class ClientDetail {
 
     @Id
     public Long client;
+    @Column(name = "displayname")
     public String displayName;
     public String name;
     public String surname;
