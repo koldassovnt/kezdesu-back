@@ -5,7 +5,7 @@ import kz.sueta.clientservice.entity.Client;
 
 public interface ClientRegister {
 
-    Client saveClient(PhoneSmsRequest phoneSmsRequest); //todo TEST
+    Client saveClient(PhoneSmsRequest phoneSmsRequest);
 
-    Client getClient(PhoneSmsRequest phoneSmsRequest); //todo TEST
+    Client getClient(PhoneSmsRequest phoneSmsRequest);
 }

@@ -52,7 +52,7 @@ public class SmsRegisterImpl implements SmsRegister {
     }
 
     @Override
-    public void saveSmsForAuth(SmsForAuth smsForAuth) {
+    public void save(SmsForAuth smsForAuth) {
         smsForAuthDao.save(smsForAuth);
     }
 }

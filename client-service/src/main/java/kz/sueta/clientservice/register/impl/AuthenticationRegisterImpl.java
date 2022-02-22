@@ -77,7 +77,7 @@ public class AuthenticationRegisterImpl implements AuthenticationRegister {
         if (smsRegister.validateSmsCode(smsForAuth.get(), phoneSmsRequest)) {
 
             smsForAuth.get().setIsValidated(true);
-            smsRegister.saveSmsForAuth(smsForAuth.get());
+            smsRegister.save(smsForAuth.get());
 
             Client existedClient = clientRegister.getClient(phoneSmsRequest);
 

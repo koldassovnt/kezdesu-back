@@ -11,11 +11,11 @@ public interface SmsRegister {
 
     SmsSendResponse sendSms(SmsSendRequest smsSendRequest);
 
-    boolean validateSmsCode(SmsForAuth smsForAuth, PhoneSmsRequest phoneSmsRequest); //todo TEST
+    boolean validateSmsCode(SmsForAuth smsForAuth, PhoneSmsRequest phoneSmsRequest);
 
-    Optional<SmsForAuth> getSmsForAuth(PhoneSmsRequest phoneSmsRequest); //todo TEST
+    Optional<SmsForAuth> getSmsForAuth(PhoneSmsRequest phoneSmsRequest);
 
-    void saveSmsForAuth(String phoneNumber, String code); //todo TEST
+    void saveSmsForAuth(String phoneNumber, String code);
 
-    void saveSmsForAuth(SmsForAuth smsForAuth); //todo TEST
+    void save(SmsForAuth smsForAuth);
 }
