@@ -8,11 +8,8 @@ import kz.sueta.fileservice.exception.FileGetException;
 import kz.sueta.fileservice.exception.FileSaveException;
 import kz.sueta.fileservice.register.FileRegister;
 import kz.sueta.fileservice.util.FileStatic;
-import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -87,9 +84,8 @@ public class FileRegisterImpl implements FileRegister {
             if (file != null) {
                 FileDetailResponse response = new FileDetailResponse();
                 response.fileId = file.fileId;
-                response.label = file.label;
                 response.type = file.mimeType;
-                response.fileByteArray = Base64.getDecoder().decode(file.content);
+                response.base64Content = file.content;
                 listResponse.addFileDetail(response);
             }
         }

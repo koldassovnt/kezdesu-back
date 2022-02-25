@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 public class FileDetailResponse {
     public String fileId;
-    public byte[] fileByteArray;
-    public String label;
+    public String base64Content;
     public String type;
 }
