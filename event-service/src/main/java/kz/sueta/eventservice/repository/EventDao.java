@@ -17,4 +17,6 @@ public interface EventDao extends CrudRepository<Event, Long> {
     @Modifying
     @Query("update Event e set e.blocked = :blocked where e.eventId = :eventId")
     void updateEventBlocked(@Param("blocked") Boolean blocked, @Param("eventId") String eventId);
+
+    Event findEventByEventIdAndActual(String eventId, Boolean actual);
 }
