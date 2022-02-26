@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
@@ -32,18 +34,21 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     private final EventContentDao eventContentDao;
     private final FileServiceClient fileServiceClient;
     private final CategoryDictionaryDao categoryDictionaryDao;
+    private final EntityManager entityManager;
 
     @Autowired
     public EventCrudRegisterImpl(EventDao eventDao,
                                  EventCreatorDao eventCreatorDao,
                                  EventContentDao eventContentDao,
                                  FileServiceClient fileServiceClient,
-                                 CategoryDictionaryDao categoryDictionaryDao) {
+                                 CategoryDictionaryDao categoryDictionaryDao,
+                                 EntityManager entityManager) {
         this.eventDao = eventDao;
         this.eventCreatorDao = eventCreatorDao;
         this.eventContentDao = eventContentDao;
         this.fileServiceClient = fileServiceClient;
         this.categoryDictionaryDao = categoryDictionaryDao;
+        this.entityManager = entityManager;
     }
 
     @Override
@@ -149,11 +154,100 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     @Override
     public EventListResponse eventList(EventListFilter filter) {
 
-        return null;
+        if (filter.blocked == null) {
+            filter.blocked = false;
+        }
+
+        if (filter.actual == null) {
+            filter.actual = true;
+        }
+
+        if (filter.limit == null) {
+            filter.limit = 10;
+        }
+
+        if (filter.offset == null) {
+            filter.offset = 0;
+        }
+
+        boolean addCategoryId = false;
+        boolean addLabelSearch = false;
+        boolean addClientId = false;
+
+        String sql =
+                " select e.eventId       as eventId, " +
+                "        e.label         as label, " +
+                "        e.description   as description, " +
+                "        e.startedAt     as startedAt, " +
+                "        e.endedAt       as endedAt, " +
+                "        e.latitude      as latitude, " +
+                "        e.longitude     as longitude, " +
+                "        e.categoryId    as categoryId, " +
+                "        e.actual        as actual, " +
+                "        e.blocked       as blocked, " +
+                "        ec.clientId     as creatorId " +
+                " from Event e " +
+                " left join EventCreator ec on ec.eventId = e.eventId " +
+                " where e.actual = :actual and e.blocked = :blocked ";
+
+        if (!Strings.isNullOrEmpty(filter.categoryId)) {
+            sql += " and e.categoryId = :categoryId ";
+            addCategoryId = true;
+        }
+
+        if (!Strings.isNullOrEmpty(filter.labelSearch)) {
+            sql += " and e.label like CONCAT('%',:labelSearch,'%') ";
+            addLabelSearch = true;
+        }
+
+        if (!Strings.isNullOrEmpty(filter.clientId)) {
+            sql += " and ec.clientId = :clientId ";
+            addClientId = true;
+        }
+
+        sql += " limit " + filter.limit + " offset " + filter.offset + " ";
+
+        TypedQuery<EventResponse> query = entityManager.createQuery(sql, EventResponse.class);
+
+        query.setParameter("actual", filter.actual)
+                .setParameter("blocked", filter.blocked);
+
+        if (addCategoryId) {
+            query.setParameter("categoryId", filter.categoryId);
+        }
+        if (addLabelSearch) {
+            query.setParameter("labelSearch", filter.labelSearch);
+        }
+        if (addClientId) {
+            query.setParameter("clientId", filter.clientId);
+        }
+
+        List<EventResponse> responses = query.getResultList();
+
+        return EventListResponse.of(responses);
     }
 
     @Override
     public EventResponse eventDetail(EventDetailRequest eventDetailRequest) {
-        return null;
+
+        String sql =
+                        " select e.eventId       as eventId, " +
+                        "        e.label         as label, " +
+                        "        e.description   as description, " +
+                        "        e.startedAt     as startedAt, " +
+                        "        e.endedAt       as endedAt, " +
+                        "        e.latitude      as latitude, " +
+                        "        e.longitude     as longitude, " +
+                        "        e.categoryId    as categoryId, " +
+                        "        e.actual        as actual, " +
+                        "        e.blocked       as blocked, " +
+                        "        ec.clientId     as creatorId " +
+                        " from Event e " +
+                        " left join EventCreator ec on ec.eventId = e.eventId " +
+                        " where e.actual = true and e.blocked = false ";
+
+        TypedQuery<EventResponse> query = entityManager.createQuery(sql, EventResponse.class);
+
+        return query.getSingleResult();
     }
 }

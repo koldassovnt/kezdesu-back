@@ -3,10 +3,8 @@ package kz.sueta.eventservice.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,10 +18,8 @@ public class EventResponse {
     public Double latitude;
     public Double longitude;
     public String categoryId;
-    public Boolean business;
+//    public Boolean business; // еще нет такого
     public Boolean actual;
     public Boolean blocked;
     public String creatorId;
-    public List<MultipartFile> images; // jpeg, png
-    public List<MultipartFile> videos; // mp4
 }

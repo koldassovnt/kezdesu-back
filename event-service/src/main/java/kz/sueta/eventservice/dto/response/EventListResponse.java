@@ -12,4 +12,8 @@ import java.util.List;
 @Data
 public class EventListResponse {
     public List<EventResponse> events = new ArrayList<>();
+
+    public static EventListResponse of(List<EventResponse> events) {
+        return new EventListResponse(events);
+    }
 }
