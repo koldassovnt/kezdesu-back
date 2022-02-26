@@ -8,6 +8,7 @@ import kz.sueta.eventservice.dto.response.FileIdModel;
 import kz.sueta.eventservice.entity.Event;
 import kz.sueta.eventservice.entity.EventContent;
 import kz.sueta.eventservice.entity.EventCreator;
+import kz.sueta.eventservice.exception.NoDataByIdException;
 import kz.sueta.eventservice.register.EventCrudRegister;
 import kz.sueta.eventservice.repository.CategoryDictionaryDao;
 import kz.sueta.eventservice.repository.EventContentDao;
@@ -100,6 +101,10 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     @Override
     public void editEvent(EditEventRequest editEventRequest) {
         Event event = eventDao.findEventByEventIdAndActual(editEventRequest.eventId, true);
+
+        if (event == null) {
+            throw new NoDataByIdException();
+        }
 
         if (!Strings.isNullOrEmpty(editEventRequest.label)) {
             event.label = editEventRequest.label;
@@ -244,9 +249,11 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                         "        ec.clientId     as creatorId " +
                         " from Event e " +
                         " left join EventCreator ec on ec.eventId = e.eventId " +
-                        " where e.actual = true and e.blocked = false ";
+                        " where e.actual = true and e.blocked = false " +
+                        " and e.eventId = :eventId ";
 
         TypedQuery<EventResponse> query = entityManager.createQuery(sql, EventResponse.class);
+        query.setParameter("eventId", eventDetailRequest.eventId);
 
         return query.getSingleResult();
     }
