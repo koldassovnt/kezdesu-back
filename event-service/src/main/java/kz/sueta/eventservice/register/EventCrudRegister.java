@@ -1,6 +1,6 @@
 package kz.sueta.eventservice.register;
 
-import kz.sueta.eventservice.dto.request.EventDetailRequest;
+import kz.sueta.eventservice.dto.request.DetailRequest;
 import kz.sueta.eventservice.dto.request.EditEventRequest;
 import kz.sueta.eventservice.dto.request.EventListFilter;
 import kz.sueta.eventservice.dto.request.SaveEventRequest;
@@ -13,11 +13,11 @@ public interface EventCrudRegister {
 
     void editEvent(EditEventRequest editEventRequest);
 
-    void blockEvent(EventDetailRequest eventDetailRequest);
+    void blockEvent(DetailRequest eventDetailRequest);
 
-    void deleteEvent(EventDetailRequest eventDetailRequest);
+    void deleteEvent(DetailRequest eventDetailRequest);
 
     EventListResponse eventList(EventListFilter filter);
 
-    EventResponse eventDetail(EventDetailRequest eventDetailRequest);
+    EventResponse eventDetail(DetailRequest eventDetailRequest);
 }

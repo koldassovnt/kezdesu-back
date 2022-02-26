@@ -147,13 +147,13 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     }
 
     @Override
-    public void blockEvent(EventDetailRequest eventDetailRequest) {
-        eventDao.updateEventBlocked(true, eventDetailRequest.eventId);
+    public void blockEvent(DetailRequest eventDetailRequest) {
+        eventDao.updateEventBlocked(true, eventDetailRequest.id);
     }
 
     @Override
-    public void deleteEvent(EventDetailRequest eventDetailRequest) {
-        eventDao.updateEventActual(false, eventDetailRequest.eventId);
+    public void deleteEvent(DetailRequest eventDetailRequest) {
+        eventDao.updateEventActual(false, eventDetailRequest.id);
     }
 
     @Override
@@ -233,7 +233,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     }
 
     @Override
-    public EventResponse eventDetail(EventDetailRequest eventDetailRequest) {
+    public EventResponse eventDetail(DetailRequest eventDetailRequest) {
 
         String sql =
                         " select e.eventId       as eventId, " +
@@ -253,7 +253,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                         " and e.eventId = :eventId ";
 
         TypedQuery<EventResponse> query = entityManager.createQuery(sql, EventResponse.class);
-        query.setParameter("eventId", eventDetailRequest.eventId);
+        query.setParameter("eventId", eventDetailRequest.id);
 
         return query.getSingleResult();
     }

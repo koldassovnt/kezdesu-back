@@ -1,6 +1,6 @@
 package kz.sueta.eventservice.controller;
 
-import kz.sueta.eventservice.dto.request.EventDetailRequest;
+import kz.sueta.eventservice.dto.request.DetailRequest;
 import kz.sueta.eventservice.dto.request.EditEventRequest;
 import kz.sueta.eventservice.dto.request.EventListFilter;
 import kz.sueta.eventservice.dto.request.SaveEventRequest;
@@ -38,13 +38,13 @@ public class EventCrudController {
     }
 
     @PostMapping(value = "/block")
-    public ResponseEntity<?> blockEvent(@Valid @RequestBody EventDetailRequest eventDetailRequest) {
+    public ResponseEntity<?> blockEvent(@Valid @RequestBody DetailRequest eventDetailRequest) {
         eventCrudRegister.blockEvent(eventDetailRequest);
         return ResponseEntity.status(200).body(MessageResponse.of("Event successfully blocked!"));
     }
 
     @PostMapping(value = "/delete")
-    public ResponseEntity<?> deleteEvent(@Valid @RequestBody EventDetailRequest eventDetailRequest) {
+    public ResponseEntity<?> deleteEvent(@Valid @RequestBody DetailRequest eventDetailRequest) {
         eventCrudRegister.deleteEvent(eventDetailRequest);
         return ResponseEntity.status(200).body(MessageResponse.of("Event successfully deleted!"));
     }
@@ -56,7 +56,7 @@ public class EventCrudController {
     }
 
     @GetMapping(value = "/detail")
-    public ResponseEntity<?> eventDetail(@Valid @RequestBody EventDetailRequest eventDetailRequest) {
+    public ResponseEntity<?> eventDetail(@Valid @RequestBody DetailRequest eventDetailRequest) {
         EventResponse response = eventCrudRegister.eventDetail(eventDetailRequest);
         return ResponseEntity.status(200).body(response);
     }

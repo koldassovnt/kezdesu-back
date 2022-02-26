@@ -1,9 +1,6 @@
 package kz.sueta.eventservice.controller;
 
-import kz.sueta.eventservice.dto.request.CityDetailRequest;
-import kz.sueta.eventservice.dto.request.CreateCityRequest;
-import kz.sueta.eventservice.dto.request.DictionaryFilter;
-import kz.sueta.eventservice.dto.request.EditCityRequest;
+import kz.sueta.eventservice.dto.request.*;
 import kz.sueta.eventservice.dto.response.CityDetailResponse;
 import kz.sueta.eventservice.dto.response.CityListResponse;
 import kz.sueta.eventservice.dto.response.MessageResponse;
@@ -38,7 +35,7 @@ public class CityCrudController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<?> deleteCity(@Valid @RequestBody CityDetailRequest request) {
+    public ResponseEntity<?> deleteCity(@Valid @RequestBody DetailRequest request) {
         cityCrudRegister.deleteCity(request);
         return ResponseEntity.status(200).body(MessageResponse.of("City successfully deleted!"));
     }
@@ -51,7 +48,7 @@ public class CityCrudController {
 
 
     @GetMapping("/detail")
-    public ResponseEntity<?> detailCity(@Valid @RequestBody CityDetailRequest request) {
+    public ResponseEntity<?> detailCity(@Valid @RequestBody DetailRequest request) {
         CityDetailResponse response = cityCrudRegister.detailCity(request);
         return ResponseEntity.status(200).body(response);
     }

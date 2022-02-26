@@ -10,7 +10,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Data
 @NotNull(message = "model can not be null")
-public class EventDetailRequest {
-    @NotNull(message = "Event id can not be null")
-    public String eventId;
+public class EditCategoryRequest {
+    @NotNull(message = "Category Id is required")
+    public String categoryId;
+    public String categoryLabel;
 }

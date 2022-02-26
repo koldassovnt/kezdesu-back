@@ -1,8 +1,8 @@
 package kz.sueta.eventservice.register.impl;
 
 import com.google.common.base.Strings;
-import kz.sueta.eventservice.dto.request.CityDetailRequest;
 import kz.sueta.eventservice.dto.request.CreateCityRequest;
+import kz.sueta.eventservice.dto.request.DetailRequest;
 import kz.sueta.eventservice.dto.request.DictionaryFilter;
 import kz.sueta.eventservice.dto.request.EditCityRequest;
 import kz.sueta.eventservice.dto.response.CityDetailResponse;
@@ -78,8 +78,8 @@ public class CityCrudRegisterImpl implements CityCrudRegister {
     }
 
     @Override
-    public void deleteCity(CityDetailRequest request) {
-        cityDictionaryDao.updateEventActual(false, request.cityId);
+    public void deleteCity(DetailRequest request) {
+        cityDictionaryDao.updateCityActual(false, request.id);
     }
 
     @Override
@@ -116,7 +116,7 @@ public class CityCrudRegisterImpl implements CityCrudRegister {
     }
 
     @Override
-    public CityDetailResponse detailCity(CityDetailRequest request) {
+    public CityDetailResponse detailCity(DetailRequest request) {
 
         String sql =
                 " select c.cityId as cityId, " +
@@ -128,7 +128,7 @@ public class CityCrudRegisterImpl implements CityCrudRegister {
                         " where c.actual = true and c.cityId = :cityId ";
 
         TypedQuery<CityDetailResponse> query = entityManager.createQuery(sql, CityDetailResponse.class);
-        query.setParameter("cityId", request.cityId);
+        query.setParameter("cityId", request.id);
 
         return query.getSingleResult();
     }

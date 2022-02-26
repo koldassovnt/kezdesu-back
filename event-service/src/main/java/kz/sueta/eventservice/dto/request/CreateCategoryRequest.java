@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Data
 @NotNull(message = "model can not be null")
-public class CityDetailRequest {
-    @NotNull(message = "City id can not be null")
-    public String cityId;
+public class CreateCategoryRequest {
+    @NotNull(message = "Category label is required")
+    public String categoryLabel;
 }

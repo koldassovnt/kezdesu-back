@@ -14,5 +14,5 @@ public interface CityDictionaryDao extends CrudRepository<CityDictionary, Long> 
 
     @Modifying
     @Query("update CityDictionary c set c.actual = :actual where c.cityId = :cityId")
-    void updateEventActual(@Param("actual") Boolean actual, @Param("cityId") String eventId);
+    void updateCityActual(@Param("actual") Boolean actual, @Param("cityId") String categoryId);
 }
