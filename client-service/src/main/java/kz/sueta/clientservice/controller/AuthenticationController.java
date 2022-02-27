@@ -3,8 +3,10 @@ package kz.sueta.clientservice.controller;
 import kz.sueta.clientservice.dto.ui.request.PhoneSmsRequest;
 import kz.sueta.clientservice.dto.ui.request.TokenRefreshRequest;
 import kz.sueta.clientservice.dto.ui.response.JwtResponse;
+import kz.sueta.clientservice.dto.ui.response.MessageResponse;
 import kz.sueta.clientservice.dto.ui.response.TokenRefreshResponse;
 import kz.sueta.clientservice.register.AuthenticationRegister;
+import kz.sueta.clientservice.util.AuthStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,16 +32,16 @@ public class AuthenticationController {
     @PostMapping(value = "/post-phone-number",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<PhoneSmsRequest> postPhoneNumberForAuth(
+    public ResponseEntity<?> postPhoneNumberForAuth(
             @Valid @RequestBody(required = false) PhoneSmsRequest phoneSmsRequest) {
         authenticationRegister.postPhoneNumberForAuth(phoneSmsRequest.getPhoneNumber());
-        return ResponseEntity.status(HttpStatus.OK).body(phoneSmsRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(MessageResponse.of(AuthStatic.SMS_SEND_CODE));
     }
 
     @PostMapping(value = "/post-sms-for-auth",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<JwtResponse> postSmsForAuth(
+    public ResponseEntity<?> postSmsForAuth(
             @Valid @RequestBody(required = false) PhoneSmsRequest phoneSmsRequest) {
         JwtResponse response = authenticationRegister.postSmsForAuth(phoneSmsRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -48,7 +50,7 @@ public class AuthenticationController {
     @PostMapping(value = "/refresh_token",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public ResponseEntity<TokenRefreshResponse> refreshToken(
+    public ResponseEntity<?> refreshToken(
             @Valid @RequestBody TokenRefreshRequest request) {
         TokenRefreshResponse response = authenticationRegister.refreshToken(request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
