@@ -66,7 +66,6 @@ public class AuthenticationRegisterImpl implements AuthenticationRegister {
 
     @Override
     public JwtResponse postSmsForAuth(PhoneSmsRequest phoneSmsRequest) {
-
         Optional<SmsForAuth> smsForAuth = smsRegister.getSmsForAuth(phoneSmsRequest);
 
         if (smsForAuth.isEmpty()) {

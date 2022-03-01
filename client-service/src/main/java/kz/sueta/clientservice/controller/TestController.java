@@ -17,7 +17,7 @@ public class TestController {
         this.env = env;
     }
 
-    @GetMapping("/status")
+    @GetMapping("/action/status")
     public String status() {
         return "WORKING CLIENT SERVICE ON PORT="
                 + env.getProperty("local.server.port")

@@ -11,15 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/client")
 public class AuthenticationController {
 
     private final AuthenticationRegister authenticationRegister;
@@ -29,7 +27,7 @@ public class AuthenticationController {
         this.authenticationRegister = authenticationRegister;
     }
 
-    @PostMapping(value = "/post-phone-number",
+    @PostMapping(value = "/auth/post-phone-number",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> postPhoneNumberForAuth(
@@ -38,7 +36,7 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.OK).body(MessageResponse.of(AuthStatic.SMS_SEND_CODE));
     }
 
-    @PostMapping(value = "/post-sms-for-auth",
+    @PostMapping(value = "/auth/post-sms-for-auth",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> postSmsForAuth(
@@ -47,7 +45,7 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping(value = "/refresh_token",
+    @PostMapping(value = "/auth/refresh_token",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> refreshToken(
