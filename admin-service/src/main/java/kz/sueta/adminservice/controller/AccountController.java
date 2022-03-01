@@ -9,15 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/admin")
+@CrossOrigin("*")
 public class AccountController {
 
     private final AccountRegister accountRegister;
@@ -27,7 +25,7 @@ public class AccountController {
         this.accountRegister = accountRegister;
     }
 
-    @PostMapping(value = "/login",
+    @PostMapping(value = "/auth/login",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
@@ -35,7 +33,7 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(jwtResponse);
     }
 
-    @PostMapping(value = "/register",
+    @PostMapping(value = "/auth/register",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {

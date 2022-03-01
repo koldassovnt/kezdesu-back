@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/acc_test")
+@RequestMapping("/admin")
 public class TestController {
 
     private final Environment env;
@@ -17,7 +17,7 @@ public class TestController {
         this.env = env;
     }
 
-    @GetMapping("/status")
+    @GetMapping("/action/status")
     public String status() {
         return "WORKING ADMIN SERVICE ON PORT="
                 + env.getProperty("local.server.port")
