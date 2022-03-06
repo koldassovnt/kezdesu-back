@@ -13,4 +13,8 @@ import javax.validation.constraints.NotNull;
 public class DetailRequest {
     @NotNull(message = "Id can not be null")
     public String id;
+
+    public static DetailRequest of(String id) {
+        return new DetailRequest(id);
+    }
 }

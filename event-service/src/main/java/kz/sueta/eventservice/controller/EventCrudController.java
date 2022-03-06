@@ -50,14 +50,23 @@ public class EventCrudController {
     }
 
     @GetMapping(value = "/list")
-    public ResponseEntity<?> eventList(@Valid @RequestBody EventListFilter filter) {
+    public ResponseEntity<?> eventList(@RequestParam(name = "limit", required = false) Integer limit,
+                                       @RequestParam(name = "offset", required = false) Integer offset,
+                                       @RequestParam(name = "categoryId", required = false) String categoryId,
+                                       @RequestParam(name = "labelSearch", required = false) String labelSearch,
+                                       @RequestParam(name = "clientId", required = false) String clientId,
+                                       @RequestParam(name = "actual", required = false) Boolean actual,
+                                       @RequestParam(name = "blocked", required = false) Boolean blocked
+    ) {
+        EventListFilter filter =
+                new EventListFilter(limit, offset, categoryId, labelSearch, clientId, actual, blocked);
         EventListResponse listResponse = eventCrudRegister.eventList(filter);
         return ResponseEntity.status(200).body(listResponse);
     }
 
     @GetMapping(value = "/detail")
-    public ResponseEntity<?> eventDetail(@Valid @RequestBody DetailRequest eventDetailRequest) {
-        EventResponse response = eventCrudRegister.eventDetail(eventDetailRequest);
+    public ResponseEntity<?> eventDetail(@RequestParam(name = "id") String id) {
+        EventResponse response = eventCrudRegister.eventDetail(DetailRequest.of(id));
         return ResponseEntity.status(200).body(response);
     }
 }

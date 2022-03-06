@@ -81,7 +81,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
         EventContent eventContent = new EventContent();
         eventContent.eventId = eventId;
 
-        if (!multipartFiles.isEmpty()) {
+        if (multipartFiles != null && !multipartFiles.isEmpty()) {
             for (MultipartFile file : multipartFiles) {
                 FileIdModel fileIdModel = fileServiceClient.saveFile(FileCreateRequest.of(file));
 
@@ -157,7 +157,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     }
 
     @Override
-    public EventListResponse eventList(EventListFilter filter) {
+    public EventListResponse eventList(EventListFilter filter) { //todo typedError
 
         if (filter.blocked == null) {
             filter.blocked = false;

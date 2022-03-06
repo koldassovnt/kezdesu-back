@@ -5,13 +5,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+        org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class
+})
 @EnableEurekaClient
 @EnableFeignClients
 public class EventServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(EventServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(EventServiceApplication.class, args);
+    }
 
 }
