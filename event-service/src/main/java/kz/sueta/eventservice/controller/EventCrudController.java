@@ -8,6 +8,7 @@ import kz.sueta.eventservice.dto.response.EventListResponse;
 import kz.sueta.eventservice.dto.response.EventResponse;
 import kz.sueta.eventservice.dto.response.MessageResponse;
 import kz.sueta.eventservice.register.EventCrudRegister;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,7 @@ public class EventCrudController {
         return ResponseEntity.status(200).body(MessageResponse.of("Event successfully deleted!"));
     }
 
+    @SneakyThrows
     @GetMapping(value = "/list")
     public ResponseEntity<?> eventList(@RequestParam(name = "limit", required = false) Integer limit,
                                        @RequestParam(name = "offset", required = false) Integer offset,
@@ -64,6 +66,7 @@ public class EventCrudController {
         return ResponseEntity.status(200).body(listResponse);
     }
 
+    @SneakyThrows
     @GetMapping(value = "/detail")
     public ResponseEntity<?> eventDetail(@RequestParam(name = "id") String id) {
         EventResponse response = eventCrudRegister.eventDetail(DetailRequest.of(id));

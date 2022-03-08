@@ -17,13 +17,15 @@ import kz.sueta.eventservice.repository.EventDao;
 import kz.sueta.eventservice.service_messaging.FileServiceClient;
 import kz.sueta.eventservice.util.CategoryStatic;
 import kz.sueta.eventservice.util.ServiceFallBackStatic;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import java.sql.Timestamp;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -157,7 +159,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     }
 
     @Override
-    public EventListResponse eventList(EventListFilter filter) { //todo typedError
+    public EventListResponse eventList(EventListFilter filter) throws SQLException {
 
         if (filter.blocked == null) {
             filter.blocked = false;
@@ -175,86 +177,105 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
             filter.offset = 0;
         }
 
-        boolean addCategoryId = false;
-        boolean addLabelSearch = false;
-        boolean addClientId = false;
-
         String sql =
-                " select e.eventId       as eventId, " +
+                " select e.event_Id       as eventId, " +
                 "        e.label         as label, " +
                 "        e.description   as description, " +
-                "        e.startedAt     as startedAt, " +
-                "        e.endedAt       as endedAt, " +
+                "        e.started_At     as startedAt, " +
+                "        e.ended_At       as endedAt, " +
                 "        e.latitude      as latitude, " +
                 "        e.longitude     as longitude, " +
-                "        e.categoryId    as categoryId, " +
+                "        e.category_Id    as categoryId, " +
                 "        e.actual        as actual, " +
                 "        e.blocked       as blocked, " +
-                "        ec.clientId     as creatorId " +
-                " from Event e " +
-                " left join EventCreator ec on ec.eventId = e.eventId " +
-                " where e.actual = :actual and e.blocked = :blocked ";
+                "        ec.client_Id     as creatorId " +
+                " from event e " +
+                " left join event_creator ec on ec.event_Id = e.event_Id " +
+                " where e.actual = ? and e.blocked = ? ";
 
         if (!Strings.isNullOrEmpty(filter.categoryId)) {
-            sql += " and e.categoryId = :categoryId ";
-            addCategoryId = true;
+            sql += " and e.category_Id = ''" + filter.categoryId + "'";
         }
 
         if (!Strings.isNullOrEmpty(filter.labelSearch)) {
-            sql += " and e.label like CONCAT('%',:labelSearch,'%') ";
-            addLabelSearch = true;
+            sql += " and e.label like CONCAT('%', '" + filter.labelSearch + "' ,'%') ";
         }
 
         if (!Strings.isNullOrEmpty(filter.clientId)) {
-            sql += " and ec.clientId = :clientId ";
-            addClientId = true;
+            sql += " and ec.client_Id =  '" + filter.clientId + "' ";
         }
 
         sql += " limit " + filter.limit + " offset " + filter.offset + " ";
 
-        TypedQuery<EventResponse> query = entityManager.createQuery(sql, EventResponse.class);
+        List<EventResponse> responses = new ArrayList<>();
 
-        query.setParameter("actual", filter.actual)
-                .setParameter("blocked", filter.blocked);
+        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5446/event-service", "admin", "admin")) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)){
+                ps.setBoolean(1, filter.actual);
+                ps.setBoolean(2, filter.blocked);
 
-        if (addCategoryId) {
-            query.setParameter("categoryId", filter.categoryId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        EventResponse eventResponse = new EventResponse();
+                        setEventResponse(eventResponse, rs);
+                        responses.add(eventResponse);
+                    }
+                }
+            }
         }
-        if (addLabelSearch) {
-            query.setParameter("labelSearch", filter.labelSearch);
-        }
-        if (addClientId) {
-            query.setParameter("clientId", filter.clientId);
-        }
-
-        List<EventResponse> responses = query.getResultList();
 
         return EventListResponse.of(responses);
     }
 
     @Override
-    public EventResponse eventDetail(DetailRequest eventDetailRequest) {
+    public EventResponse eventDetail(DetailRequest eventDetailRequest) throws SQLException {
+
+        EventResponse eventResponse = new EventResponse();
 
         String sql =
-                        " select e.eventId       as eventId, " +
+                " select e.event_Id       as eventId, " +
                         "        e.label         as label, " +
                         "        e.description   as description, " +
-                        "        e.startedAt     as startedAt, " +
-                        "        e.endedAt       as endedAt, " +
+                        "        e.started_At     as startedAt, " +
+                        "        e.ended_At       as endedAt, " +
                         "        e.latitude      as latitude, " +
                         "        e.longitude     as longitude, " +
-                        "        e.categoryId    as categoryId, " +
+                        "        e.category_Id    as categoryId, " +
                         "        e.actual        as actual, " +
                         "        e.blocked       as blocked, " +
-                        "        ec.clientId     as creatorId " +
-                        " from Event e " +
-                        " left join EventCreator ec on ec.eventId = e.eventId " +
+                        "        ec.client_Id     as creatorId " +
+                        " from event e " +
+                        " left join event_creator ec on ec.event_Id = e.event_Id " +
                         " where e.actual = true and e.blocked = false " +
-                        " and e.eventId = :eventId ";
+                        " and e.event_Id = ? ";
 
-        TypedQuery<EventResponse> query = entityManager.createQuery(sql, EventResponse.class);
-        query.setParameter("eventId", eventDetailRequest.id);
+        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5446/event-service", "admin", "admin")) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)){
+                ps.setString(1, eventDetailRequest.id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        setEventResponse(eventResponse, rs);
+                    }
+                }
+            }
+        }
 
-        return query.getSingleResult();
+        return eventResponse;
     }
+
+    private void setEventResponse(EventResponse eventResponse, ResultSet rs) throws SQLException {
+        eventResponse.eventId = rs.getString("eventId");
+        eventResponse.label = rs.getString("label");
+        eventResponse.description = rs.getString("description");
+        eventResponse.startedAt = rs.getDate("startedAt");
+        eventResponse.endedAt = rs.getDate("endedAt");
+        eventResponse.latitude = rs.getDouble("latitude");
+        eventResponse.longitude = rs.getDouble("longitude");
+        eventResponse.categoryId = rs.getString("categoryId");
+        eventResponse.actual = rs.getBoolean("actual");
+        eventResponse.blocked = rs.getBoolean("blocked");
+        eventResponse.creatorId = rs.getString("creatorId");
+    }
+
+
 }

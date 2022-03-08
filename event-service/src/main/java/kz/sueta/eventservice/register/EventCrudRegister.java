@@ -7,6 +7,8 @@ import kz.sueta.eventservice.dto.request.SaveEventRequest;
 import kz.sueta.eventservice.dto.response.EventListResponse;
 import kz.sueta.eventservice.dto.response.EventResponse;
 
+import java.sql.SQLException;
+
 public interface EventCrudRegister {
 
     void saveEvent(SaveEventRequest saveRequest);
@@ -17,7 +19,7 @@ public interface EventCrudRegister {
 
     void deleteEvent(DetailRequest eventDetailRequest);
 
-    EventListResponse eventList(EventListFilter filter);
+    EventListResponse eventList(EventListFilter filter) throws SQLException;
 
-    EventResponse eventDetail(DetailRequest eventDetailRequest);
+    EventResponse eventDetail(DetailRequest eventDetailRequest) throws SQLException;
 }
