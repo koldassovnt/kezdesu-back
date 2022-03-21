@@ -15,6 +15,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin("*")
 public class EventController {
 
     private final EventRegister eventRegister;

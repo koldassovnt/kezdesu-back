@@ -59,6 +59,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable().cors().disable()
                 .authorizeRequests()
                 .antMatchers("/client/auth/**").permitAll()
+                .antMatchers("/client/forAdmin/**").permitAll()
                 .antMatchers("/actuator/**").permitAll()
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()

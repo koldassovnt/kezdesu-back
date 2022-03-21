@@ -23,4 +23,7 @@ public class Client {
     public String password;
     public Timestamp createdAt;
     public Boolean actual;
+    public Boolean blocked;
+    @Column(name = "blocked_reason")
+    public String blockedReason;
 }

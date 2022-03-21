@@ -215,7 +215,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                 ps.setBoolean(2, filter.blocked);
 
                 try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
+                    while (rs.next()) {
                         EventResponse eventResponse = new EventResponse();
                         setEventResponse(eventResponse, rs);
                         responses.add(eventResponse);
@@ -267,8 +267,8 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
         eventResponse.eventId = rs.getString("eventId");
         eventResponse.label = rs.getString("label");
         eventResponse.description = rs.getString("description");
-        eventResponse.startedAt = rs.getDate("startedAt");
-        eventResponse.endedAt = rs.getDate("endedAt");
+        eventResponse.startedAt = rs.getTimestamp("startedAt");
+        eventResponse.endedAt = rs.getTimestamp("endedAt");
         eventResponse.latitude = rs.getDouble("latitude");
         eventResponse.longitude = rs.getDouble("longitude");
         eventResponse.categoryId = rs.getString("categoryId");
@@ -276,6 +276,4 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
         eventResponse.blocked = rs.getBoolean("blocked");
         eventResponse.creatorId = rs.getString("creatorId");
     }
-
-
 }
