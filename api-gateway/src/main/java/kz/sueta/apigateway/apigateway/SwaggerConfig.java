@@ -25,10 +25,12 @@ public class SwaggerConfig {
         List<GroupedOpenApi> groups = new ArrayList<>();
         List<RouteDefinition> definitions = locator.getRouteDefinitions().collectList().block();
         assert definitions != null;
-        definitions.stream().filter(routeDefinition -> routeDefinition.getId().matches(".*-ws")).forEach(routeDefinition -> {
-            String name = routeDefinition.getId().replaceAll("-ws", "");
-            groups.add(GroupedOpenApi.builder().pathsToMatch("/" + name + "/**").group(name).build());
-        });
+        definitions.stream().filter(routeDefinition -> routeDefinition.getId().matches(".*-ws"))
+                .forEach(routeDefinition -> {
+                    String name = routeDefinition.getId().replaceAll("-ws", "");
+                    groups.add(GroupedOpenApi.builder().pathsToMatch("/" + name + "/**").group(name).build());
+                });
+
         return groups;
     }
 }
