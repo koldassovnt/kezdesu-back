@@ -9,3 +9,10 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_USER: admin
       POSTGRES_DB: event-service
+
+  event-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8050:8050

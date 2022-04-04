@@ -9,3 +9,10 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_USER: admin
       POSTGRES_DB: file-service
+
+  file-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8052:8052
