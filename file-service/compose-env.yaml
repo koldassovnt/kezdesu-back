@@ -1,18 +1,36 @@
 version: '3'
 services:
   db-file-service:
+    container_name: db-file-service
     image: postgres:12
     restart: always
-    ports:
-      - 5447:5432
     environment:
-      POSTGRES_PASSWORD: admin
-      POSTGRES_USER: admin
-      POSTGRES_DB: file-service
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=file-service
+    networks:
+      - file_network
 
   file-api:
+    image: file-api:1.0.1
+    container_name: file-api
     build:
       context: .
-      dockerfile: Dockerfile
+    depends_on:
+      - db-file-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-file-service:5432/file-service
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - eureka.client.serviceUrl.defaultZone=http://eureka-api:8010/eureka
     ports:
       - 8052:8052
+    networks:
+      - file_network
+      - sueta_network
+
+networks:
+  sueta_network:
+    external: true
+  file_network:
+    name: file_network

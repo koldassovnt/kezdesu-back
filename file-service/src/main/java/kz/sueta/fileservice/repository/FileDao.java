@@ -1,4 +1,4 @@
-package kz.sueta.fileservice;
+package kz.sueta.fileservice.repository;
 
 import kz.sueta.fileservice.entity.File;
 import org.springframework.data.repository.CrudRepository;

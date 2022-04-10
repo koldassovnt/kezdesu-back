@@ -1,4 +1,4 @@
 FROM openjdk:16
-ARG JAR_FILE=/build/libs/*.jar
-ADD ${JAR_FILE} app.jar
+VOLUME /tmp
+COPY  build/libs/*.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]

@@ -1,13 +1,12 @@
 package kz.sueta.fileservice.register;
 
 import kz.greetgo.util.RND;
-import kz.sueta.fileservice.FileDao;
+import kz.sueta.fileservice.repository.FileDao;
 import kz.sueta.fileservice.dto.FileCreateRequest;
 import kz.sueta.fileservice.dto.FileIdModel;
 import kz.sueta.fileservice.dto.FileListRequest;
 import kz.sueta.fileservice.dto.FileListResponse;
 import kz.sueta.fileservice.entity.File;
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -16,8 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;

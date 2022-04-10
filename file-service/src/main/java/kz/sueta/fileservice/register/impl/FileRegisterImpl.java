@@ -1,7 +1,7 @@
 package kz.sueta.fileservice.register.impl;
 
 import com.google.common.base.Strings;
-import kz.sueta.fileservice.FileDao;
+import kz.sueta.fileservice.repository.FileDao;
 import kz.sueta.fileservice.dto.*;
 import kz.sueta.fileservice.entity.File;
 import kz.sueta.fileservice.exception.FileGetException;

@@ -1,0 +1,4 @@
+docker build -t gateway-api:1.0.0 .
+
+
+нужно всегдня менять версию!

@@ -1,19 +1,38 @@
 version: '3'
 services:
   db-client-service:
+    container_name: db-client-service
     image: postgres:12
     restart: always
-    ports:
-      - 5444:5432
     environment:
-      POSTGRES_PASSWORD: admin
-      POSTGRES_USER: admin
-      POSTGRES_DB: client-service
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=client-service
+    networks:
+      - client_network
 
 
   client-api:
+    image: client-api:1.0.0
+    container_name: client-api
     build:
       context: .
-      dockerfile: Dockerfile
+    depends_on:
+      - db-client-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-client-service:5432/client-service
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - eureka.client.serviceUrl.defaultZone=http://eureka-api:8010/eureka
     ports:
       - 8051:8051
+    networks:
+      - client_network
+      - sueta_network
+
+
+networks:
+  sueta_network:
+    external: true
+  client_network:
+    name: client_network

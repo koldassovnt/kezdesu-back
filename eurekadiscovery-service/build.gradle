@@ -5,8 +5,17 @@ plugins {
 }
 
 group = 'kz.sueta.eurekadiscoveryservice'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.1'
 sourceCompatibility = '11'
+
+jar {
+	manifest {
+		attributes "Main-Class": "kz/sueta/eurekadiscoveryservice/EurekaDiscoveryServiceApplication"
+	}
+	from {
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}
 
 repositories {
 	mavenCentral()

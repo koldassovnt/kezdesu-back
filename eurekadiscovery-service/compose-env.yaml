@@ -1,8 +1,19 @@
 version: '3'
 services:
-  discovery-api:
+  eureka-api:
+    image: eureka-api:1.0.1
+    container_name: eureka-api
     build:
       context: .
-      dockerfile: Dockerfile
     ports:
       - 8010:8010
+    networks:
+      - sueta_network
+
+networks:
+  default:
+    name: sueta_network
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16

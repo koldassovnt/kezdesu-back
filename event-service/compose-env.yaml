@@ -1,18 +1,37 @@
 version: '3'
+
 services:
   db-event-service:
+    container_name: db-event-service
     image: postgres:12
     restart: always
-    ports:
-      - 5446:5432
     environment:
-      POSTGRES_PASSWORD: admin
-      POSTGRES_USER: admin
-      POSTGRES_DB: event-service
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=event-service
+    networks:
+      - event_network
 
   event-api:
+    image: event-api:1.0.6
+    container_name: 'event-api'
     build:
       context: .
-      dockerfile: Dockerfile
+    depends_on:
+      - db-event-service
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-event-service:5432/event-service
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=admin
+      - eureka.client.serviceUrl.defaultZone=http://eureka-api:8010/eureka
     ports:
       - 8050:8050
+    networks:
+      - event_network
+      - sueta_network
+
+networks:
+  sueta_network:
+    external: true
+  event_network:
+    name: event_network

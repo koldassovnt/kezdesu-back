@@ -5,8 +5,17 @@ plugins {
 }
 
 group = 'kz.sueta'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.1'
 sourceCompatibility = '11'
+
+jar {
+	manifest {
+		attributes "Main-Class": "kz/sueta/fileservice/FileServiceApplication"
+	}
+	from {
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}
 
 repositories {
 	mavenCentral()
@@ -22,8 +31,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.cloud:spring-cloud-starter-config'
-	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	implementation 'org.flywaydb:flyway-core'
