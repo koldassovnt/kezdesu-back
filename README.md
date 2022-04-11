@@ -7,12 +7,12 @@
 
 ### 1.1 Authorization:
 
-- /admin/auth/login (POST)
+#### 1.1.1 /admin/auth/login (POST)
 Request body fields: 
     email (String) - Required, have to be email format
     password (String) - Required
 
-- /admin/auth/register (POST)
+#### 1.1.2 /admin/auth/register (POST)
 Request body fields: 
     email (String) - Required, have to be email format
     password (String) - Required
@@ -21,12 +21,12 @@ Request body fields:
     
 ### 1.2 Client managing
 
-- admin/action/block-client (POST)
+#### 1.2.1 admin/action/block-client (POST)
 Request body fields:
     id (String) - Required
     blockReason (String)
     
-- admin/action/list-client (GET)
+#### 1.2.2 admin/action/list-client (GET)
 Request parameters:
    limit (Integer)
    offset (Integer)
@@ -35,7 +35,7 @@ Request parameters:
    
 ### 1.3 Event managing
 
-- admin/action/save-event (POST)
+#### 1.3.1 admin/action/save-event (POST)
 Request body fields: 
     label (String) - Required
     description (String)
@@ -45,10 +45,10 @@ Request body fields:
     longitude (Double) - Required
     categoryId (String)
     creatorId (String) - Required (Will be changed later)
-    images (List<MultipartFile>)
-    videos (List<MultipartFile>)
-  
-- admin/action/edit-event (POST)
+    images (List of MultipartFile)
+    videos (List of MultipartFile)
+
+#### 1.3.2 admin/action/edit-event (POST)
 Request body fields: 
     eventId (String) - Required
     label (String)
@@ -59,22 +59,22 @@ Request body fields:
     longitude (Double)
     categoryId (String)
     clientId (String) - (Will be changed later)
-    images (List<MultipartFile>)
-    videos (List<MultipartFile>)
+    images (List of MultipartFile)
+    videos (List of MultipartFile)
   
-- admin/action/block-event (POST)
+#### 1.3.3 admin/action/block-event (POST)
 Request body fields: 
     id (String) - Required
   
-- admin/action/delete-event (POST)
+#### 1.3.4 admin/action/delete-event (POST)
 Request body fields: 
     id (String) - Required
   
-- admin/action/detail-event (GET)
+#### 1.3.5 admin/action/detail-event (GET)
 Request parameters: 
     id (String) - Required
   
-- admin/action/list-event (GET)
+#### 1.3.6 admin/action/list-event (GET)
 Request parameters:
    limit (Integer)
    offset (Integer)
