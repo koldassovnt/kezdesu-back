@@ -45,7 +45,7 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping(value = "/auth/refresh_token",
+    @PostMapping(value = "/auth/refresh-token",
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> refreshToken(

@@ -14,12 +14,12 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/client")
 @CrossOrigin(origins = "*")
-public class ClientController {
+public class ClientForAdminController {
 
     private final ClientRegister clientRegister;
 
     @Autowired
-    public ClientController(ClientRegister clientRegister) {
+    public ClientForAdminController(ClientRegister clientRegister) {
         this.clientRegister = clientRegister;
     }
 
