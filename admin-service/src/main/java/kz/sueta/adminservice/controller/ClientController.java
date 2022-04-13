@@ -26,13 +26,13 @@ public class ClientController {
         this.clientRegister = clientRegister;
     }
 
-    @PostMapping(value = "/action/blockClient")
+    @PostMapping(value = "/action/block-client")
     public ResponseEntity<?> blockClient(@Valid @RequestBody ClientBlockRequest request) {
         MessageResponse response = clientRegister.blockClient(request);
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping(value = "/action/listClient")
+    @GetMapping(value = "/action/list-client")
     public ResponseEntity<?> listClient(@RequestParam(name = "limit", required = false) Integer limit,
                                        @RequestParam(name = "offset", required = false) Integer offset,
                                        @RequestParam(name = "actual", required = false) Boolean actual,

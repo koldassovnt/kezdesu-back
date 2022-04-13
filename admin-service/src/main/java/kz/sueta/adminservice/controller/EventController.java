@@ -24,31 +24,31 @@ public class EventController {
         this.eventRegister = eventRegister;
     }
 
-    @PostMapping(value = "/action/saveEvent")
+    @PostMapping(value = "/action/save-event")
     public ResponseEntity<?> saveEvent(@Valid @RequestBody SaveEventRequest saveRequest) {
         MessageResponse response = eventRegister.saveEvent(saveRequest);
         return ResponseEntity.status(200).body(response);
     }
 
-    @PostMapping(value = "/action/editEvent")
+    @PostMapping(value = "/action/edit-event")
     public ResponseEntity<?> editEvent(@Valid @RequestBody EditEventRequest editEventRequest) {
         MessageResponse response = eventRegister.editEvent(editEventRequest);
         return ResponseEntity.status(200).body(response);
     }
 
-    @PostMapping(value = "/action/blockEvent")
+    @PostMapping(value = "/action/block-event")
     public ResponseEntity<?> blockEvent(@Valid @RequestBody DetailRequest eventDetailRequest) {
         MessageResponse response = eventRegister.blockEvent(eventDetailRequest);
         return ResponseEntity.status(200).body(response);
     }
 
-    @PostMapping(value = "/action/deleteEvent")
+    @PostMapping(value = "/action/delete-event")
     public ResponseEntity<?> deleteEvent(@Valid @RequestBody DetailRequest eventDetailRequest) {
         MessageResponse response = eventRegister.deleteEvent(eventDetailRequest);
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping(value = "/action/listEvent")
+    @GetMapping(value = "/action/list-event")
     public ResponseEntity<?> listEvent(@RequestParam(name = "limit", required = false) Integer limit,
                                        @RequestParam(name = "offset", required = false) Integer offset,
                                        @RequestParam(name = "categoryId", required = false) String categoryId,
@@ -63,7 +63,7 @@ public class EventController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping(value = "/action/detailEvent")
+    @GetMapping(value = "/action/detail-event")
     public ResponseEntity<?> detailEvent(@RequestParam(name = "id") String id) {
         EventResponse response = eventRegister.detailEvent(DetailRequest.of(id));
         return ResponseEntity.status(200).body(response);
