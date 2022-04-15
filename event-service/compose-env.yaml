@@ -13,7 +13,7 @@ services:
       - event_network
 
   event-api:
-    image: event-api:1.0.6
+    image: event-api:1.0.7
     container_name: 'event-api'
     build:
       context: .
