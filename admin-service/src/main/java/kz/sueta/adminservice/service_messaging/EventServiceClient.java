@@ -147,7 +147,7 @@ public interface EventServiceClient {
         return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
     }
 
-    @PostMapping("/city/list")
+    @GetMapping("/city/list")
     @Retry(name = "event-ws")
     @CircuitBreaker(name = "event-ws", fallbackMethod = "listCityFallback")
     CityListResponse listCity(@RequestParam(name = "limit", required = false) Integer limit,
@@ -219,7 +219,7 @@ public interface EventServiceClient {
         return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
     }
 
-    @PostMapping("/category/list")
+    @GetMapping("/category/list")
     @Retry(name = "event-ws")
     @CircuitBreaker(name = "event-ws", fallbackMethod = "listCategoryFallback")
     CategoryListResponse listCategory(@RequestParam(name = "limit", required = false) Integer limit,
