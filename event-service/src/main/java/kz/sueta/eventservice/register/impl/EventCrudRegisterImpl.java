@@ -159,7 +159,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     }
 
     @Override
-    public EventListResponse eventList(EventListFilter filter) throws SQLException {
+    public EventListResponse eventList(EventListFilter filter) throws SQLException { //todo add participants, content
 
         if (filter.blocked == null) {
             filter.blocked = false;
@@ -209,7 +209,8 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
 
         List<EventResponse> responses = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5446/event-service",
+        try (Connection connection = DriverManager.getConnection(
+                "jdbc:postgresql://localhost:5432/event-service",
                 "admin",
                 "admin")) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -230,7 +231,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     }
 
     @Override
-    public EventResponse eventDetail(DetailRequest eventDetailRequest) throws SQLException {
+    public EventResponse eventDetail(DetailRequest eventDetailRequest) throws SQLException { //todo add participants, content
 
         EventResponse eventResponse = new EventResponse();
 
@@ -251,7 +252,8 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                         " where e.actual = true and e.blocked = false " +
                         " and e.event_Id = ? ";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5446/event-service",
+        try (Connection connection = DriverManager.getConnection(
+                "jdbc:postgresql://localhost:5432/event-service",
                 "admin",
                 "admin")) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {

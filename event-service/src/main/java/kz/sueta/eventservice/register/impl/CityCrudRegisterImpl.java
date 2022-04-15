@@ -7,15 +7,22 @@ import kz.sueta.eventservice.dto.request.DictionaryFilter;
 import kz.sueta.eventservice.dto.request.EditCityRequest;
 import kz.sueta.eventservice.dto.response.CityDetailResponse;
 import kz.sueta.eventservice.dto.response.CityListResponse;
+import kz.sueta.eventservice.dto.response.EventResponse;
 import kz.sueta.eventservice.entity.CityDictionary;
 import kz.sueta.eventservice.exception.NoDataByIdException;
 import kz.sueta.eventservice.register.CityCrudRegister;
 import kz.sueta.eventservice.repository.CityDictionaryDao;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -82,6 +89,7 @@ public class CityCrudRegisterImpl implements CityCrudRegister {
         cityDictionaryDao.updateCityActual(false, request.id);
     }
 
+    @SneakyThrows
     @Override
     public CityListResponse listCity(DictionaryFilter filter) {
 
@@ -98,38 +106,79 @@ public class CityCrudRegisterImpl implements CityCrudRegister {
         }
 
         String sql =
-                " select c.cityId as cityId, " +
-                " c.cityLabel     as label, " +
+                " select c.city_id as cityId, " +
+                " c.city_label     as label, " +
                 " c.actual        as actual, " +
                 " c.latitude      as latitude, " +
                 " c.longitude     as longitude " +
-                " from CityDictionary c " +
-                " where c.actual = :actual " +
+                " from city_dictionary c " +
+                " where c.actual = ? " +
                 " limit " + filter.limit + " offset " + filter.offset + " " ;
 
         TypedQuery<CityDetailResponse> query = entityManager.createQuery(sql, CityDetailResponse.class);
         query.setParameter("actual", filter.actual);
 
-        List<CityDetailResponse> responseList = query.getResultList();
+        List<CityDetailResponse> responseList = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection(
+                "jdbc:postgresql://localhost:5432/event-service",
+                "admin",
+                "admin")) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setBoolean(1, filter.actual);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        CityDetailResponse detailResponse = new CityDetailResponse();
+                        detailResponse.cityId = rs.getString("cityId");
+                        detailResponse.label = rs.getString("label");
+                        detailResponse.latitude = rs.getDouble("latitude");
+                        detailResponse.longitude = rs.getDouble("longitude");
+                        detailResponse.actual = rs.getBoolean("actual");
+                        responseList.add(detailResponse);
+                    }
+                }
+            }
+        }
 
         return CityListResponse.of(responseList);
     }
 
+    @SneakyThrows
     @Override
     public CityDetailResponse detailCity(DetailRequest request) {
 
         String sql =
-                " select c.cityId as cityId, " +
-                        " c.cityLabel     as label, " +
+                " select c.city_id as cityId, " +
+                        " c.city_label     as label, " +
                         " c.actual        as actual, " +
                         " c.latitude      as latitude, " +
                         " c.longitude     as longitude " +
-                        " from CityDictionary c " +
-                        " where c.actual = true and c.cityId = :cityId ";
+                        " from city_dictionary c " +
+                        " where c.actual = true and c.city_id = ? ";
 
-        TypedQuery<CityDetailResponse> query = entityManager.createQuery(sql, CityDetailResponse.class);
-        query.setParameter("cityId", request.id);
+        CityDetailResponse detailResponse = new CityDetailResponse();
 
-        return query.getSingleResult();
+        try (Connection connection = DriverManager.getConnection(
+                "jdbc:postgresql://localhost:5432/event-service",
+                "admin",
+                "admin")) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, request.id);
+
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        detailResponse.cityId = rs.getString("cityId");
+                        detailResponse.label = rs.getString("label");
+                        detailResponse.latitude = rs.getDouble("latitude");
+                        detailResponse.longitude = rs.getDouble("longitude");
+                        detailResponse.actual = rs.getBoolean("actual");
+                    }
+                }
+            }
+        }
+
+
+        return detailResponse;
     }
 }
