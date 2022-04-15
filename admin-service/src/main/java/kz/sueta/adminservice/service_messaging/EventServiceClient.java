@@ -2,12 +2,8 @@ package kz.sueta.adminservice.service_messaging;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
-import kz.sueta.adminservice.dto.services.request.DetailRequest;
-import kz.sueta.adminservice.dto.services.request.EditEventRequest;
-import kz.sueta.adminservice.dto.services.request.EventListFilter;
-import kz.sueta.adminservice.dto.services.request.SaveEventRequest;
-import kz.sueta.adminservice.dto.services.response.EventListResponse;
-import kz.sueta.adminservice.dto.services.response.EventResponse;
+import kz.sueta.adminservice.dto.services.request.*;
+import kz.sueta.adminservice.dto.services.response.*;
 import kz.sueta.adminservice.dto.ui.response.MessageResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +15,10 @@ import static kz.sueta.adminservice.util.ServiceFallbackStatic.SERVICE_CALL_ERRO
 
 @FeignClient(name = "event-ws")
 public interface EventServiceClient {
+
+    /**
+     * Event region
+     */
 
     @PostMapping("/event/save")
     @Retry(name = "event-ws")
@@ -101,6 +101,150 @@ public interface EventServiceClient {
     EventResponse detailEvent(@RequestParam String id);
 
     default EventResponse detailEventFallback(String id, Throwable throwable) {
+        System.out.println("RequestParam = " + id);
+        System.out.println("Exception class=" + throwable.getClass().getName());
+        System.out.println("Exception took place: " + throwable.getMessage());
+        return null;
+    }
+
+    /**
+     * City region
+     */
+
+    @PostMapping("/city/save")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "saveCityFallback")
+    MessageResponse saveCity(@RequestBody CreateCityRequest request);
+
+    default MessageResponse saveCityFallback(CreateCityRequest request, Throwable throwable) {
+        System.out.println("RequestBody = " + request);
+        System.out.println("Exception class=" + throwable.getClass().getName());
+        System.out.println("Exception took place: " + throwable.getMessage());
+        return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
+    }
+
+    @PostMapping("/city/edit")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "editCityFallback")
+    MessageResponse editCity(@RequestBody EditCityRequest request);
+
+    default MessageResponse editCityFallback(EditCityRequest request, Throwable throwable) {
+        System.out.println("RequestBody = " + request);
+        System.out.println("Exception class=" + throwable.getClass().getName());
+        System.out.println("Exception took place: " + throwable.getMessage());
+        return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
+    }
+
+    @PostMapping("/city/delete")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "deleteCityFallback")
+    MessageResponse deleteCity(@RequestBody DetailRequest request);
+
+    default MessageResponse deleteCityFallback(DetailRequest request, Throwable throwable) {
+        System.out.println("RequestBody = " + request);
+        System.out.println("Exception class=" + throwable.getClass().getName());
+        System.out.println("Exception took place: " + throwable.getMessage());
+        return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
+    }
+
+    @PostMapping("/city/list")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "listCityFallback")
+    CityListResponse listCity(@RequestParam(name = "limit", required = false) Integer limit,
+                                  @RequestParam(name = "offset", required = false) Integer offset,
+                                  @RequestParam(name = "actual", required = false) Boolean actual);
+
+    default CityListResponse listCityFallback(Integer limit,
+                                              Integer offset,
+                                              Boolean actual,
+                                              Throwable throwable) {
+
+        DictionaryFilter request = new DictionaryFilter(limit, offset, actual);
+
+        System.out.println("RequestParam = " + request);
+        System.out.println("Exception class=" + throwable.getClass().getName());
+        System.out.println("Exception took place: " + throwable.getMessage());
+        return new CityListResponse();
+    }
+
+    @GetMapping("/city/detail")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "detailCityFallback")
+    CityDetailResponse detailCity(@RequestParam String id);
+
+    default CityDetailResponse detailCityFallback(String id, Throwable throwable) {
+        System.out.println("RequestParam = " + id);
+        System.out.println("Exception class=" + throwable.getClass().getName());
+        System.out.println("Exception took place: " + throwable.getMessage());
+        return null;
+    }
+
+    /**
+     * Category region
+     */
+
+    @PostMapping("/category/save")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "saveCategoryFallback")
+    MessageResponse saveCategory(@RequestBody CreateCategoryRequest request);
+
+    default MessageResponse saveCategoryFallback(CreateCategoryRequest request, Throwable throwable) {
+        System.out.println("RequestBody = " + request);
+        System.out.println("Exception class=" + throwable.getClass().getName());
+        System.out.println("Exception took place: " + throwable.getMessage());
+        return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
+    }
+
+    @PostMapping("/category/edit")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "editCategoryFallback")
+    MessageResponse editCategory(@RequestBody EditCategoryRequest request);
+
+    default MessageResponse editCategoryFallback(EditCategoryRequest request, Throwable throwable) {
+        System.out.println("RequestBody = " + request);
+        System.out.println("Exception class=" + throwable.getClass().getName());
+        System.out.println("Exception took place: " + throwable.getMessage());
+        return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
+    }
+
+    @PostMapping("/category/delete")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "deleteCategoryFallback")
+    MessageResponse deleteCategory(@RequestBody DetailRequest request);
+
+    default MessageResponse deleteCategoryFallback(DetailRequest request, Throwable throwable) {
+        System.out.println("RequestBody = " + request);
+        System.out.println("Exception class=" + throwable.getClass().getName());
+        System.out.println("Exception took place: " + throwable.getMessage());
+        return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
+    }
+
+    @PostMapping("/category/list")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "listCategoryFallback")
+    CategoryListResponse listCategory(@RequestParam(name = "limit", required = false) Integer limit,
+                              @RequestParam(name = "offset", required = false) Integer offset,
+                              @RequestParam(name = "actual", required = false) Boolean actual);
+
+    default CategoryListResponse listCategoryFallback(Integer limit,
+                                              Integer offset,
+                                              Boolean actual,
+                                              Throwable throwable) {
+
+        DictionaryFilter request = new DictionaryFilter(limit, offset, actual);
+
+        System.out.println("RequestParam = " + request);
+        System.out.println("Exception class=" + throwable.getClass().getName());
+        System.out.println("Exception took place: " + throwable.getMessage());
+        return new CategoryListResponse();
+    }
+
+    @GetMapping("/category/detail")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "detailCategoryFallback")
+    CategoryDetailResponse detailCategory(@RequestParam String id);
+
+    default CategoryDetailResponse detailCategoryFallback(String id, Throwable throwable) {
         System.out.println("RequestParam = " + id);
         System.out.println("Exception class=" + throwable.getClass().getName());
         System.out.println("Exception took place: " + throwable.getMessage());

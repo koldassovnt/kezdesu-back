@@ -41,15 +41,20 @@ public class CityCrudController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> listCity(@Valid @RequestBody DictionaryFilter filter) {
+    public ResponseEntity<?> listCity(@RequestParam(name = "limit", required = false) Integer limit,
+                                      @RequestParam(name = "offset", required = false) Integer offset,
+                                      @RequestParam(name = "actual", required = false) Boolean actual) {
+
+        DictionaryFilter filter = new DictionaryFilter(limit, offset, actual);
+
         CityListResponse response = cityCrudRegister.listCity(filter);
         return ResponseEntity.status(200).body(response);
     }
 
 
     @GetMapping("/detail")
-    public ResponseEntity<?> detailCity(@Valid @RequestBody DetailRequest request) {
-        CityDetailResponse response = cityCrudRegister.detailCity(request);
+    public ResponseEntity<?> detailCity(@RequestParam(name = "id") String id) {
+        CityDetailResponse response = cityCrudRegister.detailCity(DetailRequest.of(id));
         return ResponseEntity.status(200).body(response);
     }
 }

@@ -179,19 +179,19 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
 
         String sql =
                 " select e.event_Id       as eventId, " +
-                "        e.label         as label, " +
-                "        e.description   as description, " +
-                "        e.started_At     as startedAt, " +
-                "        e.ended_At       as endedAt, " +
-                "        e.latitude      as latitude, " +
-                "        e.longitude     as longitude, " +
-                "        e.category_Id    as categoryId, " +
-                "        e.actual        as actual, " +
-                "        e.blocked       as blocked, " +
-                "        ec.client_Id     as creatorId " +
-                " from event e " +
-                " left join event_creator ec on ec.event_Id = e.event_Id " +
-                " where e.actual = ? and e.blocked = ? ";
+                        "        e.label         as label, " +
+                        "        e.description   as description, " +
+                        "        e.started_At     as startedAt, " +
+                        "        e.ended_At       as endedAt, " +
+                        "        e.latitude      as latitude, " +
+                        "        e.longitude     as longitude, " +
+                        "        e.category_Id    as categoryId, " +
+                        "        e.actual        as actual, " +
+                        "        e.blocked       as blocked, " +
+                        "        ec.client_Id     as creatorId " +
+                        " from event e " +
+                        " left join event_creator ec on ec.event_Id = e.event_Id " +
+                        " where e.actual = ? and e.blocked = ? ";
 
         if (!Strings.isNullOrEmpty(filter.categoryId)) {
             sql += " and e.category_Id = ''" + filter.categoryId + "'";
@@ -209,8 +209,10 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
 
         List<EventResponse> responses = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5446/event-service", "admin", "admin")) {
-            try (PreparedStatement ps = connection.prepareStatement(sql)){
+        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5446/event-service",
+                "admin",
+                "admin")) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setBoolean(1, filter.actual);
                 ps.setBoolean(2, filter.blocked);
 
@@ -249,8 +251,10 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                         " where e.actual = true and e.blocked = false " +
                         " and e.event_Id = ? ";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5446/event-service", "admin", "admin")) {
-            try (PreparedStatement ps = connection.prepareStatement(sql)){
+        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5446/event-service",
+                "admin",
+                "admin")) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setString(1, eventDetailRequest.id);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {

@@ -1,5 +1,6 @@
 package kz.sueta.adminservice.register.impl;
 
+import com.netflix.servo.util.Strings;
 import kz.sueta.adminservice.dto.services.request.DetailRequest;
 import kz.sueta.adminservice.dto.services.request.EditEventRequest;
 import kz.sueta.adminservice.dto.services.request.EventListFilter;
@@ -7,23 +8,43 @@ import kz.sueta.adminservice.dto.services.request.SaveEventRequest;
 import kz.sueta.adminservice.dto.services.response.EventListResponse;
 import kz.sueta.adminservice.dto.services.response.EventResponse;
 import kz.sueta.adminservice.dto.ui.response.MessageResponse;
+import kz.sueta.adminservice.entity.Account;
+import kz.sueta.adminservice.exception.ui.RestException;
 import kz.sueta.adminservice.register.EventRegister;
+import kz.sueta.adminservice.repository.AccountDao;
 import kz.sueta.adminservice.service_messaging.EventServiceClient;
 import kz.sueta.adminservice.util.ServiceFallbackStatic;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EventRegisterImpl implements EventRegister {
 
     private final EventServiceClient eventServiceClient;
+    private final AccountDao accountDao;
 
-    public EventRegisterImpl(EventServiceClient eventServiceClient) {
+    @Autowired
+    public EventRegisterImpl(EventServiceClient eventServiceClient,
+                             AccountDao accountDao) {
         this.eventServiceClient = eventServiceClient;
+        this.accountDao = accountDao;
     }
 
-
     @Override
-    public MessageResponse saveEvent(SaveEventRequest saveRequest) {
+    public MessageResponse saveEvent(SaveEventRequest saveRequest, String email) {
+
+        if (Strings.isNullOrEmpty(email)) {
+            throw new RestException("2h1mkSxfnT :: Authorization is incorrect, please login again!");
+        }
+
+        Account account = accountDao.findAccountByEmailAndActual(email, true);
+
+        if (account == null) {
+            throw new RuntimeException("hCp867b9Lk :: account is null by email!");
+        }
+
+        saveRequest.creatorId = account.accountId;
+
         MessageResponse messageResponse = eventServiceClient.saveEvent(saveRequest);
 
         if (ServiceFallbackStatic.SERVICE_CALL_ERROR_MESSAGE.equals(messageResponse.message)) {

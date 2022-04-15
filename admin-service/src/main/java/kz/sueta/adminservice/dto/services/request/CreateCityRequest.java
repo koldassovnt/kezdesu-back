@@ -1,4 +1,4 @@
-package kz.sueta.eventservice.dto.request;
+package kz.sueta.adminservice.dto.services.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

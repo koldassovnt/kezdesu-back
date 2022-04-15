@@ -1,4 +1,4 @@
-package kz.sueta.eventservice.dto.request;
+package kz.sueta.adminservice.dto.services.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,11 +10,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Data
 @NotNull(message = "model can not be null")
-public class CreateCityRequest {
-    @NotNull(message = "City label is required")
+public class EditCityRequest {
+    @NotNull(message = "City Id is required")
+    public String cityId;
     public String cityLabel;
-    @NotNull(message = "City latitude is required")
     public Double latitude;
-    @NotNull(message = "City longitude is required")
     public Double longitude;
 }

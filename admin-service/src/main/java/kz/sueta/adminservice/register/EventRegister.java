@@ -10,7 +10,7 @@ import kz.sueta.adminservice.dto.ui.response.MessageResponse;
 
 public interface EventRegister {
 
-    MessageResponse saveEvent(SaveEventRequest saveRequest);
+    MessageResponse saveEvent(SaveEventRequest saveRequest, String email);
 
     MessageResponse editEvent(EditEventRequest editEventRequest);
 

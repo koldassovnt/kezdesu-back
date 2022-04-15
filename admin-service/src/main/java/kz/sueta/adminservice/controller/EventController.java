@@ -9,6 +9,7 @@ import kz.sueta.adminservice.dto.services.response.EventResponse;
 import kz.sueta.adminservice.dto.ui.response.MessageResponse;
 import kz.sueta.adminservice.register.EventRegister;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,8 +26,9 @@ public class EventController {
     }
 
     @PostMapping(value = "/action/save-event")
-    public ResponseEntity<?> saveEvent(@Valid @RequestBody SaveEventRequest saveRequest) {
-        MessageResponse response = eventRegister.saveEvent(saveRequest);
+    public ResponseEntity<?> saveEvent(@Valid @RequestBody SaveEventRequest saveRequest,
+                                       Authentication authentication) {
+        MessageResponse response = eventRegister.saveEvent(saveRequest, authentication.getName());
         return ResponseEntity.status(200).body(response);
     }
 

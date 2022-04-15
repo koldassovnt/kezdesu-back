@@ -39,15 +39,20 @@ public class CategoryCrudController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<?> listCategory(@Valid @RequestBody DictionaryFilter filter) {
+    public ResponseEntity<?> listCategory(@RequestParam(name = "limit", required = false) Integer limit,
+                                          @RequestParam(name = "offset", required = false) Integer offset,
+                                          @RequestParam(name = "actual", required = false) Boolean actual) {
+
+        DictionaryFilter filter = new DictionaryFilter(limit, offset, actual);
+
         CategoryListResponse response = categoryCrudRegister.listCategory(filter);
         return ResponseEntity.status(200).body(response);
     }
 
 
     @GetMapping("/detail")
-    public ResponseEntity<?> detailCategory(@Valid @RequestBody DetailRequest request) {
-        CategoryDetailResponse response = categoryCrudRegister.detailCategory(request);
+    public ResponseEntity<?> detailCategory(@RequestParam(name = "id") String id) {
+        CategoryDetailResponse response = categoryCrudRegister.detailCategory(DetailRequest.of(id));
         return ResponseEntity.status(200).body(response);
     }
 }
