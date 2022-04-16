@@ -26,7 +26,7 @@ public class SaveEventRequest {
     @NotNull(message = "Longitude is required")
     public Double longitude;
     public String categoryId;
-    @NotNull(message = "Creator id is required")
+
     public String creatorId;
     public List<MultipartFile> images; // jpeg, png
     public List<MultipartFile> videos; // mp4

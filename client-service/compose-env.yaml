@@ -13,7 +13,7 @@ services:
 
 
   client-api:
-    image: client-api:1.0.1
+    image: client-api:1.0.4
     container_name: client-api
     build:
       context: .

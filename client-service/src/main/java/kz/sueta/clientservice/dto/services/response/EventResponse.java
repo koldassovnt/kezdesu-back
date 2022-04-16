@@ -22,4 +22,7 @@ public class EventResponse {
     public Boolean actual;
     public Boolean blocked;
     public String creatorId;
+
+    //todo add creator full info
+    //todo add list of participants
 }
