@@ -57,7 +57,6 @@
     - latitude (Double) - Required
     - longitude (Double) - Required
     - categoryId (String)
-    - creatorId (String)
     - images (List of MultipartFile)
     - videos (List of MultipartFile)
 
@@ -72,7 +71,6 @@
     - latitude (Double)
     - longitude (Double)
     - categoryId (String)
-    - clientId (String)
     - images (List of MultipartFile)
     - videos (List of MultipartFile)
   
@@ -188,7 +186,50 @@
 - Request body fields:
    - refreshToken (String) - Required
    
-### 2.2 Client managing
+### 2.2 Event managing
+
+#### 2.2.1 client/action/save-event (POST) (NEED token)
+
+- Request body fields: 
+    - label (String) - Required
+    - description (String)
+    - startedAt (Date) - Required
+    - endedAt (Date) - Required
+    - latitude (Double) - Required
+    - longitude (Double) - Required
+    - categoryId (String)
+    - images (List of MultipartFile)
+    - videos (List of MultipartFile)
+   
+#### 2.2.2 client/action/edit-event (POST) (NEED token)
+   
+- Request body fields: 
+    - eventId (String) - Required
+    - label (String)
+    - description (String)
+    - startedAt (Date)
+    - endedAt (Date)
+    - latitude (Double)
+    - longitude (Double)
+    - categoryId (String)
+    - images (List of MultipartFile)
+    - videos (List of MultipartFile)
+
+#### 2.2.3 client/action/list-event (GET) (NEED token)
+
+- Request parameters:
+   - categoryId (String)
+   - labelSearch (String)
+   - clientId (String)
+   - actual (Boolean)
+   - blocked (Boolean)
+
+#### 2.2.4 client/action/detail-event (GET) (NEED token)
+
+- Request parameters: 
+    - id (String) - Required
+   
+### 2.3 Client managing
 
 
 ###### Apis will be updated as it will changed
