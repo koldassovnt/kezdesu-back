@@ -151,8 +151,8 @@ public interface EventServiceClient {
     @Retry(name = "event-ws")
     @CircuitBreaker(name = "event-ws", fallbackMethod = "listCityFallback")
     CityListResponse listCity(@RequestParam(name = "limit", required = false) Integer limit,
-                                  @RequestParam(name = "offset", required = false) Integer offset,
-                                  @RequestParam(name = "actual", required = false) Boolean actual);
+                              @RequestParam(name = "offset", required = false) Integer offset,
+                              @RequestParam(name = "actual", required = false) Boolean actual);
 
     default CityListResponse listCityFallback(Integer limit,
                                               Integer offset,
@@ -223,8 +223,8 @@ public interface EventServiceClient {
     @Retry(name = "event-ws")
     @CircuitBreaker(name = "event-ws", fallbackMethod = "listCategoryFallback")
     CategoryListResponse listCategory(@RequestParam(name = "limit", required = false) Integer limit,
-                              @RequestParam(name = "offset", required = false) Integer offset,
-                              @RequestParam(name = "actual", required = false) Boolean actual);
+                                      @RequestParam(name = "offset", required = false) Integer offset,
+                                      @RequestParam(name = "actual", required = false) Boolean actual);
 
     default CategoryListResponse listCategoryFallback(Integer limit,
                                               Integer offset,
