@@ -7,19 +7,17 @@ import kz.sueta.eventservice.dto.request.DictionaryFilter;
 import kz.sueta.eventservice.dto.request.EditCityRequest;
 import kz.sueta.eventservice.dto.response.CityDetailResponse;
 import kz.sueta.eventservice.dto.response.CityListResponse;
-import kz.sueta.eventservice.dto.response.EventResponse;
 import kz.sueta.eventservice.entity.CityDictionary;
 import kz.sueta.eventservice.exception.NoDataByIdException;
 import kz.sueta.eventservice.register.CityCrudRegister;
 import kz.sueta.eventservice.repository.CityDictionaryDao;
+import kz.sueta.eventservice.util.DbUtil;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -30,13 +28,13 @@ import java.util.UUID;
 public class CityCrudRegisterImpl implements CityCrudRegister {
 
     private final CityDictionaryDao cityDictionaryDao;
-    private final EntityManager entityManager;
+    private final Environment environment;
 
     @Autowired
     public CityCrudRegisterImpl(CityDictionaryDao cityDictionaryDao,
-                                EntityManager entityManager) {
+                                Environment environment) {
         this.cityDictionaryDao = cityDictionaryDao;
-        this.entityManager = entityManager;
+        this.environment = environment;
     }
 
     @Override
@@ -57,7 +55,7 @@ public class CityCrudRegisterImpl implements CityCrudRegister {
         cityDictionary.longitude = request.longitude;
         cityDictionary.actual = true;
 
-        cityDictionaryDao.save(cityDictionary);
+        cityDictionaryDao.saveAndFlush(cityDictionary);
     }
 
     @Override
@@ -81,12 +79,20 @@ public class CityCrudRegisterImpl implements CityCrudRegister {
             cityDictionary.longitude = request.longitude;
         }
 
-        cityDictionaryDao.save(cityDictionary);
+        cityDictionaryDao.saveAndFlush(cityDictionary);
     }
 
     @Override
     public void deleteCity(DetailRequest request) {
-        cityDictionaryDao.updateCityActual(false, request.id);
+
+        CityDictionary cityDictionary = cityDictionaryDao.findCityDictionaryByCityId(request.id);
+
+        if (cityDictionary == null) {
+            throw new NoDataByIdException("9Gv33oWluT :: city by this id does not exists!");
+        }
+
+        cityDictionary.actual = false;
+        cityDictionaryDao.saveAndFlush(cityDictionary);
     }
 
     @SneakyThrows
@@ -107,23 +113,17 @@ public class CityCrudRegisterImpl implements CityCrudRegister {
 
         String sql =
                 " select c.city_id as cityId, " +
-                " c.city_label     as label, " +
-                " c.actual        as actual, " +
-                " c.latitude      as latitude, " +
-                " c.longitude     as longitude " +
-                " from city_dictionary c " +
-                " where c.actual = ? " +
-                " limit " + filter.limit + " offset " + filter.offset + " " ;
-
-        TypedQuery<CityDetailResponse> query = entityManager.createQuery(sql, CityDetailResponse.class);
-        query.setParameter("actual", filter.actual);
+                        " c.city_label     as label, " +
+                        " c.actual        as actual, " +
+                        " c.latitude      as latitude, " +
+                        " c.longitude     as longitude " +
+                        " from city_dictionary c " +
+                        " where c.actual = ? " +
+                        " limit " + filter.limit + " offset " + filter.offset + " ";
 
         List<CityDetailResponse> responseList = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/event-service",
-                "admin",
-                "admin")) {
+        try (Connection connection = DbUtil.getConnection(environment)) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setBoolean(1, filter.actual);
 
@@ -159,10 +159,7 @@ public class CityCrudRegisterImpl implements CityCrudRegister {
 
         CityDetailResponse detailResponse = new CityDetailResponse();
 
-        try (Connection connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/event-service",
-                "admin",
-                "admin")) {
+        try (Connection connection = DbUtil.getConnection(environment)) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setString(1, request.id);
 

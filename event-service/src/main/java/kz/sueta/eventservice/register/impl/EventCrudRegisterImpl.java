@@ -16,14 +16,13 @@ import kz.sueta.eventservice.repository.EventCreatorDao;
 import kz.sueta.eventservice.repository.EventDao;
 import kz.sueta.eventservice.service_messaging.FileServiceClient;
 import kz.sueta.eventservice.util.CategoryStatic;
+import kz.sueta.eventservice.util.DbUtil;
 import kz.sueta.eventservice.util.ServiceFallBackStatic;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     private final EventContentDao eventContentDao;
     private final FileServiceClient fileServiceClient;
     private final CategoryDictionaryDao categoryDictionaryDao;
-    private final EntityManager entityManager;
+    private final Environment environment;
 
     @Autowired
     public EventCrudRegisterImpl(EventDao eventDao,
@@ -45,13 +44,13 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                                  EventContentDao eventContentDao,
                                  FileServiceClient fileServiceClient,
                                  CategoryDictionaryDao categoryDictionaryDao,
-                                 EntityManager entityManager) {
+                                 Environment environment) {
         this.eventDao = eventDao;
         this.eventCreatorDao = eventCreatorDao;
         this.eventContentDao = eventContentDao;
         this.fileServiceClient = fileServiceClient;
         this.categoryDictionaryDao = categoryDictionaryDao;
-        this.entityManager = entityManager;
+        this.environment = environment;
     }
 
     @Override
@@ -65,15 +64,16 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
         event.endedAt = new Timestamp(saveRequest.endedAt.getTime());
         event.latitude = saveRequest.latitude;
         event.longitude = saveRequest.longitude;
+        event.blocked = false;
 
         setCategoryId(event, saveRequest.categoryId);
 
-        eventDao.save(event);
+        eventDao.saveAndFlush(event);
 
         EventCreator eventCreator = new EventCreator();
         eventCreator.eventId = event.eventId;
         eventCreator.clientId = saveRequest.creatorId;
-        eventCreatorDao.save(eventCreator);
+        eventCreatorDao.saveAndFlush(eventCreator);
 
         saveEventContent(saveRequest.images, event.eventId);
         saveEventContent(saveRequest.videos, event.eventId);
@@ -91,7 +91,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                         && !ServiceFallBackStatic.SERVICE_FALLBACK_ID.equals(fileIdModel.fileId)) {
                     eventContent.fileId = fileIdModel.fileId;
 
-                    eventContentDao.save(eventContent);
+                    eventContentDao.saveAndFlush(eventContent);
                 } else {
                     System.out.println("File saving error");
                     //todo add logging
@@ -134,8 +134,11 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
 
         setCategoryId(event, editEventRequest.categoryId);
 
-        saveEventContent(editEventRequest.images, editEventRequest.eventId);
-        saveEventContent(editEventRequest.videos, editEventRequest.eventId);
+        eventDao.saveAndFlush(event);
+
+        saveEventContent(editEventRequest.images, event.eventId);
+        saveEventContent(editEventRequest.videos, event.eventId);
+
     }
 
     private void setCategoryId(Event event, String categoryId) {
@@ -150,12 +153,26 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
 
     @Override
     public void blockEvent(DetailRequest eventDetailRequest) {
-        eventDao.updateEventBlocked(true, eventDetailRequest.id);
+        Event event = eventDao.findEventByEventId(eventDetailRequest.id);
+
+        if (event == null) {
+            throw new NoDataByIdException("VnwnHg1M2X :: event by this id does not exists!");
+        }
+
+        event.blocked = true;
+        eventDao.saveAndFlush(event);
     }
 
     @Override
     public void deleteEvent(DetailRequest eventDetailRequest) {
-        eventDao.updateEventActual(false, eventDetailRequest.id);
+        Event event = eventDao.findEventByEventId(eventDetailRequest.id);
+
+        if (event == null) {
+            throw new NoDataByIdException("X9O0sPT5BB :: event by this id does not exists!");
+        }
+
+        event.actual = false;
+        eventDao.saveAndFlush(event);
     }
 
     @Override
@@ -209,10 +226,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
 
         List<EventResponse> responses = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/event-service",
-                "admin",
-                "admin")) {
+        try (Connection connection = DbUtil.getConnection(environment)) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setBoolean(1, filter.actual);
                 ps.setBoolean(2, filter.blocked);
@@ -252,10 +266,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                         " where e.actual = true and e.blocked = false " +
                         " and e.event_Id = ? ";
 
-        try (Connection connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/event-service",
-                "admin",
-                "admin")) {
+        try (Connection connection = DbUtil.getConnection(environment)) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setString(1, eventDetailRequest.id);
                 try (ResultSet rs = ps.executeQuery()) {

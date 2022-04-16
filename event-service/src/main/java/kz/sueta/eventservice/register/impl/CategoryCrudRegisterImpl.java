@@ -7,19 +7,17 @@ import kz.sueta.eventservice.dto.request.DictionaryFilter;
 import kz.sueta.eventservice.dto.request.EditCategoryRequest;
 import kz.sueta.eventservice.dto.response.CategoryDetailResponse;
 import kz.sueta.eventservice.dto.response.CategoryListResponse;
-import kz.sueta.eventservice.dto.response.CityDetailResponse;
 import kz.sueta.eventservice.entity.CategoryDictionary;
 import kz.sueta.eventservice.exception.NoDataByIdException;
 import kz.sueta.eventservice.register.CategoryCrudRegister;
 import kz.sueta.eventservice.repository.CategoryDictionaryDao;
+import kz.sueta.eventservice.util.DbUtil;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -30,13 +28,13 @@ import java.util.UUID;
 public class CategoryCrudRegisterImpl implements CategoryCrudRegister {
 
     private final CategoryDictionaryDao categoryDictionaryDao;
-    private final EntityManager entityManager;
+    private final Environment environment;
 
     @Autowired
     public CategoryCrudRegisterImpl(CategoryDictionaryDao categoryDictionaryDao,
-                                    EntityManager entityManager) {
+                                    Environment environment) {
         this.categoryDictionaryDao = categoryDictionaryDao;
-        this.entityManager = entityManager;
+        this.environment = environment;
     }
 
     @Override
@@ -45,7 +43,7 @@ public class CategoryCrudRegisterImpl implements CategoryCrudRegister {
         category.categoryId = UUID.randomUUID().toString();
         category.actual = true;
         category.categoryLabel = request.categoryLabel;
-        categoryDictionaryDao.save(category);
+        categoryDictionaryDao.saveAndFlush(category);
     }
 
     @Override
@@ -61,12 +59,20 @@ public class CategoryCrudRegisterImpl implements CategoryCrudRegister {
             category.categoryLabel = request.categoryLabel;
         }
 
-        categoryDictionaryDao.save(category);
+        categoryDictionaryDao.saveAndFlush(category);
     }
 
     @Override
     public void deleteCategory(DetailRequest request) {
-        categoryDictionaryDao.updateCategoryActual(false, request.id);
+
+        CategoryDictionary categoryDictionary = categoryDictionaryDao.findCategoryDictionaryByCategoryId(request.id);
+
+        if (categoryDictionary == null) {
+            throw new NoDataByIdException("T9uWwoYpnt :: category by this id does not exists!");
+        }
+
+        categoryDictionary.actual = false;
+        categoryDictionaryDao.saveAndFlush(categoryDictionary);
     }
 
     @SneakyThrows
@@ -95,10 +101,7 @@ public class CategoryCrudRegisterImpl implements CategoryCrudRegister {
 
         List<CategoryDetailResponse> responseList = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/event-service",
-                "admin",
-                "admin")) {
+        try (Connection connection = DbUtil.getConnection(environment)) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setBoolean(1, filter.actual);
 
@@ -130,10 +133,7 @@ public class CategoryCrudRegisterImpl implements CategoryCrudRegister {
 
         CategoryDetailResponse detailResponse = new CategoryDetailResponse();
 
-        try (Connection connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/event-service",
-                "admin",
-                "admin")) {
+        try (Connection connection = DbUtil.getConnection(environment)) {
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setString(1, request.id);
 
