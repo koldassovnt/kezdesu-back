@@ -18,6 +18,8 @@ import kz.sueta.eventservice.service_messaging.FileServiceClient;
 import kz.sueta.eventservice.util.CategoryStatic;
 import kz.sueta.eventservice.util.DbUtil;
 import kz.sueta.eventservice.util.ServiceFallBackStatic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -27,9 +29,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class EventCrudRegisterImpl implements EventCrudRegister {
+
+    private static final Logger logger = LoggerFactory.getLogger(EventCrudRegisterImpl.class);
 
     private final EventDao eventDao;
     private final EventCreatorDao eventCreatorDao;
@@ -93,8 +98,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
 
                     eventContentDao.saveAndFlush(eventContent);
                 } else {
-                    System.out.println("File saving error");
-                    //todo add logging
+                    logger.error("y6NOY734ht :: File saving error for eventId = " + eventId);
                 }
             }
         }
@@ -102,6 +106,9 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
 
     @Override
     public void editEvent(EditEventRequest editEventRequest) {
+
+        //todo check if event of this clientId
+
         Event event = eventDao.findEventByEventIdAndActual(editEventRequest.eventId, true);
 
         if (event == null) {
@@ -146,7 +153,8 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                 (categoryId, true) > 1) {
             event.categoryId = categoryId;
         } else {
-            //todo add logging
+            logger.info("Ji11HoFFKb :: category was not found by Id = " + categoryId +
+                    " category will be = " + CategoryStatic.GENERAL_CATEGORY_CODE);
             event.categoryId = CategoryStatic.GENERAL_CATEGORY_CODE;
         }
     }
@@ -278,6 +286,23 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
         }
 
         return eventResponse;
+    }
+
+    @Override
+    public void closeEvent() throws SQLException {
+        logger.info("7BdCCst3X2 :: close Event task start");
+        AtomicInteger updatedCount = new AtomicInteger(0);
+
+        try (Connection connection = DbUtil.getConnection(environment)) {
+            try (PreparedStatement ps = connection.prepareStatement("" +
+                    "update event set actual = false " +
+                    "where ended_at < current_timestamp ")) {
+                int update = ps.executeUpdate();
+                updatedCount.set(update);
+            }
+        }
+
+        logger.info("vHtyJ3g5WN :: close Event task finished with updated count = " + updatedCount.get());
     }
 
     private void setEventResponse(EventResponse eventResponse, ResultSet rs) throws SQLException {

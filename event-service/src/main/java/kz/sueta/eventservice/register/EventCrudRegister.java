@@ -22,4 +22,6 @@ public interface EventCrudRegister {
     EventListResponse eventList(EventListFilter filter) throws SQLException;
 
     EventResponse eventDetail(DetailRequest eventDetailRequest) throws SQLException;
+
+    void closeEvent() throws SQLException;
 }
