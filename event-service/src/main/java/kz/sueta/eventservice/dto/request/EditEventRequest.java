@@ -23,6 +23,7 @@ public class EditEventRequest {
     public Double latitude;
     public Double longitude;
     public String categoryId;
+
     public String clientId;
     public List<MultipartFile> images; // jpeg, png
     public List<MultipartFile> videos; // mp4

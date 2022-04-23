@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,6 +25,5 @@ public class EventResponse {
     public Boolean blocked;
     public String creatorId;
 
-   //todo add creator full info
-   //todo add list of participants
+    public List<String> participantList = new ArrayList<>();
 }

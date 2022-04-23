@@ -8,16 +8,15 @@ import kz.sueta.eventservice.dto.response.FileIdModel;
 import kz.sueta.eventservice.entity.Event;
 import kz.sueta.eventservice.entity.EventContent;
 import kz.sueta.eventservice.entity.EventCreator;
+import kz.sueta.eventservice.entity.id_class.EventCreatorId;
 import kz.sueta.eventservice.exception.NoDataByIdException;
 import kz.sueta.eventservice.register.EventCrudRegister;
-import kz.sueta.eventservice.repository.CategoryDictionaryDao;
-import kz.sueta.eventservice.repository.EventContentDao;
-import kz.sueta.eventservice.repository.EventCreatorDao;
-import kz.sueta.eventservice.repository.EventDao;
+import kz.sueta.eventservice.repository.*;
 import kz.sueta.eventservice.service_messaging.FileServiceClient;
 import kz.sueta.eventservice.util.CategoryStatic;
 import kz.sueta.eventservice.util.DbUtil;
 import kz.sueta.eventservice.util.ServiceFallBackStatic;
+import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -107,7 +107,13 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     @Override
     public void editEvent(EditEventRequest editEventRequest) {
 
-        //todo check if event of this clientId
+        EventCreatorId eventCreatorId = EventCreatorId.of(editEventRequest.eventId, editEventRequest.clientId);
+
+        Optional<EventCreator> eventCreator = eventCreatorDao.findById(eventCreatorId);
+
+        if (eventCreator.isEmpty()) {
+            throw new RuntimeException("v67FY6CGg8 :: there is no event of this client = " + editEventRequest.clientId);
+        }
 
         Event event = eventDao.findEventByEventIdAndActual(editEventRequest.eventId, true);
 
@@ -184,7 +190,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     }
 
     @Override
-    public EventListResponse eventList(EventListFilter filter) throws SQLException { //todo add participants, content
+    public EventListResponse eventList(EventListFilter filter) throws SQLException {
 
         if (filter.blocked == null) {
             filter.blocked = false;
@@ -242,7 +248,10 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         EventResponse eventResponse = new EventResponse();
+
                         setEventResponse(eventResponse, rs);
+                        setEventParticipants(eventResponse, connection);
+
                         responses.add(eventResponse);
                     }
                 }
@@ -252,8 +261,23 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
         return EventListResponse.of(responses);
     }
 
+    @SneakyThrows
+    private void setEventParticipants(EventResponse eventResponse, Connection connection) {
+
+        try (PreparedStatement ps = connection.prepareStatement(
+                "select client_id from event_participant where event_id = ?")) {
+            ps.setString(1, eventResponse.eventId);
+
+            try(ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    eventResponse.participantList.add(rs.getString("client_id"));
+                }
+            }
+        }
+    }
+
     @Override
-    public EventResponse eventDetail(DetailRequest eventDetailRequest) throws SQLException { //todo add participants, content
+    public EventResponse eventDetail(DetailRequest eventDetailRequest) throws SQLException {
 
         EventResponse eventResponse = new EventResponse();
 
@@ -280,6 +304,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         setEventResponse(eventResponse, rs);
+                        setEventParticipants(eventResponse, connection);
                     }
                 }
             }
