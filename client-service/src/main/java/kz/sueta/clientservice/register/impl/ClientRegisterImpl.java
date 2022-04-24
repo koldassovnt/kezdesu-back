@@ -5,12 +5,13 @@ import kz.sueta.clientservice.dto.services.request.ClientListFilter;
 import kz.sueta.clientservice.dto.services.response.ClientListResponse;
 import kz.sueta.clientservice.dto.services.response.ClientResponse;
 import kz.sueta.clientservice.dto.ui.request.PhoneSmsRequest;
-import kz.sueta.clientservice.dto.ui.response.MessageResponse;
 import kz.sueta.clientservice.entity.Client;
 import kz.sueta.clientservice.register.ClientRegister;
 import kz.sueta.clientservice.repository.ClientDao;
+import kz.sueta.clientservice.util.DbUtil;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -24,13 +25,15 @@ import java.util.UUID;
 public class ClientRegisterImpl implements ClientRegister {
 
     private final PasswordEncoder passwordEncoder;
-
     private final ClientDao clientDao;
+    private final Environment environment;
 
     @Autowired
-    public ClientRegisterImpl(PasswordEncoder passwordEncoder, ClientDao clientDao) {
+    public ClientRegisterImpl(PasswordEncoder passwordEncoder, ClientDao clientDao,
+                              Environment environment) {
         this.passwordEncoder = passwordEncoder;
         this.clientDao = clientDao;
+        this.environment = environment;
     }
 
     @Override
@@ -91,7 +94,7 @@ public class ClientRegisterImpl implements ClientRegister {
 
         List<ClientResponse> response = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5444/client-service", "admin", "admin")) {
+        try (Connection connection = DbUtil.getConnection(environment)) {
             try (PreparedStatement ps = connection.prepareStatement(sql)){
                 ps.setBoolean(1, filter.actual);
                 ps.setBoolean(2, filter.blocked);

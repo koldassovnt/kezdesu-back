@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ClientDetailDao extends CrudRepository<ClientDetail, Long> {
+
+    ClientDetail findClientDetailByClient(Long client);
 }

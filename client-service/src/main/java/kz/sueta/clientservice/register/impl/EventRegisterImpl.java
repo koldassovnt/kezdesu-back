@@ -5,27 +5,61 @@ import kz.sueta.clientservice.dto.services.request.DetailRequest;
 import kz.sueta.clientservice.dto.services.request.EditEventRequest;
 import kz.sueta.clientservice.dto.services.request.EventListFilter;
 import kz.sueta.clientservice.dto.services.request.SaveEventRequest;
+import kz.sueta.clientservice.dto.services.response.AdminDetail;
 import kz.sueta.clientservice.dto.services.response.EventListResponse;
 import kz.sueta.clientservice.dto.services.response.EventResponse;
+import kz.sueta.clientservice.dto.ui.response.ClientEventListResponse;
+import kz.sueta.clientservice.dto.ui.response.ClientEventResponse;
+import kz.sueta.clientservice.dto.ui.response.ClientInfoResponse;
 import kz.sueta.clientservice.dto.ui.response.MessageResponse;
+import kz.sueta.clientservice.entity.Client;
+import kz.sueta.clientservice.entity.ClientDetail;
 import kz.sueta.clientservice.exception.ui.RestException;
 import kz.sueta.clientservice.register.EventRegister;
+import kz.sueta.clientservice.repository.ClientDao;
+import kz.sueta.clientservice.repository.ClientDetailDao;
+import kz.sueta.clientservice.service_messaging.AdminServiceClient;
 import kz.sueta.clientservice.service_messaging.EventServiceClient;
+import kz.sueta.clientservice.util.DbUtil;
 import kz.sueta.clientservice.util.ServiceFallbackStatic;
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class EventRegisterImpl implements EventRegister {
 
     private final EventServiceClient eventServiceClient;
+    private final ClientDao clientDao;
+    private final AdminServiceClient adminServiceClient;
+    private final ClientDetailDao clientDetailDao;
+    private final Environment environment;
 
-    public EventRegisterImpl(EventServiceClient eventServiceClient) {
+    @Autowired
+    public EventRegisterImpl(EventServiceClient eventServiceClient,
+                             ClientDao clientDao,
+                             AdminServiceClient adminServiceClient,
+                             ClientDetailDao clientDetailDao,
+                             Environment environment) {
         this.eventServiceClient = eventServiceClient;
+        this.clientDao = clientDao;
+        this.adminServiceClient = adminServiceClient;
+        this.clientDetailDao = clientDetailDao;
+        this.environment = environment;
     }
 
+    @SneakyThrows
     @Override
-    public EventListResponse listEvents(EventListFilter filter) {
-        return eventServiceClient.listEvent(
+    public ClientEventListResponse listEvents(EventListFilter filter) {
+        EventListResponse eventListResponse = eventServiceClient.listEvent(
                 filter.limit,
                 filter.offset,
                 filter.categoryId,
@@ -33,17 +67,26 @@ public class EventRegisterImpl implements EventRegister {
                 filter.clientId,
                 filter.actual,
                 filter.blocked);
+
+        List<ClientEventResponse> eventResponses = new ArrayList<>();
+
+        for (EventResponse er : eventListResponse.events) {
+            eventResponses.add(mapClientEventResponse(er));
+        }
+
+        return ClientEventListResponse.of(eventResponses);
     }
 
+    @SneakyThrows
     @Override
-    public EventResponse detailEvent(DetailRequest request) {
+    public ClientEventResponse detailEvent(DetailRequest request) {
         EventResponse eventResponse = eventServiceClient.detailEvent(request.id);
 
         if (eventResponse == null) {
             throw new RuntimeException("I66IvYen3h :: event service calling returned error for DETAIL");
         }
 
-        return eventResponse;
+        return mapClientEventResponse(eventResponse);
     }
 
     @Override
@@ -78,5 +121,99 @@ public class EventRegisterImpl implements EventRegister {
         return response;
     }
 
+    @Override
+    public ClientInfoResponse joinEvent(DetailRequest detailRequest, String clientId) {
+        return null; //todo
+    }
 
+    @Override
+    public MessageResponse qrEvent(DetailRequest detailRequest, String clientId) {
+        return null; //todo
+    }
+
+    @Override
+    public EventListResponse clientEvents(String clientId) {
+        return null; //todo
+    }
+
+    @Override
+    public EventListResponse clientParticipatedEvents(String clientId) {
+        return null;
+    }
+
+    private ClientEventResponse mapClientEventResponse(EventResponse er) throws SQLException {
+
+        if (er == null) {
+            return new ClientEventResponse();
+        }
+
+        ClientEventResponse cer = new ClientEventResponse();
+
+        cer.eventId = er.eventId;
+        cer.label = er.label;
+        cer.description = er.description;
+        cer.startedAt = er.startedAt;
+        cer.endedAt = er.endedAt;
+        cer.latitude = er.latitude;
+        cer.longitude = er.longitude;
+        cer.categoryId = er.categoryId;
+        cer.actual = er.actual;
+        cer.blocked = er.blocked;
+
+        cer.creatorInfo = new ClientInfoResponse();
+
+        Client client = clientDao.findClientByClientIdAndActual(er.creatorId, true);
+
+        if (client != null) {
+
+            ClientDetail clientDetail = clientDetailDao.findClientDetailByClient(client.client);
+
+            if (clientDetail == null) {
+                clientDetail = new ClientDetail();
+            }
+
+            String displayName = clientDetail.displayName;
+
+            cer.creatorInfo.clientId = client.clientId;
+            cer.creatorInfo.phone = client.phone;
+            cer.creatorInfo.displayName = displayName;
+            cer.creatorInfo.imgId = clientDetail.imgId;
+        } else {
+            AdminDetail adminDetail = adminServiceClient.getAdminDetail(er.creatorId);
+            cer.creatorInfo.clientId = adminDetail.adminId;
+            cer.creatorInfo.phone = adminDetail.phone;
+            cer.creatorInfo.displayName = adminDetail.displayName;
+        }
+
+        try (Connection connection = DbUtil.getConnection(environment)) {
+
+            for (String id : er.participantList) {
+
+                try (PreparedStatement ps = connection.prepareStatement(
+                        "select x.client_id        as clientId, " +
+                                "       x.phone        as phone, " +
+                                "       x1.displayname as displayName, " +
+                                "       x1.img_id      as imgId " +
+                                "from client x " +
+                                "left join client_detail x1.client = x.client " +
+                                "where client_id = ? and actual = true")) {
+
+                    ps.setString(1, id);
+
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            ClientInfoResponse infoResponse = new ClientInfoResponse();
+                            infoResponse.clientId = rs.getString("clientId");
+                            infoResponse.phone = rs.getString("phone");
+                            infoResponse.displayName = rs.getString("displayName");
+                            infoResponse.imgId = rs.getString("imgId");
+                            cer.participantList.add(infoResponse);
+                        }
+                    }
+                }
+            }
+        }
+
+        return cer;
+    }
 }

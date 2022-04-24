@@ -1,4 +1,4 @@
-package kz.sueta.clientservice.dto.services.response;
+package kz.sueta.adminservice.dto.ui.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class EventResponse {
+public class AdminEventResponse {
     public String eventId;
     public String label;
     public String description;
@@ -20,10 +20,9 @@ public class EventResponse {
     public Double latitude;
     public Double longitude;
     public String categoryId;
-//    public Boolean business; // еще нет такого
     public Boolean actual;
     public Boolean blocked;
-    public String creatorId;
 
-    public List<String> participantList = new ArrayList<>();
+    public ClientInfoResponse creatorInfo;
+    public List<ClientInfoResponse> participantList = new ArrayList<>();
 }
