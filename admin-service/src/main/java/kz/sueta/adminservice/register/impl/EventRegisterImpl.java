@@ -7,6 +7,8 @@ import kz.sueta.adminservice.dto.services.request.EventListFilter;
 import kz.sueta.adminservice.dto.services.request.SaveEventRequest;
 import kz.sueta.adminservice.dto.services.response.EventListResponse;
 import kz.sueta.adminservice.dto.services.response.EventResponse;
+import kz.sueta.adminservice.dto.ui.response.AdminEventListResponse;
+import kz.sueta.adminservice.dto.ui.response.AdminEventResponse;
 import kz.sueta.adminservice.dto.ui.response.MessageResponse;
 import kz.sueta.adminservice.entity.Account;
 import kz.sueta.adminservice.exception.ui.RestException;
@@ -88,19 +90,21 @@ public class EventRegisterImpl implements EventRegister {
     }
 
     @Override
-    public EventListResponse listEvent(EventListFilter filter) {
-        return eventServiceClient.listEvent(filter.limit, filter.offset, filter.categoryId,
+    public AdminEventListResponse listEvent(EventListFilter filter) {
+        EventListResponse eventListResponse = eventServiceClient.listEvent(filter.limit, filter.offset, filter.categoryId,
                 filter.labelSearch, filter.clientId, filter.actual, filter.blocked);
+
+        return null; //todo
     }
 
     @Override
-    public EventResponse detailEvent(DetailRequest eventDetailRequest) {
+    public AdminEventResponse detailEvent(DetailRequest eventDetailRequest) {
         EventResponse eventResponse = eventServiceClient.detailEvent(eventDetailRequest.id);
 
         if (eventResponse == null) {
             throw new RuntimeException("8m2VlOC3gT :: event service calling returned error for DETAIL");
         }
 
-        return eventResponse;
+        return null; //todo
     }
 }

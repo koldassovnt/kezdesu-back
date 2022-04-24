@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface AccountDao extends CrudRepository<Account, Long> {
 
     Account findAccountByEmailAndActual(String email, boolean b);
+
+    Account findAccountByAccountIdAndActual(String id, boolean b);
 }

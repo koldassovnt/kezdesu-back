@@ -3,6 +3,7 @@ package kz.sueta.adminservice.controller;
 import kz.sueta.adminservice.dto.ui.request.LoginRequest;
 import kz.sueta.adminservice.dto.ui.request.RegisterRequest;
 import kz.sueta.adminservice.dto.ui.request.ResetPasswordRequest;
+import kz.sueta.adminservice.dto.ui.response.AdminDetail;
 import kz.sueta.adminservice.dto.ui.response.JwtResponse;
 import kz.sueta.adminservice.dto.ui.response.MessageResponse;
 import kz.sueta.adminservice.register.AccountRegister;
@@ -51,5 +52,11 @@ public class AccountController {
         accountRegister.resetPassword(passwordRequest, authentication.getName());
         return ResponseEntity.status(HttpStatus.OK).body(
                 MessageResponse.of("Account password reset was done successfully!"));
+    }
+
+    @GetMapping("/action/get-account")
+    public ResponseEntity<?> getAccount(@RequestParam(value = "id") String id) {
+        AdminDetail detail = accountRegister.getAdminDetail(id);
+        return ResponseEntity.status(200).body(detail);
     }
 }

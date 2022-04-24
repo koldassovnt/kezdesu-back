@@ -4,8 +4,8 @@ import kz.sueta.adminservice.dto.services.request.DetailRequest;
 import kz.sueta.adminservice.dto.services.request.EditEventRequest;
 import kz.sueta.adminservice.dto.services.request.EventListFilter;
 import kz.sueta.adminservice.dto.services.request.SaveEventRequest;
-import kz.sueta.adminservice.dto.services.response.EventListResponse;
-import kz.sueta.adminservice.dto.services.response.EventResponse;
+import kz.sueta.adminservice.dto.ui.response.AdminEventListResponse;
+import kz.sueta.adminservice.dto.ui.response.AdminEventResponse;
 import kz.sueta.adminservice.dto.ui.response.MessageResponse;
 import kz.sueta.adminservice.register.EventRegister;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +50,7 @@ public class EventController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping(value = "/action/list-event")
+    @GetMapping(value = "/action/list-event")//todo add to readme
     public ResponseEntity<?> listEvent(@RequestParam(name = "limit", required = false) Integer limit,
                                        @RequestParam(name = "offset", required = false) Integer offset,
                                        @RequestParam(name = "categoryId", required = false) String categoryId,
@@ -61,13 +61,13 @@ public class EventController {
     ) {
         EventListFilter filter =
                 new EventListFilter(limit, offset, categoryId, labelSearch, clientId, actual, blocked);
-        EventListResponse response = eventRegister.listEvent(filter);
+        AdminEventListResponse response = eventRegister.listEvent(filter);
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping(value = "/action/detail-event")
+    @GetMapping(value = "/action/detail-event")//todo add to readme
     public ResponseEntity<?> detailEvent(@RequestParam(name = "id") String id) {
-        EventResponse response = eventRegister.detailEvent(DetailRequest.of(id));
+        AdminEventResponse response = eventRegister.detailEvent(DetailRequest.of(id));
         return ResponseEntity.status(200).body(response);
     }
 }

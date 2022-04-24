@@ -6,6 +6,7 @@ import kz.sueta.adminservice.bean_security.services.CustomAccountDetails;
 import kz.sueta.adminservice.dto.ui.request.LoginRequest;
 import kz.sueta.adminservice.dto.ui.request.RegisterRequest;
 import kz.sueta.adminservice.dto.ui.request.ResetPasswordRequest;
+import kz.sueta.adminservice.dto.ui.response.AdminDetail;
 import kz.sueta.adminservice.dto.ui.response.JwtResponse;
 import kz.sueta.adminservice.entity.Account;
 import kz.sueta.adminservice.exception.ui.RegisterException;
@@ -100,6 +101,18 @@ public class AccountRegisterImpl implements AccountRegister {
 
         account.password = passwordEncoder.encode(passwordRequest.newPassword);
         accountDao.save(account);
+    }
+
+    @Override
+    public AdminDetail getAdminDetail(String adminId) {
+
+        Account account = accountDao.findAccountByAccountIdAndActual(adminId, true);
+
+        if (account == null) {
+            throw new RuntimeException("utOpTh4sGy :: no account by Id = " + adminId);
+        }
+
+        return AdminDetail.of(account.accountId, account.displayName, account.phone);
     }
 
 }

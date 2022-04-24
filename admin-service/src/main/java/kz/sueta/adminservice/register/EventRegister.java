@@ -4,8 +4,8 @@ import kz.sueta.adminservice.dto.services.request.DetailRequest;
 import kz.sueta.adminservice.dto.services.request.EditEventRequest;
 import kz.sueta.adminservice.dto.services.request.EventListFilter;
 import kz.sueta.adminservice.dto.services.request.SaveEventRequest;
-import kz.sueta.adminservice.dto.services.response.EventListResponse;
-import kz.sueta.adminservice.dto.services.response.EventResponse;
+import kz.sueta.adminservice.dto.ui.response.AdminEventListResponse;
+import kz.sueta.adminservice.dto.ui.response.AdminEventResponse;
 import kz.sueta.adminservice.dto.ui.response.MessageResponse;
 
 public interface EventRegister {
@@ -18,7 +18,7 @@ public interface EventRegister {
 
     MessageResponse deleteEvent(DetailRequest eventDetailRequest);
 
-    EventListResponse listEvent(EventListFilter filter);
+    AdminEventListResponse listEvent(EventListFilter filter);
 
-    EventResponse detailEvent(DetailRequest eventDetailRequest);
+    AdminEventResponse detailEvent(DetailRequest eventDetailRequest);
 }

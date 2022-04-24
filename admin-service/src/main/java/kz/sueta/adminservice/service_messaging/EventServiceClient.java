@@ -5,6 +5,8 @@ import io.github.resilience4j.retry.annotation.Retry;
 import kz.sueta.adminservice.dto.services.request.*;
 import kz.sueta.adminservice.dto.services.response.*;
 import kz.sueta.adminservice.dto.ui.response.MessageResponse;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,8 @@ import static kz.sueta.adminservice.util.ServiceFallbackStatic.SERVICE_CALL_ERRO
 @FeignClient(name = "event-ws")
 public interface EventServiceClient {
 
+    Logger log = LoggerFactory.getLogger(EventServiceClient.class);
+
     /**
      * Event region
      */
@@ -26,9 +30,9 @@ public interface EventServiceClient {
     MessageResponse saveEvent(@RequestBody SaveEventRequest saveEventRequest);
 
     default MessageResponse saveEventFallback(SaveEventRequest saveEventRequest, Throwable throwable) {
-        System.out.println("RequestBody = " + saveEventRequest);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestBody = " + saveEventRequest);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
     }
 
@@ -38,9 +42,9 @@ public interface EventServiceClient {
     MessageResponse editEvent(@RequestBody EditEventRequest editEventRequest);
 
     default MessageResponse editEventFallback(EditEventRequest editEventRequest, Throwable throwable) {
-        System.out.println("RequestBody = " + editEventRequest);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestBody = " + editEventRequest);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
     }
 
@@ -50,9 +54,9 @@ public interface EventServiceClient {
     MessageResponse blockEvent(@RequestBody DetailRequest detailRequest);
 
     default MessageResponse blockEventFallback(DetailRequest detailRequest, Throwable throwable) {
-        System.out.println("RequestBody = " + detailRequest);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestBody = " + detailRequest);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
     }
 
@@ -62,9 +66,9 @@ public interface EventServiceClient {
     MessageResponse deleteEvent(@RequestBody DetailRequest eventDetailRequest);
 
     default MessageResponse deleteEventFallback(DetailRequest detailRequest, Throwable throwable) {
-        System.out.println("RequestBody = " + detailRequest);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestBody = " + detailRequest);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
     }
 
@@ -89,9 +93,9 @@ public interface EventServiceClient {
                                                 Throwable throwable) {
         EventListFilter filter =
                 new EventListFilter(limit, offset, categoryId, labelSearch, clientId, actual, blocked);
-        System.out.println("RequestParam = " + filter);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestParam = " + filter);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return new EventListResponse();
     }
 
@@ -101,9 +105,9 @@ public interface EventServiceClient {
     EventResponse detailEvent(@RequestParam String id);
 
     default EventResponse detailEventFallback(String id, Throwable throwable) {
-        System.out.println("RequestParam = " + id);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestParam = " + id);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return null;
     }
 
@@ -117,9 +121,9 @@ public interface EventServiceClient {
     MessageResponse saveCity(@RequestBody CreateCityRequest request);
 
     default MessageResponse saveCityFallback(CreateCityRequest request, Throwable throwable) {
-        System.out.println("RequestBody = " + request);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestBody = " + request);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
     }
 
@@ -129,9 +133,9 @@ public interface EventServiceClient {
     MessageResponse editCity(@RequestBody EditCityRequest request);
 
     default MessageResponse editCityFallback(EditCityRequest request, Throwable throwable) {
-        System.out.println("RequestBody = " + request);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestBody = " + request);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
     }
 
@@ -141,9 +145,9 @@ public interface EventServiceClient {
     MessageResponse deleteCity(@RequestBody DetailRequest request);
 
     default MessageResponse deleteCityFallback(DetailRequest request, Throwable throwable) {
-        System.out.println("RequestBody = " + request);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestBody = " + request);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
     }
 
@@ -161,9 +165,9 @@ public interface EventServiceClient {
 
         DictionaryFilter request = new DictionaryFilter(limit, offset, actual);
 
-        System.out.println("RequestParam = " + request);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestParam = " + request);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return new CityListResponse();
     }
 
@@ -173,9 +177,9 @@ public interface EventServiceClient {
     CityDetailResponse detailCity(@RequestParam String id);
 
     default CityDetailResponse detailCityFallback(String id, Throwable throwable) {
-        System.out.println("RequestParam = " + id);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestParam = " + id);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return null;
     }
 
@@ -189,9 +193,9 @@ public interface EventServiceClient {
     MessageResponse saveCategory(@RequestBody CreateCategoryRequest request);
 
     default MessageResponse saveCategoryFallback(CreateCategoryRequest request, Throwable throwable) {
-        System.out.println("RequestBody = " + request);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestBody = " + request);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
     }
 
@@ -201,9 +205,9 @@ public interface EventServiceClient {
     MessageResponse editCategory(@RequestBody EditCategoryRequest request);
 
     default MessageResponse editCategoryFallback(EditCategoryRequest request, Throwable throwable) {
-        System.out.println("RequestBody = " + request);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestBody = " + request);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
     }
 
@@ -213,9 +217,9 @@ public interface EventServiceClient {
     MessageResponse deleteCategory(@RequestBody DetailRequest request);
 
     default MessageResponse deleteCategoryFallback(DetailRequest request, Throwable throwable) {
-        System.out.println("RequestBody = " + request);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestBody = " + request);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
     }
 
@@ -233,9 +237,9 @@ public interface EventServiceClient {
 
         DictionaryFilter request = new DictionaryFilter(limit, offset, actual);
 
-        System.out.println("RequestParam = " + request);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestParam = " + request);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return new CategoryListResponse();
     }
 
@@ -245,9 +249,9 @@ public interface EventServiceClient {
     CategoryDetailResponse detailCategory(@RequestParam String id);
 
     default CategoryDetailResponse detailCategoryFallback(String id, Throwable throwable) {
-        System.out.println("RequestParam = " + id);
-        System.out.println("Exception class=" + throwable.getClass().getName());
-        System.out.println("Exception took place: " + throwable.getMessage());
+        log.info("RequestParam = " + id);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
         return null;
     }
 }
