@@ -138,7 +138,7 @@ public class EventRegisterImpl implements EventRegister {
 
     @Override
     public EventListResponse clientParticipatedEvents(String clientId) {
-        return null;
+        return null; //todo
     }
 
     private ClientEventResponse mapClientEventResponse(EventResponse er) throws SQLException {

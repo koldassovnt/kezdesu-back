@@ -1,13 +1,28 @@
 package kz.sueta.clientservice.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import kz.sueta.clientservice.dto.services.response.ClientResponse;
+import kz.sueta.clientservice.register.ClientRegister;
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/client")
 @CrossOrigin(origins = "*")
 public class ClientController { //todo edit client info
 
+    private final ClientRegister clientRegister;
 
+    @Autowired
+    public ClientController(ClientRegister clientRegister) {
+        this.clientRegister = clientRegister;
+    }
+
+    @SneakyThrows
+    @GetMapping("/action/client-detail") //todo add readme
+    public ResponseEntity<?> getClient(@RequestParam(value = "id") String id) {
+        ClientResponse response = clientRegister.getClientById(id);
+        return ResponseEntity.status(200).body(response);
+    }
 }

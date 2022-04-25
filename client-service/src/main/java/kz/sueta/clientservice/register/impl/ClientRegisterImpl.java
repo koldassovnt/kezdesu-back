@@ -2,6 +2,7 @@ package kz.sueta.clientservice.register.impl;
 
 import kz.sueta.clientservice.dto.services.request.ClientBlockRequest;
 import kz.sueta.clientservice.dto.services.request.ClientListFilter;
+import kz.sueta.clientservice.dto.services.request.IdListRequest;
 import kz.sueta.clientservice.dto.services.response.ClientListResponse;
 import kz.sueta.clientservice.dto.services.response.ClientResponse;
 import kz.sueta.clientservice.dto.ui.request.PhoneSmsRequest;
@@ -85,7 +86,8 @@ public class ClientRegisterImpl implements ClientRegister {
                         "       cd.displayname   as displayName, " +
                         "       cd.name          as name, " +
                         "       cd.surname       as surname, " +
-                        "       cd.birthDate     as birthDate " +
+                        "       cd.birthDate     as birthDate," +
+                        "       cd.img_id        as imgId " +
                         "from client c " +
                         "         left join client_detail cd on c.client = cd.client " +
                         "where c.actual = ? " +
@@ -95,24 +97,13 @@ public class ClientRegisterImpl implements ClientRegister {
         List<ClientResponse> response = new ArrayList<>();
 
         try (Connection connection = DbUtil.getConnection(environment)) {
-            try (PreparedStatement ps = connection.prepareStatement(sql)){
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setBoolean(1, filter.actual);
                 ps.setBoolean(2, filter.blocked);
 
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
-                        ClientResponse clientResponse = new ClientResponse();
-                        clientResponse.clientId = rs.getString("clientId");
-                        clientResponse.phone = rs.getString("phone");
-                        clientResponse.email = rs.getString("email");
-                        clientResponse.actual = rs.getBoolean("actual");
-                        clientResponse.blocked = rs.getBoolean("blocked");
-                        clientResponse.blockedReason = rs.getString("blockedReason");
-                        clientResponse.displayName = rs.getString("displayName");
-                        clientResponse.name = rs.getString("name");
-                        clientResponse.surname = rs.getString("surname");
-                        clientResponse.birthDate = rs.getTimestamp("birthDate");
-                        response.add(clientResponse);
+                        response.add(getClientResponse(rs));
                     }
                 }
             }
@@ -124,6 +115,96 @@ public class ClientRegisterImpl implements ClientRegister {
     @Override
     public void blockClient(ClientBlockRequest request) {
         clientDao.updateClientBlocked(true, request.blockReason, request.id);
+    }
+
+    @Override
+    public ClientResponse getClientById(String id) throws SQLException {
+
+        ClientResponse clientResponse = null;
+
+        String sql =
+                "select c.client_id      as clientId, " +
+                        "       c.phone          as phone, " +
+                        "       c.email          as email, " +
+                        "       c.actual         as actual, " +
+                        "       c.blocked        as blocked, " +
+                        "       c.blocked_reason as blockedReason, " +
+                        "       cd.displayname   as displayName, " +
+                        "       cd.name          as name, " +
+                        "       cd.surname       as surname, " +
+                        "       cd.birthDate     as birthDate," +
+                        "       cd.img_id        as imgId " +
+                        "from client c " +
+                        "         left join client_detail cd on c.client = cd.client " +
+                        "where c.actual = true and c.client_id = ? ";
+
+        try (Connection connection = DbUtil.getConnection(environment)) {
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        clientResponse = getClientResponse(rs);
+                    }
+                }
+            }
+        }
+
+        return clientResponse;
+    }
+
+    @Override
+    public ClientListResponse listClientById(IdListRequest idListRequest) throws SQLException {
+
+        List<ClientResponse> response = new ArrayList<>();
+
+        String sql =
+                "select c.client_id      as clientId, " +
+                        "       c.phone          as phone, " +
+                        "       c.email          as email, " +
+                        "       c.actual         as actual, " +
+                        "       c.blocked        as blocked, " +
+                        "       c.blocked_reason as blockedReason, " +
+                        "       cd.displayname   as displayName, " +
+                        "       cd.name          as name, " +
+                        "       cd.surname       as surname, " +
+                        "       cd.birthDate     as birthDate," +
+                        "       cd.img_id        as imgId " +
+                        "from client c " +
+                        "         left join client_detail cd on c.client = cd.client " +
+                        "where c.actual = true and c.client_id = ? ";
+
+        try (Connection connection = DbUtil.getConnection(environment)) {
+
+            for (String id : idListRequest.idList) {
+
+                try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                    ps.setString(1, id);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            response.add(getClientResponse(rs));
+                        }
+                    }
+                }
+            }
+        }
+
+        return ClientListResponse.of(response);
+    }
+
+    private ClientResponse getClientResponse(ResultSet rs) throws SQLException {
+        ClientResponse clientResponse = new ClientResponse();
+        clientResponse.clientId = rs.getString("clientId");
+        clientResponse.phone = rs.getString("phone");
+        clientResponse.email = rs.getString("email");
+        clientResponse.actual = rs.getBoolean("actual");
+        clientResponse.blocked = rs.getBoolean("blocked");
+        clientResponse.blockedReason = rs.getString("blockedReason");
+        clientResponse.displayName = rs.getString("displayName");
+        clientResponse.name = rs.getString("name");
+        clientResponse.surname = rs.getString("surname");
+        clientResponse.birthDate = rs.getTimestamp("birthDate");
+        clientResponse.imgId = rs.getString("imgId");
+        return clientResponse;
     }
 
 }

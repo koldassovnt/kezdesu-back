@@ -2,9 +2,11 @@ package kz.sueta.clientservice.controller;
 
 import kz.sueta.clientservice.dto.services.request.ClientBlockRequest;
 import kz.sueta.clientservice.dto.services.request.ClientListFilter;
+import kz.sueta.clientservice.dto.services.request.IdListRequest;
 import kz.sueta.clientservice.dto.services.response.ClientListResponse;
 import kz.sueta.clientservice.dto.ui.response.MessageResponse;
 import kz.sueta.clientservice.register.ClientRegister;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,4 +42,10 @@ public class ClientForAdminController {
         return ResponseEntity.status(200).body(MessageResponse.of("Client successfully blocked!"));
     }
 
+    @SneakyThrows
+    @PostMapping("/forAdmin/listClientById")
+    public ResponseEntity<?> listClientById(@Valid @RequestBody IdListRequest idListRequest) {
+        ClientListResponse response = clientRegister.listClientById(idListRequest);
+        return ResponseEntity.status(200).body(response);
+    }
 }
