@@ -22,4 +22,5 @@ public class EventParticipant {
     @Id
     @Column(name = "client_id")
     public String clientId;
+    public Boolean approved;
 }
