@@ -4,7 +4,9 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import kz.sueta.adminservice.dto.services.request.ClientBlockRequest;
 import kz.sueta.adminservice.dto.services.request.ClientListFilter;
+import kz.sueta.adminservice.dto.services.request.IdListRequest;
 import kz.sueta.adminservice.dto.services.response.ClientListResponse;
+import kz.sueta.adminservice.dto.services.response.ClientResponse;
 import kz.sueta.adminservice.dto.ui.response.MessageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,5 +54,32 @@ public interface ClientServiceClient {
         log.info("Exception class=" + throwable.getClass().getName());
         log.info("Exception took place: " + throwable.getMessage());
         return new ClientListResponse();
+    }
+
+    @PostMapping("/client/forAdmin/listClientById")
+    @Retry(name = "client-ws")
+    @CircuitBreaker(name = "client-ws", fallbackMethod = "listClientByIdFallback")
+    ClientListResponse listClientById(@RequestBody IdListRequest idListRequest);
+
+    default ClientListResponse listClientByIdFallback(IdListRequest idListRequest,
+                                                  Throwable throwable) {
+
+        log.info("RequestBody = " + idListRequest);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
+        return new ClientListResponse();
+    }
+
+    @GetMapping("/client/action/client-detail")
+    @Retry(name = "client-ws")
+    @CircuitBreaker(name = "client-ws", fallbackMethod = "detailClientFallback")
+    ClientResponse detailClient(@RequestParam(name = "id") String id);
+
+    default ClientResponse detailClientFallback(String id,
+                                                  Throwable throwable) {
+        log.info("RequestParam = " + id);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
+        return null;
     }
 }

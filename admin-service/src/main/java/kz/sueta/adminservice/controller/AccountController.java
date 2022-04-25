@@ -54,9 +54,11 @@ public class AccountController {
                 MessageResponse.of("Account password reset was done successfully!"));
     }
 
-    @GetMapping("/action/get-account")
+    @GetMapping("/action/get-account")//todo add readme
     public ResponseEntity<?> getAccount(@RequestParam(value = "id") String id) {
         AdminDetail detail = accountRegister.getAdminDetail(id);
         return ResponseEntity.status(200).body(detail);
     }
+
+    //todo add account edit
 }

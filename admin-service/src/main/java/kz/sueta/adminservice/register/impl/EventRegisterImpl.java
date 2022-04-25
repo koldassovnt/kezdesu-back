@@ -1,35 +1,42 @@
 package kz.sueta.adminservice.register.impl;
 
 import com.netflix.servo.util.Strings;
-import kz.sueta.adminservice.dto.services.request.DetailRequest;
-import kz.sueta.adminservice.dto.services.request.EditEventRequest;
-import kz.sueta.adminservice.dto.services.request.EventListFilter;
-import kz.sueta.adminservice.dto.services.request.SaveEventRequest;
+import kz.sueta.adminservice.dto.services.request.*;
+import kz.sueta.adminservice.dto.services.response.ClientListResponse;
+import kz.sueta.adminservice.dto.services.response.ClientResponse;
 import kz.sueta.adminservice.dto.services.response.EventListResponse;
 import kz.sueta.adminservice.dto.services.response.EventResponse;
 import kz.sueta.adminservice.dto.ui.response.AdminEventListResponse;
 import kz.sueta.adminservice.dto.ui.response.AdminEventResponse;
+import kz.sueta.adminservice.dto.ui.response.ClientInfoResponse;
 import kz.sueta.adminservice.dto.ui.response.MessageResponse;
 import kz.sueta.adminservice.entity.Account;
 import kz.sueta.adminservice.exception.ui.RestException;
 import kz.sueta.adminservice.register.EventRegister;
 import kz.sueta.adminservice.repository.AccountDao;
+import kz.sueta.adminservice.service_messaging.ClientServiceClient;
 import kz.sueta.adminservice.service_messaging.EventServiceClient;
 import kz.sueta.adminservice.util.ServiceFallbackStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class EventRegisterImpl implements EventRegister {
 
     private final EventServiceClient eventServiceClient;
     private final AccountDao accountDao;
+    private final ClientServiceClient clientServiceClient;
 
     @Autowired
     public EventRegisterImpl(EventServiceClient eventServiceClient,
-                             AccountDao accountDao) {
+                             AccountDao accountDao,
+                             ClientServiceClient clientServiceClient) {
         this.eventServiceClient = eventServiceClient;
         this.accountDao = accountDao;
+        this.clientServiceClient = clientServiceClient;
     }
 
     @Override
@@ -94,7 +101,13 @@ public class EventRegisterImpl implements EventRegister {
         EventListResponse eventListResponse = eventServiceClient.listEvent(filter.limit, filter.offset, filter.categoryId,
                 filter.labelSearch, filter.clientId, filter.actual, filter.blocked);
 
-        return null; //todo
+        List<AdminEventResponse> adminEventResponseList = new ArrayList<>();
+
+        for (EventResponse er : eventListResponse.events) {
+            adminEventResponseList.add(mapAdminEventResponse(er));
+        }
+
+        return AdminEventListResponse.of(adminEventResponseList);
     }
 
     @Override
@@ -105,6 +118,58 @@ public class EventRegisterImpl implements EventRegister {
             throw new RuntimeException("8m2VlOC3gT :: event service calling returned error for DETAIL");
         }
 
-        return null; //todo
+        return mapAdminEventResponse(eventResponse);
+    }
+
+    private AdminEventResponse mapAdminEventResponse(EventResponse er) {
+        if (er == null) {
+            return new AdminEventResponse();
+        }
+
+        AdminEventResponse aer = new AdminEventResponse();
+        aer.eventId = er.eventId;
+        aer.label = er.label;
+        aer.description = er.description;
+        aer.startedAt = er.startedAt;
+        aer.endedAt = er.endedAt;
+        aer.latitude = er.latitude;
+        aer.longitude = er.longitude;
+        aer.categoryId = er.categoryId;
+        aer.actual = er.actual;
+        aer.blocked = er.blocked;
+
+        aer.creatorInfo = new ClientInfoResponse();
+
+        Account account = accountDao.findAccountByAccountIdAndActual(er.creatorId, true);
+
+        if (account != null) {
+            aer.creatorInfo.clientId = er.creatorId;
+            aer.creatorInfo.phone = account.phone;
+            aer.creatorInfo.displayName = account.displayName;
+        } else {
+            ClientResponse clientResponse = clientServiceClient.detailClient(er.creatorId);
+
+            if (clientResponse == null) {
+                clientResponse = new ClientResponse();
+            }
+            aer.creatorInfo.clientId = clientResponse.clientId;
+            aer.creatorInfo.phone = clientResponse.phone;
+            aer.creatorInfo.displayName = clientResponse.displayName;
+            aer.creatorInfo.imgId = clientResponse.imgId;
+        }
+
+        ClientListResponse clientListResponse = clientServiceClient
+                .listClientById(IdListRequest.of(er.participantList));
+
+        for (ClientResponse cr : clientListResponse.clients) {
+            ClientInfoResponse infoResponse = new ClientInfoResponse();
+            infoResponse.clientId = cr.clientId;
+            infoResponse.phone = cr.phone;
+            infoResponse.displayName = cr.displayName;
+            infoResponse.imgId = cr.imgId;
+            aer.participantList.add(infoResponse);
+        }
+
+        return aer;
     }
 }

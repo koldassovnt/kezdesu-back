@@ -20,4 +20,5 @@ public class ClientResponse {
     public String name;
     public String surname;
     public Date birthDate;
+    public String imgId;
 }
