@@ -1,11 +1,9 @@
 package kz.sueta.clientservice.register.impl;
 
 import com.google.common.base.Strings;
-import kz.sueta.clientservice.dto.services.request.DetailRequest;
-import kz.sueta.clientservice.dto.services.request.EditEventRequest;
-import kz.sueta.clientservice.dto.services.request.EventListFilter;
-import kz.sueta.clientservice.dto.services.request.SaveEventRequest;
+import kz.sueta.clientservice.dto.services.request.*;
 import kz.sueta.clientservice.dto.services.response.AdminDetail;
+import kz.sueta.clientservice.dto.services.response.CategoryListResponse;
 import kz.sueta.clientservice.dto.services.response.EventListResponse;
 import kz.sueta.clientservice.dto.services.response.EventResponse;
 import kz.sueta.clientservice.dto.ui.response.ClientEventListResponse;
@@ -123,22 +121,87 @@ public class EventRegisterImpl implements EventRegister {
 
     @Override
     public ClientInfoResponse joinEvent(DetailRequest detailRequest, String clientId) {
-        return null; //todo
+        if (Strings.isNullOrEmpty(clientId)) {
+            throw new RestException("vaTi0Hgd47 :: Authorization is incorrect, please login again!");
+        }
+
+        Client client = clientDao.findClientByClientIdAndActual(clientId, true);
+
+        if (client == null) {
+            throw new RuntimeException("Ad1jV19pXf :: client by clientId=" + clientId + " does not exists!");
+        }
+
+        MessageResponse response = eventServiceClient.joinEvent(ClientEventRequest.of(clientId, detailRequest.id));
+
+        if (ServiceFallbackStatic.CREATOR_ACTING_IN_HIS_EVENT.equals(response.message)) {
+            throw new RestException("wBZC6mF2Q0 :: creator can not join to his event!");
+        }
+
+        if (ServiceFallbackStatic.SERVICE_CALL_ERROR_MESSAGE.equals(response.message)) {
+            throw new RuntimeException("e29YH4Xcs7 :: event service calling returned error for JOIN");
+        }
+
+        ClientDetail cd = clientDetailDao.findClientDetailByClient(client.client);
+
+        if (cd == null) {
+            cd = new ClientDetail();
+        }
+
+        ClientInfoResponse clientInfoResponse = new ClientInfoResponse();
+        clientInfoResponse.clientId = clientId;
+        clientInfoResponse.phone = client.phone;
+        clientInfoResponse.displayName = cd.displayName;
+        clientInfoResponse.imgId = cd.imgId;
+
+        return clientInfoResponse;
     }
 
     @Override
     public MessageResponse qrEvent(DetailRequest detailRequest, String clientId) {
-        return null; //todo
+        if (Strings.isNullOrEmpty(clientId)) {
+            throw new RestException("2kheBjZw5A :: Authorization is incorrect, please login again!");
+        }
+
+        Client client = clientDao.findClientByClientIdAndActual(clientId, true);
+
+        if (client == null) {
+            throw new RuntimeException("pUMdNZdY9F :: client by clientId=" + clientId + " does not exists!");
+        }
+
+        MessageResponse response = eventServiceClient.approveEvent(ClientEventRequest.of(clientId, detailRequest.id));
+
+        if (ServiceFallbackStatic.CREATOR_ACTING_IN_HIS_EVENT.equals(response.message)) {
+            throw new RestException("v2XE8TK6Y9 :: creator can not QR his event!");
+        }
+
+        if (ServiceFallbackStatic.SERVICE_CALL_ERROR_MESSAGE.equals(response.message)) {
+            throw new RuntimeException("g65NVMtw87 :: event service calling returned error for APPROVE");
+        }
+
+        return response;
     }
 
     @Override
     public EventListResponse clientEvents(String clientId) {
-        return null; //todo
+        if (Strings.isNullOrEmpty(clientId)) {
+            throw new RestException("oOGpBitVyG :: Authorization is incorrect, please login again!");
+        }
+
+        return eventServiceClient.clientEvents(true, clientId);
     }
 
     @Override
-    public EventListResponse clientParticipatedEvents(String clientId) {
-        return null; //todo
+    public EventListResponse clientParticipatedEvents(String clientId) {//todo check
+        if (Strings.isNullOrEmpty(clientId)) {
+            throw new RestException("d3dyc3cm51 :: Authorization is incorrect, please login again!");
+        }
+
+        return eventServiceClient.clientEvents(false, clientId);
+    }
+
+    @Override
+    public CategoryListResponse categoryList() {
+        return eventServiceClient.listCategory(100, 0, true);
     }
 
     private ClientEventResponse mapClientEventResponse(EventResponse er) throws SQLException {
@@ -195,7 +258,7 @@ public class EventRegisterImpl implements EventRegister {
                                 "       x1.displayname as displayName, " +
                                 "       x1.img_id      as imgId " +
                                 "from client x " +
-                                "left join client_detail x1.client = x.client " +
+                                "left join client_detail x1 on x1.client = x.client " +
                                 "where client_id = ? and actual = true")) {
 
                     ps.setString(1, id);

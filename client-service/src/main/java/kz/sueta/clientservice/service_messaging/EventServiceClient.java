@@ -2,10 +2,8 @@ package kz.sueta.clientservice.service_messaging;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
-import kz.sueta.clientservice.dto.services.request.DetailRequest;
-import kz.sueta.clientservice.dto.services.request.EditEventRequest;
-import kz.sueta.clientservice.dto.services.request.EventListFilter;
-import kz.sueta.clientservice.dto.services.request.SaveEventRequest;
+import kz.sueta.clientservice.dto.services.request.*;
+import kz.sueta.clientservice.dto.services.response.CategoryListResponse;
 import kz.sueta.clientservice.dto.services.response.EventListResponse;
 import kz.sueta.clientservice.dto.services.response.EventResponse;
 import kz.sueta.clientservice.dto.ui.response.MessageResponse;
@@ -109,5 +107,60 @@ public interface EventServiceClient {
         log.info("Exception class=" + throwable.getClass().getName());
         log.info("Exception took place: " + throwable.getMessage());
         return null;
+    }
+
+    @PostMapping("/event/join-event")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "joinEventFallback")
+    MessageResponse joinEvent(@RequestBody ClientEventRequest request);
+
+    default MessageResponse joinEventFallback(ClientEventRequest request, Throwable throwable) {
+        log.info("RequestBody = " + request);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
+        return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
+    }
+
+    @PostMapping("/event/approve-event")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "approveEventFallback")
+    MessageResponse approveEvent(@RequestBody ClientEventRequest request);
+
+    default MessageResponse approveEventFallback(ClientEventRequest request, Throwable throwable) {
+        log.info("RequestBody = " + request);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
+        return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
+    }
+
+    @GetMapping("/event/client-events")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "clientEventsFallback")
+    EventListResponse clientEvents(@RequestParam("creator") Boolean creator,
+                                   @RequestParam("id") String id);
+
+    default EventListResponse clientEventsFallback(Boolean creator, String id, Throwable throwable) {
+        log.info("RequestParam = " + creator + ", " + id);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
+        return new EventListResponse();
+    }
+
+    @GetMapping("/category/list")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "listCategoryFallback")
+    CategoryListResponse listCategory(@RequestParam(name = "limit", required = false) Integer limit,
+                                      @RequestParam(name = "offset", required = false) Integer offset,
+                                      @RequestParam(name = "actual", required = false) Boolean actual);
+
+    default CategoryListResponse listCategoryFallback(Integer limit,
+                                                      Integer offset,
+                                                      Boolean actual,
+                                                      Throwable throwable) {
+
+        log.info("RequestParam = " + limit + ", " + offset + ", " + actual);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
+        return new CategoryListResponse();
     }
 }

@@ -5,6 +5,7 @@ import kz.sueta.clientservice.register.ClientRegister;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,9 +21,9 @@ public class ClientController { //todo edit client info
     }
 
     @SneakyThrows
-    @GetMapping("/action/client-detail") //todo add readme
-    public ResponseEntity<?> getClient(@RequestParam(value = "id") String id) {
-        ClientResponse response = clientRegister.getClientById(id);
+    @GetMapping("/action/client-detail")
+    public ResponseEntity<?> getClient(Authentication authentication) {
+        ClientResponse response = clientRegister.getClientById(authentication.getName());
         return ResponseEntity.status(200).body(response);
     }
 }

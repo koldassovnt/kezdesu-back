@@ -1,5 +1,6 @@
 package kz.sueta.clientservice.register.impl;
 
+import com.google.common.base.Strings;
 import kz.sueta.clientservice.dto.services.request.ClientBlockRequest;
 import kz.sueta.clientservice.dto.services.request.ClientListFilter;
 import kz.sueta.clientservice.dto.services.request.IdListRequest;

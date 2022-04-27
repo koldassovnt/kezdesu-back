@@ -4,6 +4,7 @@ import kz.sueta.clientservice.dto.services.request.DetailRequest;
 import kz.sueta.clientservice.dto.services.request.EditEventRequest;
 import kz.sueta.clientservice.dto.services.request.EventListFilter;
 import kz.sueta.clientservice.dto.services.request.SaveEventRequest;
+import kz.sueta.clientservice.dto.services.response.CategoryListResponse;
 import kz.sueta.clientservice.dto.services.response.EventListResponse;
 import kz.sueta.clientservice.dto.ui.response.ClientEventListResponse;
 import kz.sueta.clientservice.dto.ui.response.ClientEventResponse;
@@ -27,4 +28,6 @@ public interface EventRegister {
     EventListResponse clientEvents(String clientId);
 
     EventListResponse clientParticipatedEvents(String clientId);
+
+    CategoryListResponse categoryList();
 }

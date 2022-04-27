@@ -14,7 +14,7 @@ public interface AdminServiceClient {
 
     Logger log = LoggerFactory.getLogger(AdminServiceClient.class);
 
-    @GetMapping("/admin/action/get-account")
+    @GetMapping("/admin/forClient/get-account")
     @Retry(name = "admin-ws")
     @CircuitBreaker(name = "admin-ws", fallbackMethod = "detailAdminFallback")
     AdminDetail getAdminDetail(@RequestParam String id);

@@ -4,6 +4,7 @@ import kz.sueta.clientservice.dto.services.request.ClientBlockRequest;
 import kz.sueta.clientservice.dto.services.request.ClientListFilter;
 import kz.sueta.clientservice.dto.services.request.IdListRequest;
 import kz.sueta.clientservice.dto.services.response.ClientListResponse;
+import kz.sueta.clientservice.dto.services.response.ClientResponse;
 import kz.sueta.clientservice.dto.ui.response.MessageResponse;
 import kz.sueta.clientservice.register.ClientRegister;
 import lombok.SneakyThrows;
@@ -40,6 +41,13 @@ public class ClientForAdminController {
     public ResponseEntity<?> blockClient(@Valid @RequestBody ClientBlockRequest request) {
         clientRegister.blockClient(request);
         return ResponseEntity.status(200).body(MessageResponse.of("Client successfully blocked!"));
+    }
+
+    @SneakyThrows
+    @GetMapping("/forAdmin/client-detail")
+    public ResponseEntity<?> getClient(@RequestParam(value = "id") String id) {
+        ClientResponse response = clientRegister.getClientById(id);
+        return ResponseEntity.status(200).body(response);
     }
 
     @SneakyThrows
