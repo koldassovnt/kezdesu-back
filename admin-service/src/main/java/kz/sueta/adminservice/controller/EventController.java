@@ -50,7 +50,7 @@ public class EventController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping(value = "/action/list-event")//todo add to readme
+    @GetMapping(value = "/action/list-event")
     public ResponseEntity<?> listEvent(@RequestParam(name = "limit", required = false) Integer limit,
                                        @RequestParam(name = "offset", required = false) Integer offset,
                                        @RequestParam(name = "categoryId", required = false) String categoryId,
@@ -65,7 +65,7 @@ public class EventController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping(value = "/action/detail-event")//todo add to readme
+    @GetMapping(value = "/action/detail-event")
     public ResponseEntity<?> detailEvent(@RequestParam(name = "id") String id) {
         AdminEventResponse response = eventRegister.detailEvent(DetailRequest.of(id));
         return ResponseEntity.status(200).body(response);

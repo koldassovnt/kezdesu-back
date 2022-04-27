@@ -1,5 +1,6 @@
 package kz.sueta.adminservice.register;
 
+import kz.sueta.adminservice.dto.ui.request.AccountEditRequest;
 import kz.sueta.adminservice.dto.ui.request.LoginRequest;
 import kz.sueta.adminservice.dto.ui.request.RegisterRequest;
 import kz.sueta.adminservice.dto.ui.request.ResetPasswordRequest;
@@ -15,5 +16,9 @@ public interface AccountRegister {
 
     void resetPassword(ResetPasswordRequest passwordRequest, String email);
 
-    AdminDetail getAdminDetail(String adminId);
+    AdminDetail getAdminDetailById(String adminId);
+
+    void editAccount(AccountEditRequest editRequest, String email);
+
+    AdminDetail getAdminDetail(String email);
 }

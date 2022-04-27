@@ -1,5 +1,6 @@
 package kz.sueta.adminservice.controller;
 
+import kz.sueta.adminservice.dto.ui.request.AccountEditRequest;
 import kz.sueta.adminservice.dto.ui.request.LoginRequest;
 import kz.sueta.adminservice.dto.ui.request.RegisterRequest;
 import kz.sueta.adminservice.dto.ui.request.ResetPasswordRequest;
@@ -54,11 +55,23 @@ public class AccountController {
                 MessageResponse.of("Account password reset was done successfully!"));
     }
 
-    @GetMapping("/action/get-account")//todo add readme
-    public ResponseEntity<?> getAccount(@RequestParam(value = "id") String id) {
-        AdminDetail detail = accountRegister.getAdminDetail(id);
+    @GetMapping("/action/get-account")
+    public ResponseEntity<?> getAccount(Authentication authentication) {
+        AdminDetail detail = accountRegister.getAdminDetail(authentication.getName());
         return ResponseEntity.status(200).body(detail);
     }
 
-    //todo add account edit
+    @GetMapping("/forClient/get-account")
+    public ResponseEntity<?> getAccountForClient(@RequestParam(value = "id") String id) {
+        AdminDetail detail = accountRegister.getAdminDetailById(id);
+        return ResponseEntity.status(200).body(detail);
+    }
+
+    @PostMapping("/action/edit-account")
+    public ResponseEntity<?> editAccount(@Valid @RequestBody AccountEditRequest editRequest,
+                                         Authentication authentication) {
+        accountRegister.editAccount(editRequest, authentication.getName());
+        return ResponseEntity.status(HttpStatus.OK).body(
+                MessageResponse.of("Account details were changed successfully!"));
+    }
 }

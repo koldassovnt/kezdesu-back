@@ -3,6 +3,7 @@ package kz.sueta.adminservice.register.impl;
 import com.google.common.base.Strings;
 import kz.sueta.adminservice.bean_security.jwt.JwtUtils;
 import kz.sueta.adminservice.bean_security.services.CustomAccountDetails;
+import kz.sueta.adminservice.dto.ui.request.AccountEditRequest;
 import kz.sueta.adminservice.dto.ui.request.LoginRequest;
 import kz.sueta.adminservice.dto.ui.request.RegisterRequest;
 import kz.sueta.adminservice.dto.ui.request.ResetPasswordRequest;
@@ -104,12 +105,50 @@ public class AccountRegisterImpl implements AccountRegister {
     }
 
     @Override
-    public AdminDetail getAdminDetail(String adminId) {
+    public AdminDetail getAdminDetailById(String adminId) {
 
         Account account = accountDao.findAccountByAccountIdAndActual(adminId, true);
 
         if (account == null) {
             throw new RuntimeException("utOpTh4sGy :: no account by Id = " + adminId);
+        }
+
+        return AdminDetail.of(account.accountId, account.displayName, account.phone);
+    }
+
+    @Override
+    public void editAccount(AccountEditRequest editRequest, String email) {
+        if (Strings.isNullOrEmpty(email)) {
+            throw new RestException("VlZS57g4dy :: Authorization is incorrect, please login again!");
+        }
+
+        Account account = accountDao.findAccountByEmailAndActual(email, true);
+
+        if (account == null) {
+            throw new RuntimeException("Wts0r5oyUC :: account is null by email!");
+        }
+
+        if (!Strings.isNullOrEmpty(editRequest.displayName)) {
+            account.displayName = editRequest.displayName;
+        }
+
+        if (!Strings.isNullOrEmpty(editRequest.phone)) {
+            account.phone = editRequest.phone;
+        }
+
+        accountDao.save(account);
+    }
+
+    @Override
+    public AdminDetail getAdminDetail(String email) {
+        if (Strings.isNullOrEmpty(email)) {
+            throw new RestException("Anj40PaL3E :: Authorization is incorrect, please login again!");
+        }
+
+        Account account = accountDao.findAccountByEmailAndActual(email, true);
+
+        if (account == null) {
+            throw new RuntimeException("ENZ462UAQ8 :: account is null by email!");
         }
 
         return AdminDetail.of(account.accountId, account.displayName, account.phone);

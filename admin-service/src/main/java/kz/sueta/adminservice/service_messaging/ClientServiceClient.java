@@ -70,7 +70,7 @@ public interface ClientServiceClient {
         return new ClientListResponse();
     }
 
-    @GetMapping("/client/action/client-detail")
+    @GetMapping("/client/forAdmin/client-detail")
     @Retry(name = "client-ws")
     @CircuitBreaker(name = "client-ws", fallbackMethod = "detailClientFallback")
     ClientResponse detailClient(@RequestParam(name = "id") String id);
