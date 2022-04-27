@@ -164,6 +164,18 @@
 - Request parameters: 
     - id (String) - Required
 
+### 1.6 Account managing
+
+#### 1.6.1 admin/action/get-account (GET) (NEED token)
+
+- No request param
+
+#### 1.6.2 admin/action/edit-account (POST) (NEED token)
+
+- Request body fields:
+    - displayName (String)
+    - phone (String)
+
 ## 2 For Client
 
 ##### For client part working with JWT token is required. Except 2.1 Authorization part.
@@ -229,7 +241,34 @@
 - Request parameters: 
     - id (String) - Required
    
+#### 2.2.5 client/action/join-event (POST) (NEED token)
+
+- Request parameters: 
+    - id (String) - Required
+
+#### 2.2.6 client/action/qr-event (POST) (NEED token)
+
+- Request parameters: 
+    - id (String) - Required
+
+#### 2.2.7 client/action/client-events (GET) (NEED token)
+
+- No request param
+
+#### 2.2.8 client/action/client-participated-events (GET) (NEED token)
+
+- No request param
+   
 ### 2.3 Client managing
 
+#### 2.3.1 /client/action/client-detail (GET) (NEED token)
+
+- No request param
+
+### 2.4 Category managing
+
+#### 2.4.1 /client/action/category-list (GET) (NEED token)
+
+- No request param
 
 ###### Apis will be updated as it will changed
