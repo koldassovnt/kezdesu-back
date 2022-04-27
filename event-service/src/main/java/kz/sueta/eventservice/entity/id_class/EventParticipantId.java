@@ -12,4 +12,8 @@ import java.io.Serializable;
 public class EventParticipantId implements Serializable {
     public String eventId;
     public String clientId;
+
+    public static EventParticipantId of(String eventId, String clientId) {
+        return new EventParticipantId(eventId, clientId);
+    }
 }
