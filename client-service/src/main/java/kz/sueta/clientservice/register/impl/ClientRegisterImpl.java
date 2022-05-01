@@ -1,14 +1,20 @@
 package kz.sueta.clientservice.register.impl;
 
+import com.google.common.base.Strings;
 import kz.sueta.clientservice.dto.services.request.ClientBlockRequest;
 import kz.sueta.clientservice.dto.services.request.ClientListFilter;
 import kz.sueta.clientservice.dto.services.request.IdListRequest;
 import kz.sueta.clientservice.dto.services.response.ClientListResponse;
 import kz.sueta.clientservice.dto.services.response.ClientResponse;
+import kz.sueta.clientservice.dto.ui.request.EditClientRequest;
 import kz.sueta.clientservice.dto.ui.request.PhoneSmsRequest;
+import kz.sueta.clientservice.dto.ui.response.MessageResponse;
 import kz.sueta.clientservice.entity.Client;
+import kz.sueta.clientservice.entity.ClientDetail;
+import kz.sueta.clientservice.exception.ui.RestException;
 import kz.sueta.clientservice.register.ClientRegister;
 import kz.sueta.clientservice.repository.ClientDao;
+import kz.sueta.clientservice.repository.ClientDetailDao;
 import kz.sueta.clientservice.util.DbUtil;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +34,17 @@ public class ClientRegisterImpl implements ClientRegister {
     private final PasswordEncoder passwordEncoder;
     private final ClientDao clientDao;
     private final Environment environment;
+    private final ClientDetailDao clientDetailDao;
 
     @Autowired
-    public ClientRegisterImpl(PasswordEncoder passwordEncoder, ClientDao clientDao,
+    public ClientRegisterImpl(PasswordEncoder passwordEncoder,
+                              ClientDao clientDao,
+                              ClientDetailDao clientDetailDao,
                               Environment environment) {
         this.passwordEncoder = passwordEncoder;
         this.clientDao = clientDao;
         this.environment = environment;
+        this.clientDetailDao = clientDetailDao;
     }
 
     @Override
@@ -191,6 +201,46 @@ public class ClientRegisterImpl implements ClientRegister {
         }
 
         return ClientListResponse.of(response);
+    }
+
+    @Override
+    public MessageResponse editClient(EditClientRequest request, String clientId) {
+        if (Strings.isNullOrEmpty(clientId)) {
+            throw new RestException("SGN8209c3g :: Authorization is incorrect, please login again!");
+        }
+
+        Client client = clientDao.findClientByClientIdAndActual(clientId, true);
+
+        if (client == null) {
+            throw new RestException("14oW532k0M :: Authorization is incorrect, please login again!");
+        }
+
+        ClientDetail clientDetail = clientDetailDao.findClientDetailByClient(client.client);
+
+        if (!Strings.isNullOrEmpty(request.email)) {
+            client.email = request.email;
+            clientDao.save(client);
+        }
+
+        if (!Strings.isNullOrEmpty(request.displayName)) {
+            clientDetail.displayName = request.displayName;
+        }
+
+        if (!Strings.isNullOrEmpty(request.name)) {
+            clientDetail.name = request.name;
+        }
+
+        if (!Strings.isNullOrEmpty(request.surname)) {
+            clientDetail.surname = request.surname;
+        }
+
+        if (request.birthDate != null) {
+            clientDetail.birthdate = new Timestamp(request.birthDate.getTime());
+        }
+
+        clientDetailDao.save(clientDetail);
+
+        return MessageResponse.of("Client details successfully edited!");
     }
 
     private ClientResponse getClientResponse(ResultSet rs) throws SQLException {
