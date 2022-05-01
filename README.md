@@ -273,6 +273,15 @@
 
 - No request param
 
+#### 2.3.2 /client/action/edit-client (POST) (NEED token)
+
+- Request body:
+    - displayName (String)
+    - email (String)
+    - name (String)
+    - surname (String)
+    - birthDate (Date)
+
 ### 2.4 Category managing
 
 #### 2.4.1 /client/action/category-list (GET) (NEED token)
