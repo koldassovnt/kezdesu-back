@@ -59,6 +59,7 @@
     - categoryId (String)
     - images (List of MultipartFile)
     - videos (List of MultipartFile)
+    - address (String)
 
 #### 1.3.2 admin/action/edit-event (POST) (NEED token)
 
@@ -73,6 +74,7 @@
     - categoryId (String)
     - images (List of MultipartFile)
     - videos (List of MultipartFile)
+    - address (String)
   
 #### 1.3.3 admin/action/block-event (POST) (NEED token)
 
@@ -140,12 +142,16 @@
 
 - Request body fields: 
     - categoryLabel (String) - Required
+    - img (String)
+    - color (String)
 
 #### 1.5.2 /admin/action/edit-category (POST) (NEED token)
 
 - Request body fields: 
     - categoryId (String) - Required
     - categoryLabel (String)
+    - img (String)
+    - color (String)
 
 #### 1.5.3 /admin/action/delete-category (POST) (NEED token)
 
@@ -212,6 +218,7 @@
     - categoryId (String)
     - images (List of MultipartFile)
     - videos (List of MultipartFile)
+    - address (String)
    
 #### 2.2.2 client/action/edit-event (POST) (NEED token)
    
@@ -226,6 +233,7 @@
     - categoryId (String)
     - images (List of MultipartFile)
     - videos (List of MultipartFile)
+    - address (String)
 
 #### 2.2.3 client/action/list-event (GET) (NEED token)
 
