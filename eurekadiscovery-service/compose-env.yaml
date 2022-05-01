@@ -11,7 +11,7 @@ services:
       - sueta_network
 
 networks:
-  default:
+  sueta_network:
     name: sueta_network
     ipam:
       driver: default

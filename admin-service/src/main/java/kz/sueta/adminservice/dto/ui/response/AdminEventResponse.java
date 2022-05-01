@@ -25,4 +25,6 @@ public class AdminEventResponse {
 
     public ClientInfoResponse creatorInfo;
     public List<ClientInfoResponse> participantList = new ArrayList<>();
+
+    public String address;
 }

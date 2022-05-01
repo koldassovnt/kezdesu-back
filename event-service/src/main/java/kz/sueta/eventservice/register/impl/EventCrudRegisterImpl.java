@@ -70,6 +70,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
         event.latitude = saveRequest.latitude;
         event.longitude = saveRequest.longitude;
         event.blocked = false;
+        event.address = saveRequest.address;
 
         setCategoryId(event, saveRequest.categoryId);
 
@@ -143,6 +144,10 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
 
         if (editEventRequest.longitude != null) {
             event.longitude = editEventRequest.longitude;
+        }
+
+        if (!Strings.isNullOrEmpty(editEventRequest.address)) {
+            event.address = editEventRequest.address;
         }
 
         setCategoryId(event, editEventRequest.categoryId);
@@ -219,7 +224,8 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                         "        e.category_Id    as categoryId, " +
                         "        e.actual        as actual, " +
                         "        e.blocked       as blocked, " +
-                        "        ec.client_Id     as creatorId " +
+                        "        ec.client_Id     as creatorId, " +
+                        "        e.address        as address " +
                         " from event e " +
                         " left join event_creator ec on ec.event_Id = e.event_Id " +
                         " where e.actual = ? and e.blocked = ? ";
@@ -292,7 +298,8 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                         "        e.category_Id    as categoryId, " +
                         "        e.actual        as actual, " +
                         "        e.blocked       as blocked, " +
-                        "        ec.client_Id     as creatorId " +
+                        "        ec.client_Id     as creatorId, " +
+                        "        e.address        as address " +
                         " from event e " +
                         " left join event_creator ec on ec.event_Id = e.event_Id " +
                         " where e.actual = true and e.blocked = false " +
@@ -342,5 +349,6 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
         eventResponse.actual = rs.getBoolean("actual");
         eventResponse.blocked = rs.getBoolean("blocked");
         eventResponse.creatorId = rs.getString("creatorId");
+        eventResponse.address = rs.getString("address");
     }
 }

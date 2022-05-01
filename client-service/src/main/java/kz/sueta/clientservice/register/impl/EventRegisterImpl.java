@@ -191,7 +191,7 @@ public class EventRegisterImpl implements EventRegister {
     }
 
     @Override
-    public EventListResponse clientParticipatedEvents(String clientId) {//todo check
+    public EventListResponse clientParticipatedEvents(String clientId) {
         if (Strings.isNullOrEmpty(clientId)) {
             throw new RestException("d3dyc3cm51 :: Authorization is incorrect, please login again!");
         }
@@ -222,6 +222,7 @@ public class EventRegisterImpl implements EventRegister {
         cer.categoryId = er.categoryId;
         cer.actual = er.actual;
         cer.blocked = er.blocked;
+        cer.address = er.address;
 
         cer.creatorInfo = new ClientInfoResponse();
 

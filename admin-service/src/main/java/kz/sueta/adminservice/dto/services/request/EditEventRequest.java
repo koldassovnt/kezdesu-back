@@ -26,4 +26,5 @@ public class EditEventRequest {
     public String clientId;
     public List<MultipartFile> images; // jpeg, png
     public List<MultipartFile> videos; // mp4
+    public String address;
 }

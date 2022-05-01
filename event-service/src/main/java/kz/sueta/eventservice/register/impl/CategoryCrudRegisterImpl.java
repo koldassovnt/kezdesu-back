@@ -43,6 +43,8 @@ public class CategoryCrudRegisterImpl implements CategoryCrudRegister {
         category.categoryId = UUID.randomUUID().toString();
         category.actual = true;
         category.categoryLabel = request.categoryLabel;
+        category.img = request.img;
+        category.color = request.color;
         categoryDictionaryDao.saveAndFlush(category);
     }
 
@@ -57,6 +59,14 @@ public class CategoryCrudRegisterImpl implements CategoryCrudRegister {
 
         if (!Strings.isNullOrEmpty(request.categoryLabel)) {
             category.categoryLabel = request.categoryLabel;
+        }
+
+        if (!Strings.isNullOrEmpty(request.img)) {
+            category.img = request.img;
+        }
+
+        if (!Strings.isNullOrEmpty(request.color)) {
+            category.color = request.color;
         }
 
         categoryDictionaryDao.saveAndFlush(category);
@@ -94,7 +104,9 @@ public class CategoryCrudRegisterImpl implements CategoryCrudRegister {
         String sql =
                 " select c.category_id         as categoryId, " +
                         " c.category_label     as label, " +
-                        " c.actual            as actual " +
+                        " c.actual             as actual, " +
+                        " c.img                as img, " +
+                        " c.color              as color " +
                         " from category_dictionary c " +
                         " where c.actual = ? " +
                         " limit " + filter.limit + " offset " + filter.offset + " ";
@@ -111,6 +123,8 @@ public class CategoryCrudRegisterImpl implements CategoryCrudRegister {
                         detailResponse.categoryId = rs.getString("categoryId");
                         detailResponse.label = rs.getString("label");
                         detailResponse.actual = rs.getBoolean("actual");
+                        detailResponse.img = rs.getString("img");
+                        detailResponse.color = rs.getString("color");
                         responseList.add(detailResponse);
                     }
                 }
@@ -127,7 +141,9 @@ public class CategoryCrudRegisterImpl implements CategoryCrudRegister {
         String sql =
                 " select c.category_id         as categoryId, " +
                         " c.category_label     as label, " +
-                        " c.actual            as actual " +
+                        " c.actual             as actual, " +
+                        " c.img                as img, " +
+                        " c.color              as color " +
                         " from category_dictionary c " +
                         " where c.actual = true and c.category_id = ? ";
 
@@ -142,6 +158,8 @@ public class CategoryCrudRegisterImpl implements CategoryCrudRegister {
                         detailResponse.categoryId = rs.getString("categoryId");
                         detailResponse.label = rs.getString("label");
                         detailResponse.actual = rs.getBoolean("actual");
+                        detailResponse.img = rs.getString("img");
+                        detailResponse.color = rs.getString("color");
                     }
                 }
             }

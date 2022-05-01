@@ -137,6 +137,7 @@ public class EventRegisterImpl implements EventRegister {
         aer.categoryId = er.categoryId;
         aer.actual = er.actual;
         aer.blocked = er.blocked;
+        aer.address = er.address;
 
         aer.creatorInfo = new ClientInfoResponse();
 

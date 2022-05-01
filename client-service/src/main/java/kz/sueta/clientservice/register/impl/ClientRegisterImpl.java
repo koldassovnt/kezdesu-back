@@ -1,6 +1,5 @@
 package kz.sueta.clientservice.register.impl;
 
-import com.google.common.base.Strings;
 import kz.sueta.clientservice.dto.services.request.ClientBlockRequest;
 import kz.sueta.clientservice.dto.services.request.ClientListFilter;
 import kz.sueta.clientservice.dto.services.request.IdListRequest;
@@ -46,6 +45,8 @@ public class ClientRegisterImpl implements ClientRegister {
         client.createdAt = new Timestamp(new Date().getTime());
         client.password = passwordEncoder.encode(phoneSmsRequest.phoneNumber + client.clientId);
         client.actual = true;
+        client.blocked = false;
+        client.blockedReason = null;
 
         clientDao.save(client);
 

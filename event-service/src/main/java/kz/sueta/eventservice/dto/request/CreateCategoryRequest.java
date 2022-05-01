@@ -13,4 +13,6 @@ import javax.validation.constraints.NotNull;
 public class CreateCategoryRequest {
     @NotNull(message = "Category label is required")
     public String categoryLabel;
+    public String img;
+    public String color;
 }

@@ -19,4 +19,6 @@ public class CategoryDictionary {
     @Column(name = "category_label")
     public String categoryLabel;
     public Boolean actual;
+    public String img;
+    public String color;
 }

@@ -32,4 +32,5 @@ public class Event {
     public Boolean blocked;
     @Column(name = "created_at")
     public Timestamp createdAt;
+    public String address;
 }

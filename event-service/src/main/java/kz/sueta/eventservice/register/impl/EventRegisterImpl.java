@@ -111,7 +111,8 @@ public class EventRegisterImpl implements EventRegister {
                         "        e.longitude     as longitude, " +
                         "        e.category_Id    as categoryId, " +
                         "        e.actual        as actual, " +
-                        "        e.blocked       as blocked " +
+                        "        e.blocked       as blocked, " +
+                        "        e.address       as address " +
                         " from event e ";
 
         if (creator) {
@@ -140,6 +141,7 @@ public class EventRegisterImpl implements EventRegister {
                         eventResponse.categoryId = rs.getString("categoryId");
                         eventResponse.actual = rs.getBoolean("actual");
                         eventResponse.blocked = rs.getBoolean("blocked");
+                        eventResponse.address = rs.getString("address");
                         responses.add(eventResponse);
                     }
                 }

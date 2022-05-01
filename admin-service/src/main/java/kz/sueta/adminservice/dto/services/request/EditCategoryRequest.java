@@ -14,4 +14,6 @@ public class EditCategoryRequest {
     @NotNull(message = "Category Id is required")
     public String categoryId;
     public String categoryLabel;
+    public String img;
+    public String color;
 }

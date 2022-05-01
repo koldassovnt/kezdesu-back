@@ -33,4 +33,6 @@ public class SaveEventRequest {
     public String creatorId;
     public List<MultipartFile> images; // jpeg, png
     public List<MultipartFile> videos; // mp4
+
+    public String address;
 }
