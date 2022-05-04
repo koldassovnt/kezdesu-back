@@ -231,7 +231,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                         " where e.actual = ? and e.blocked = ? ";
 
         if (!Strings.isNullOrEmpty(filter.categoryId)) {
-            sql += " and e.category_Id = ''" + filter.categoryId + "'";
+            sql += " and e.category_Id = '" + filter.categoryId + "' ";
         }
 
         if (!Strings.isNullOrEmpty(filter.labelSearch)) {
