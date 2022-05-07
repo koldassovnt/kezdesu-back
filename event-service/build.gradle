@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'kz.sueta'
-version = '1.0.23'
+version = '1.0.24'
 sourceCompatibility = '11'
 
 
