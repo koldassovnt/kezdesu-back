@@ -28,9 +28,15 @@ public class FileController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @GetMapping("/getFiles")
+    @PostMapping("/getFiles")
     public ResponseEntity<?> getFiles(@Valid @RequestBody FileListRequest fileListRequest) {
         FileListResponse response = fileRegister.getFiles(fileListRequest);
         return ResponseEntity.status(200).body(response);
+    }
+
+    @GetMapping("/getFileType")
+    public ResponseEntity<?> getFileType(@RequestParam(value = "id") String id) {
+        String type = fileRegister.getFileType(id);
+        return ResponseEntity.status(200).body(type);
     }
 }

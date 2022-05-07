@@ -2,6 +2,7 @@ package kz.sueta.eventservice.register.impl;
 
 import com.google.common.base.Strings;
 import kz.sueta.eventservice.dto.request.*;
+import kz.sueta.eventservice.dto.response.ContentResponse;
 import kz.sueta.eventservice.dto.response.EventListResponse;
 import kz.sueta.eventservice.dto.response.EventResponse;
 import kz.sueta.eventservice.dto.response.FileIdModel;
@@ -161,7 +162,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
 
     private void setCategoryId(Event event, String categoryId) {
         if (categoryDictionaryDao.countCategoryDictionariesByCategoryIdAndActual
-                (categoryId, true) > 1) {
+                (categoryId, true) >= 1) {
             event.categoryId = categoryId;
         } else {
             logger.info("Ji11HoFFKb :: category was not found by Id = " + categoryId +
@@ -257,6 +258,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
 
                         setEventResponse(eventResponse, rs);
                         setEventParticipants(eventResponse, connection);
+                        setEventContent(eventResponse, connection);
 
                         responses.add(eventResponse);
                     }
@@ -277,6 +279,24 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
             try(ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     eventResponse.participantList.add(rs.getString("client_id"));
+                }
+            }
+        }
+    }
+
+    @SneakyThrows
+    private void setEventContent(EventResponse eventResponse, Connection connection) {
+
+        try (PreparedStatement ps = connection.prepareStatement(
+                "select file_id from event_content where event_id = ?")) {
+            ps.setString(1, eventResponse.eventId);
+
+            try(ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ContentResponse response = new ContentResponse();
+                    response.contentId = rs.getString("file_id");
+                    response.contentType = fileServiceClient.getFileType(response.contentId);
+                    eventResponse.contentList.add(response);
                 }
             }
         }
@@ -312,6 +332,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                     if (rs.next()) {
                         setEventResponse(eventResponse, rs);
                         setEventParticipants(eventResponse, connection);
+                        setEventContent(eventResponse, connection);
                     }
                 }
             }
@@ -328,7 +349,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
         try (Connection connection = DbUtil.getConnection(environment)) {
             try (PreparedStatement ps = connection.prepareStatement("" +
                     "update event set actual = false " +
-                    "where ended_at < current_timestamp ")) {
+                    "where ended_at < current_timestamp and actual = true")) {
                 int update = ps.executeUpdate();
                 updatedCount.set(update);
             }

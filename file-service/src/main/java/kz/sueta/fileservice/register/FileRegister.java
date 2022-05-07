@@ -10,4 +10,6 @@ public interface FileRegister {
     FileIdModel saveFile(FileCreateRequest fileCreateRequest);
 
     FileListResponse getFiles(FileListRequest fileListRequest);
+
+    String getFileType(String id);
 }

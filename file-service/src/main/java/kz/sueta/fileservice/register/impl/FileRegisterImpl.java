@@ -92,4 +92,19 @@ public class FileRegisterImpl implements FileRegister {
 
         return listResponse;
     }
+
+    @Override
+    public String getFileType(String id) {
+        if (Strings.isNullOrEmpty(id)) {
+            throw new RuntimeException("DhIrd3lmEM :: file id is null or empty");
+        }
+
+        File file = fileDao.findFileByFileId(id);
+
+        if (file == null) {
+            throw new RuntimeException("T0m7FFcREg :: file by id = " + id + " is null");
+        }
+
+        return file.mimeType;
+    }
 }

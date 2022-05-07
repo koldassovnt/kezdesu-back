@@ -223,6 +223,7 @@ public class EventRegisterImpl implements EventRegister {
         cer.actual = er.actual;
         cer.blocked = er.blocked;
         cer.address = er.address;
+        cer.contentList = er.contentList;
 
         cer.creatorInfo = new ClientInfoResponse();
 

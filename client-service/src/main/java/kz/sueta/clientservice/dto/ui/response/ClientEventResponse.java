@@ -1,5 +1,6 @@
 package kz.sueta.clientservice.dto.ui.response;
 
+import kz.sueta.clientservice.dto.services.response.ContentResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,4 +27,5 @@ public class ClientEventResponse {
     public ClientInfoResponse creatorInfo;
     public List<ClientInfoResponse> participantList = new ArrayList<>();
     public String address;
+    public List<ContentResponse> contentList = new ArrayList<>();
 }

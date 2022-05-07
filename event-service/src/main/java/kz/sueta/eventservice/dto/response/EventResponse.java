@@ -27,4 +27,6 @@ public class EventResponse {
 
     public List<String> participantList = new ArrayList<>();
     public String address;
+
+    public List<ContentResponse> contentList = new ArrayList<>();
 }
