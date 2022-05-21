@@ -3,6 +3,7 @@ package kz.sueta.clientservice.register.impl;
 import com.google.common.base.Strings;
 import kz.sueta.clientservice.dto.services.request.ClientBlockRequest;
 import kz.sueta.clientservice.dto.services.request.ClientListFilter;
+import kz.sueta.clientservice.dto.services.request.DetailRequest;
 import kz.sueta.clientservice.dto.services.request.IdListRequest;
 import kz.sueta.clientservice.dto.services.response.ClientListResponse;
 import kz.sueta.clientservice.dto.services.response.ClientResponse;
@@ -241,6 +242,11 @@ public class ClientRegisterImpl implements ClientRegister {
         clientDetailDao.save(clientDetail);
 
         return MessageResponse.of("Client details successfully edited!");
+    }
+
+    @Override
+    public void unblockClient(DetailRequest request) {
+        clientDao.updateClientBlocked(false, null, request.id);
     }
 
     private ClientResponse getClientResponse(ResultSet rs) throws SQLException {

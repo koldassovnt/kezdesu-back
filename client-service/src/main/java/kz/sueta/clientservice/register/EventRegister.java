@@ -10,6 +10,7 @@ import kz.sueta.clientservice.dto.ui.response.ClientEventListResponse;
 import kz.sueta.clientservice.dto.ui.response.ClientEventResponse;
 import kz.sueta.clientservice.dto.ui.response.ClientInfoResponse;
 import kz.sueta.clientservice.dto.ui.response.MessageResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface EventRegister {
 
@@ -30,4 +31,6 @@ public interface EventRegister {
     EventListResponse clientParticipatedEvents(String clientId);
 
     CategoryListResponse categoryList();
+
+    MessageResponse saveEventContent(MultipartFile file, String id, String clientId);
 }

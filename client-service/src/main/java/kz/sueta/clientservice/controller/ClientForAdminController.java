@@ -2,6 +2,7 @@ package kz.sueta.clientservice.controller;
 
 import kz.sueta.clientservice.dto.services.request.ClientBlockRequest;
 import kz.sueta.clientservice.dto.services.request.ClientListFilter;
+import kz.sueta.clientservice.dto.services.request.DetailRequest;
 import kz.sueta.clientservice.dto.services.request.IdListRequest;
 import kz.sueta.clientservice.dto.services.response.ClientListResponse;
 import kz.sueta.clientservice.dto.services.response.ClientResponse;
@@ -55,5 +56,11 @@ public class ClientForAdminController {
     public ResponseEntity<?> listClientById(@Valid @RequestBody IdListRequest idListRequest) {
         ClientListResponse response = clientRegister.listClientById(idListRequest);
         return ResponseEntity.status(200).body(response);
+    }
+
+    @PostMapping("/forAdmin/unblockClient")
+    public ResponseEntity<?> unblockClient(@Valid @RequestBody DetailRequest request) {
+        clientRegister.unblockClient(request);
+        return ResponseEntity.status(200).body(MessageResponse.of("Client successfully unblocked!"));
     }
 }

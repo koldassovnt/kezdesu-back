@@ -13,6 +13,7 @@ import kz.sueta.clientservice.register.EventRegister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -85,4 +86,14 @@ public class EventController {
         EventListResponse response = eventRegister.clientParticipatedEvents(authentication.getName());
         return ResponseEntity.status(200).body(response);
     }
+
+    @PostMapping(value = "/action/event/{id}/save-content",
+            consumes = {"multipart/form-data"})
+    public ResponseEntity<?> saveEventContent(@PathVariable String id,
+                                              @RequestParam("file") MultipartFile file,
+                                              Authentication authentication) {
+        MessageResponse response = eventRegister.saveEventContent(file, id, authentication.getName());
+        return ResponseEntity.status(200).body(response);
+    }
+
 }

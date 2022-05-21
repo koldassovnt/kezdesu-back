@@ -3,11 +3,9 @@ package kz.sueta.clientservice.dto.services.request;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,7 +26,5 @@ public class SaveEventRequest {
     public String categoryId;
 
     public String creatorId;
-    public List<MultipartFile> images; // jpeg, png
-    public List<MultipartFile> videos; // mp4
     public String address;
 }

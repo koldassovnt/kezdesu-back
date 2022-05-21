@@ -2,10 +2,7 @@ package kz.sueta.clientservice.register.impl;
 
 import com.google.common.base.Strings;
 import kz.sueta.clientservice.dto.services.request.*;
-import kz.sueta.clientservice.dto.services.response.AdminDetail;
-import kz.sueta.clientservice.dto.services.response.CategoryListResponse;
-import kz.sueta.clientservice.dto.services.response.EventListResponse;
-import kz.sueta.clientservice.dto.services.response.EventResponse;
+import kz.sueta.clientservice.dto.services.response.*;
 import kz.sueta.clientservice.dto.ui.response.ClientEventListResponse;
 import kz.sueta.clientservice.dto.ui.response.ClientEventResponse;
 import kz.sueta.clientservice.dto.ui.response.ClientInfoResponse;
@@ -18,12 +15,14 @@ import kz.sueta.clientservice.repository.ClientDao;
 import kz.sueta.clientservice.repository.ClientDetailDao;
 import kz.sueta.clientservice.service_messaging.AdminServiceClient;
 import kz.sueta.clientservice.service_messaging.EventServiceClient;
+import kz.sueta.clientservice.service_messaging.FileServiceClient;
 import kz.sueta.clientservice.util.DbUtil;
 import kz.sueta.clientservice.util.ServiceFallbackStatic;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -40,18 +39,21 @@ public class EventRegisterImpl implements EventRegister {
     private final AdminServiceClient adminServiceClient;
     private final ClientDetailDao clientDetailDao;
     private final Environment environment;
+    private final FileServiceClient fileServiceClient;
 
     @Autowired
     public EventRegisterImpl(EventServiceClient eventServiceClient,
                              ClientDao clientDao,
                              AdminServiceClient adminServiceClient,
                              ClientDetailDao clientDetailDao,
-                             Environment environment) {
+                             Environment environment,
+                             FileServiceClient fileServiceClient) {
         this.eventServiceClient = eventServiceClient;
         this.clientDao = clientDao;
         this.adminServiceClient = adminServiceClient;
         this.clientDetailDao = clientDetailDao;
         this.environment = environment;
+        this.fileServiceClient = fileServiceClient;
     }
 
     @SneakyThrows
@@ -202,6 +204,41 @@ public class EventRegisterImpl implements EventRegister {
     @Override
     public CategoryListResponse categoryList() {
         return eventServiceClient.listCategory(100, 0, true);
+    }
+
+    @Override
+    public MessageResponse saveEventContent(MultipartFile file, String id, String clientId) {
+        if (Strings.isNullOrEmpty(clientId)) {
+            throw new RestException("oGVuQiqCuX :: Authorization is incorrect, please login again!");
+        }
+
+        if (Strings.isNullOrEmpty(id)) {
+            throw new RestException("a8i3x817hT :: eventId was null!");
+        }
+
+        if (!eventServiceClient.isEventExist(id)) {
+            throw new RestException("zFWWxTDhAO :: event by this Id does not exists!");
+        }
+
+        FileIdModel fileIdModel = fileServiceClient.saveFile(file);
+
+        if (fileIdModel == null) {
+            throw new RuntimeException("5O7On2Bdd1 :: file was not saved!");
+        }
+
+        if (Strings.isNullOrEmpty(fileIdModel.fileId)) {
+            throw new RuntimeException("oJPqjBjWsV :: fileId to save is null!");
+        }
+
+        SaveEventContentRequest request = SaveEventContentRequest.of(id, fileIdModel.fileId);
+
+        MessageResponse response = eventServiceClient.saveContent(request);
+
+        if (ServiceFallbackStatic.SERVICE_CALL_ERROR_MESSAGE.equals(response.message)) {
+            throw new RuntimeException("6QN2lMpYaA :: event service calling returned error for SAVE CONTENT");
+        }
+
+        return response;
     }
 
     private ClientEventResponse mapClientEventResponse(EventResponse er) throws SQLException {

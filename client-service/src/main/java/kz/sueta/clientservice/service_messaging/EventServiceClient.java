@@ -163,4 +163,29 @@ public interface EventServiceClient {
         log.info("Exception took place: " + throwable.getMessage());
         return new CategoryListResponse();
     }
+
+    @GetMapping("/event/is-event-exists")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "isEventExistFallback")
+    Boolean isEventExist(@RequestParam("id") String id);
+
+    default Boolean isEventExistFallback(String id, Throwable throwable) {
+        log.info("RequestParam = " + id);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
+        return false;
+    }
+
+    @PostMapping("/event/save-content")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "saveContentFallback")
+    MessageResponse saveContent(@RequestBody SaveEventContentRequest request);
+
+    default MessageResponse saveContentFallback(SaveEventContentRequest request,
+                                                Throwable throwable) {
+        log.info("RequestBody = " + request);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
+        return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
+    }
 }

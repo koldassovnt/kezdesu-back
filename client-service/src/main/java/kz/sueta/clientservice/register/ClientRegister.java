@@ -2,6 +2,7 @@ package kz.sueta.clientservice.register;
 
 import kz.sueta.clientservice.dto.services.request.ClientBlockRequest;
 import kz.sueta.clientservice.dto.services.request.ClientListFilter;
+import kz.sueta.clientservice.dto.services.request.DetailRequest;
 import kz.sueta.clientservice.dto.services.request.IdListRequest;
 import kz.sueta.clientservice.dto.services.response.ClientListResponse;
 import kz.sueta.clientservice.dto.services.response.ClientResponse;
@@ -27,4 +28,6 @@ public interface ClientRegister {
     ClientListResponse listClientById(IdListRequest idListRequest) throws SQLException;
 
     MessageResponse editClient(EditClientRequest request, String clientId);
+
+    void unblockClient(DetailRequest request);
 }
