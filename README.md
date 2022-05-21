@@ -44,6 +44,11 @@
    - offset (Integer)
    - actual (Boolean)
    - blocked (Boolean)
+
+#### 1.2.3 admin/action/unblock-client (POST) (NEED token)
+
+- Request body fields:
+    - id (String) - Required
    
 ### 1.3 Event managing
 
@@ -57,8 +62,6 @@
     - latitude (Double) - Required
     - longitude (Double) - Required
     - categoryId (String)
-    - images (List of MultipartFile)
-    - videos (List of MultipartFile)
     - address (String)
 
 #### 1.3.2 admin/action/edit-event (POST) (NEED token)
@@ -72,8 +75,6 @@
     - latitude (Double)
     - longitude (Double)
     - categoryId (String)
-    - images (List of MultipartFile)
-    - videos (List of MultipartFile)
     - address (String)
   
 #### 1.3.3 admin/action/block-event (POST) (NEED token)
@@ -216,8 +217,6 @@
     - latitude (Double) - Required
     - longitude (Double) - Required
     - categoryId (String)
-    - images (List of MultipartFile)
-    - videos (List of MultipartFile)
     - address (String)
    
 #### 2.2.2 client/action/edit-event (POST) (NEED token)
@@ -231,8 +230,6 @@
     - latitude (Double)
     - longitude (Double)
     - categoryId (String)
-    - images (List of MultipartFile)
-    - videos (List of MultipartFile)
     - address (String)
 
 #### 2.2.3 client/action/list-event (GET) (NEED token)
@@ -266,14 +263,22 @@
 #### 2.2.8 client/action/client-participated-events (GET) (NEED token)
 
 - No request param
+
+#### 2.2.9 client/action/event/{id}/save-content (POST) (NEED token)
+
+- Request parameters: 
+    - file (MultipartFile)
+
+- PathVariable: 
+    - id (String)
    
 ### 2.3 Client managing
 
-#### 2.3.1 /client/action/client-detail (GET) (NEED token)
+#### 2.3.1 client/action/client-detail (GET) (NEED token)
 
 - No request param
 
-#### 2.3.2 /client/action/edit-client (POST) (NEED token)
+#### 2.3.2 client/action/edit-client (POST) (NEED token)
 
 - Request body:
     - displayName (String)
@@ -282,10 +287,22 @@
     - surname (String)
     - birthDate (Date)
 
+#### 2.3.4 client/action/save-image (POST) (NEED token)
+
+- Request parameters: 
+    - file (MultipartFile)
+
 ### 2.4 Category managing
 
-#### 2.4.1 /client/action/category-list (GET) (NEED token)
+#### 2.4.1 client/action/category-list (GET) (NEED token)
 
 - No request param
+
+### 2.5 File (Content) managing
+
+#### 2.5.1 client/action/get-content/{id} (GET) (NEED token)
+
+- PathVariable:
+    - id (String)
 
 ###### Apis will be updated as it will changed
