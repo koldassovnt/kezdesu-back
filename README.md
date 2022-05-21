@@ -62,8 +62,6 @@
     - latitude (Double) - Required
     - longitude (Double) - Required
     - categoryId (String)
-    - images (List of MultipartFile)
-    - videos (List of MultipartFile)
     - address (String)
 
 #### 1.3.2 admin/action/edit-event (POST) (NEED token)
@@ -77,8 +75,6 @@
     - latitude (Double)
     - longitude (Double)
     - categoryId (String)
-    - images (List of MultipartFile)
-    - videos (List of MultipartFile)
     - address (String)
   
 #### 1.3.3 admin/action/block-event (POST) (NEED token)
@@ -221,8 +217,6 @@
     - latitude (Double) - Required
     - longitude (Double) - Required
     - categoryId (String)
-    - images (List of MultipartFile)
-    - videos (List of MultipartFile)
     - address (String)
    
 #### 2.2.2 client/action/edit-event (POST) (NEED token)
@@ -236,8 +230,6 @@
     - latitude (Double)
     - longitude (Double)
     - categoryId (String)
-    - images (List of MultipartFile)
-    - videos (List of MultipartFile)
     - address (String)
 
 #### 2.2.3 client/action/list-event (GET) (NEED token)
