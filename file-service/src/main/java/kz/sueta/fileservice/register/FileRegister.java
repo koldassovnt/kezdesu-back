@@ -12,4 +12,6 @@ public interface FileRegister {
     FileListResponse getFiles(FileListRequest fileListRequest);
 
     String getFileType(String id);
+
+    String getFileById(String id);
 }

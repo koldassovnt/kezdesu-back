@@ -1,15 +1,11 @@
 package kz.sueta.fileservice.controller;
 
 import kz.sueta.fileservice.dto.FileIdModel;
-import kz.sueta.fileservice.dto.FileListRequest;
-import kz.sueta.fileservice.dto.FileListResponse;
 import kz.sueta.fileservice.register.FileRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/file")
@@ -29,9 +25,9 @@ public class FileController {
         return ResponseEntity.status(200).body(response);
     }
 
-    @PostMapping("/getFiles")
-    public ResponseEntity<?> getFiles(@Valid @RequestBody FileListRequest fileListRequest) {
-        FileListResponse response = fileRegister.getFiles(fileListRequest);
+    @GetMapping("/get-file")
+    public ResponseEntity<?> getFiles(@RequestParam(value = "id") String id) {
+        String response = fileRegister.getFileById(id);
         return ResponseEntity.status(200).body(response);
     }
 
