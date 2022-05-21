@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'kz.sueta.clientservice'
-version = '1.0.18'
+version = '1.0.19'
 sourceCompatibility = '11'
 
 jar {

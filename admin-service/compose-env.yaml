@@ -13,7 +13,7 @@ services:
       - admin_network
 
   admin-api:
-    image: admin-api:1.0.16
+    image: admin-api:1.0.17
     container_name: 'admin-api'
     build:
       context: .
