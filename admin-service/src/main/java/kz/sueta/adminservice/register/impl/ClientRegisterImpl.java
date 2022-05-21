@@ -2,6 +2,7 @@ package kz.sueta.adminservice.register.impl;
 
 import kz.sueta.adminservice.dto.services.request.ClientBlockRequest;
 import kz.sueta.adminservice.dto.services.request.ClientListFilter;
+import kz.sueta.adminservice.dto.services.request.DetailRequest;
 import kz.sueta.adminservice.dto.services.response.ClientListResponse;
 import kz.sueta.adminservice.dto.ui.response.MessageResponse;
 import kz.sueta.adminservice.register.ClientRegister;
@@ -34,5 +35,16 @@ public class ClientRegisterImpl implements ClientRegister {
     @Override
     public ClientListResponse listClient(ClientListFilter filter) {
         return serviceClient.listClient(filter.limit, filter.offset, filter.actual, filter.blocked);
+    }
+
+    @Override
+    public MessageResponse unblockClient(DetailRequest request) {
+        MessageResponse messageResponse = serviceClient.unblockClient(request);
+
+        if (ServiceFallbackStatic.SERVICE_CALL_ERROR_MESSAGE.equals(messageResponse.message)) {
+            throw new RuntimeException("lDgOT8R0a4 :: client service calling returned error for UNBLOCK");
+        }
+
+        return messageResponse;
     }
 }

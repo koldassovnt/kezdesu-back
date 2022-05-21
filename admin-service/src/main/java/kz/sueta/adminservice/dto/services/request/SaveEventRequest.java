@@ -3,11 +3,9 @@ package kz.sueta.adminservice.dto.services.request;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,8 +29,5 @@ public class SaveEventRequest {
      * creatorId = id of admin from jwt token
      */
     public String creatorId;
-    public List<MultipartFile> images; // jpeg, png
-    public List<MultipartFile> videos; // mp4
-
     public String address;
 }

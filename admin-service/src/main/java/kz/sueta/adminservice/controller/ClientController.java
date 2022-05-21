@@ -3,9 +3,7 @@ package kz.sueta.adminservice.controller;
 import kz.sueta.adminservice.dto.services.request.ClientBlockRequest;
 import kz.sueta.adminservice.dto.services.request.ClientListFilter;
 import kz.sueta.adminservice.dto.services.request.DetailRequest;
-import kz.sueta.adminservice.dto.services.request.EventListFilter;
 import kz.sueta.adminservice.dto.services.response.ClientListResponse;
-import kz.sueta.adminservice.dto.services.response.EventListResponse;
 import kz.sueta.adminservice.dto.ui.response.MessageResponse;
 import kz.sueta.adminservice.register.ClientRegister;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +27,12 @@ public class ClientController {
     @PostMapping(value = "/action/block-client")
     public ResponseEntity<?> blockClient(@Valid @RequestBody ClientBlockRequest request) {
         MessageResponse response = clientRegister.blockClient(request);
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @PostMapping(value = "/action/unblock-client")
+    public ResponseEntity<?> unblockClient(@Valid @RequestBody DetailRequest request) {
+        MessageResponse response = clientRegister.unblockClient(request);
         return ResponseEntity.status(200).body(response);
     }
 

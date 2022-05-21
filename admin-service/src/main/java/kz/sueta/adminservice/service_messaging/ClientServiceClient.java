@@ -4,6 +4,7 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import kz.sueta.adminservice.dto.services.request.ClientBlockRequest;
 import kz.sueta.adminservice.dto.services.request.ClientListFilter;
+import kz.sueta.adminservice.dto.services.request.DetailRequest;
 import kz.sueta.adminservice.dto.services.request.IdListRequest;
 import kz.sueta.adminservice.dto.services.response.ClientListResponse;
 import kz.sueta.adminservice.dto.services.response.ClientResponse;
@@ -81,5 +82,18 @@ public interface ClientServiceClient {
         log.info("Exception class=" + throwable.getClass().getName());
         log.info("Exception took place: " + throwable.getMessage());
         return null;
+    }
+
+    @PostMapping("/client/forAdmin/unblockClient")
+    @Retry(name = "client-ws")
+    @CircuitBreaker(name = "client-ws", fallbackMethod = "unblockClientFallback")
+    MessageResponse unblockClient(@RequestBody DetailRequest request);
+
+    default MessageResponse unblockClientFallback(DetailRequest request,
+                                                  Throwable throwable) {
+        log.info("RequestBody = " + request);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
+        return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
     }
 }
