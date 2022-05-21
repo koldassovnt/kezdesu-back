@@ -95,5 +95,4 @@ public class EventController {
         MessageResponse response = eventRegister.saveEventContent(file, id, authentication.getName());
         return ResponseEntity.status(200).body(response);
     }
-
 }

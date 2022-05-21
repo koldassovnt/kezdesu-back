@@ -7,6 +7,7 @@ import kz.sueta.clientservice.dto.services.request.DetailRequest;
 import kz.sueta.clientservice.dto.services.request.IdListRequest;
 import kz.sueta.clientservice.dto.services.response.ClientListResponse;
 import kz.sueta.clientservice.dto.services.response.ClientResponse;
+import kz.sueta.clientservice.dto.services.response.FileIdModel;
 import kz.sueta.clientservice.dto.ui.request.EditClientRequest;
 import kz.sueta.clientservice.dto.ui.request.PhoneSmsRequest;
 import kz.sueta.clientservice.dto.ui.response.MessageResponse;
@@ -16,12 +17,14 @@ import kz.sueta.clientservice.exception.ui.RestException;
 import kz.sueta.clientservice.register.ClientRegister;
 import kz.sueta.clientservice.repository.ClientDao;
 import kz.sueta.clientservice.repository.ClientDetailDao;
+import kz.sueta.clientservice.service_messaging.FileServiceClient;
 import kz.sueta.clientservice.util.DbUtil;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -36,16 +39,19 @@ public class ClientRegisterImpl implements ClientRegister {
     private final ClientDao clientDao;
     private final Environment environment;
     private final ClientDetailDao clientDetailDao;
+    private final FileServiceClient fileServiceClient;
 
     @Autowired
     public ClientRegisterImpl(PasswordEncoder passwordEncoder,
                               ClientDao clientDao,
                               ClientDetailDao clientDetailDao,
-                              Environment environment) {
+                              Environment environment,
+                              FileServiceClient fileServiceClient) {
         this.passwordEncoder = passwordEncoder;
         this.clientDao = clientDao;
         this.environment = environment;
         this.clientDetailDao = clientDetailDao;
+        this.fileServiceClient = fileServiceClient;
     }
 
     @Override
@@ -60,6 +66,10 @@ public class ClientRegisterImpl implements ClientRegister {
         client.blockedReason = null;
 
         clientDao.save(client);
+
+        ClientDetail clientDetail = new ClientDetail();
+        clientDetail.client = client.client;
+        clientDetailDao.save(clientDetail);
 
         return client;
     }
@@ -247,6 +257,35 @@ public class ClientRegisterImpl implements ClientRegister {
     @Override
     public void unblockClient(DetailRequest request) {
         clientDao.updateClientBlocked(false, null, request.id);
+    }
+
+    @Override
+    public MessageResponse saveClientImage(MultipartFile file, String clientId) {
+        if (Strings.isNullOrEmpty(clientId)) {
+            throw new RestException("yRllKciE8L :: Authorization is incorrect, please login again!");
+        }
+
+        Client client = clientDao.findClientByClientIdAndActual(clientId, true);
+
+        if (client == null) {
+            throw new RestException("kB98jvQr1g :: Authorization is incorrect, please login again!");
+        }
+
+        FileIdModel fileIdModel = fileServiceClient.saveFile(file);
+
+        if (fileIdModel == null) {
+            throw new RuntimeException("w6gJF1whw4 :: file was not saved!");
+        }
+
+        if (Strings.isNullOrEmpty(fileIdModel.fileId)) {
+            throw new RuntimeException("Di3xi1EnKy :: fileId to save is null!");
+        }
+
+        ClientDetail clientDetail = clientDetailDao.findClientDetailByClient(client.client);
+        clientDetail.imgId = fileIdModel.fileId;
+        clientDetailDao.save(clientDetail);
+
+        return MessageResponse.of("Q17DzEWR7K :: client image was successfully set!");
     }
 
     private ClientResponse getClientResponse(ResultSet rs) throws SQLException {

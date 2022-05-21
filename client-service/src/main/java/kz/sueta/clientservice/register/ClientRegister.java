@@ -10,6 +10,7 @@ import kz.sueta.clientservice.dto.ui.request.EditClientRequest;
 import kz.sueta.clientservice.dto.ui.request.PhoneSmsRequest;
 import kz.sueta.clientservice.dto.ui.response.MessageResponse;
 import kz.sueta.clientservice.entity.Client;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLException;
 
@@ -30,4 +31,6 @@ public interface ClientRegister {
     MessageResponse editClient(EditClientRequest request, String clientId);
 
     void unblockClient(DetailRequest request);
+
+    MessageResponse saveClientImage(MultipartFile file, String clientId);
 }

@@ -27,4 +27,16 @@ public interface FileServiceClient {
         log.info("Exception took place: " + throwable.getMessage());
         return null;
     }
+
+    @GetMapping(value = "/file/get-file")
+    @Retry(name = "file-ws")
+    @CircuitBreaker(name = "file-ws", fallbackMethod = "getFileByIdFallback")
+    String getFileById(@RequestParam("id") String id);
+
+    default String getFileByIdFallback(String id, Throwable throwable) {
+        log.info("RequestParam=" + id);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
+        return null;
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
@@ -38,4 +39,11 @@ public class ClientController {
         return ResponseEntity.status(200).body(response);
     }
 
+    @PostMapping(value = "/action/save-image",
+            consumes = {"multipart/form-data"})
+    public ResponseEntity<?> saveEventContent(@RequestParam("file") MultipartFile file,
+                                              Authentication authentication) {
+        MessageResponse response = clientRegister.saveClientImage(file, authentication.getName());
+        return ResponseEntity.status(200).body(response);
+    }
 }
