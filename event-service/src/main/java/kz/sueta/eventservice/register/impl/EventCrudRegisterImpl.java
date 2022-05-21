@@ -1,29 +1,30 @@
 package kz.sueta.eventservice.register.impl;
 
 import com.google.common.base.Strings;
-import kz.sueta.eventservice.dto.request.*;
+import kz.sueta.eventservice.dto.request.DetailRequest;
+import kz.sueta.eventservice.dto.request.EditEventRequest;
+import kz.sueta.eventservice.dto.request.EventListFilter;
+import kz.sueta.eventservice.dto.request.SaveEventRequest;
 import kz.sueta.eventservice.dto.response.ContentResponse;
 import kz.sueta.eventservice.dto.response.EventListResponse;
 import kz.sueta.eventservice.dto.response.EventResponse;
-import kz.sueta.eventservice.dto.response.FileIdModel;
 import kz.sueta.eventservice.entity.Event;
-import kz.sueta.eventservice.entity.EventContent;
 import kz.sueta.eventservice.entity.EventCreator;
 import kz.sueta.eventservice.entity.id_class.EventCreatorId;
 import kz.sueta.eventservice.exception.NoDataByIdException;
 import kz.sueta.eventservice.register.EventCrudRegister;
-import kz.sueta.eventservice.repository.*;
+import kz.sueta.eventservice.repository.CategoryDictionaryDao;
+import kz.sueta.eventservice.repository.EventCreatorDao;
+import kz.sueta.eventservice.repository.EventDao;
 import kz.sueta.eventservice.service_messaging.FileServiceClient;
 import kz.sueta.eventservice.util.CategoryStatic;
 import kz.sueta.eventservice.util.DbUtil;
-import kz.sueta.eventservice.util.ServiceFallBackStatic;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -39,7 +40,6 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
 
     private final EventDao eventDao;
     private final EventCreatorDao eventCreatorDao;
-    private final EventContentDao eventContentDao;
     private final FileServiceClient fileServiceClient;
     private final CategoryDictionaryDao categoryDictionaryDao;
     private final Environment environment;
@@ -47,13 +47,11 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     @Autowired
     public EventCrudRegisterImpl(EventDao eventDao,
                                  EventCreatorDao eventCreatorDao,
-                                 EventContentDao eventContentDao,
                                  FileServiceClient fileServiceClient,
                                  CategoryDictionaryDao categoryDictionaryDao,
                                  Environment environment) {
         this.eventDao = eventDao;
         this.eventCreatorDao = eventCreatorDao;
-        this.eventContentDao = eventContentDao;
         this.fileServiceClient = fileServiceClient;
         this.categoryDictionaryDao = categoryDictionaryDao;
         this.environment = environment;
@@ -81,29 +79,6 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
         eventCreator.eventId = event.eventId;
         eventCreator.clientId = saveRequest.creatorId;
         eventCreatorDao.saveAndFlush(eventCreator);
-
-        saveEventContent(saveRequest.images, event.eventId);
-        saveEventContent(saveRequest.videos, event.eventId);
-    }
-
-    private void saveEventContent(List<MultipartFile> multipartFiles, String eventId) {
-        EventContent eventContent = new EventContent();
-        eventContent.eventId = eventId;
-
-        if (multipartFiles != null && !multipartFiles.isEmpty()) {
-            for (MultipartFile file : multipartFiles) {
-                FileIdModel fileIdModel = fileServiceClient.saveFile(FileCreateRequest.of(file));
-
-                if (fileIdModel != null && !Strings.isNullOrEmpty(fileIdModel.fileId)
-                        && !ServiceFallBackStatic.SERVICE_FALLBACK_ID.equals(fileIdModel.fileId)) {
-                    eventContent.fileId = fileIdModel.fileId;
-
-                    eventContentDao.saveAndFlush(eventContent);
-                } else {
-                    logger.error("y6NOY734ht :: File saving error for eventId = " + eventId);
-                }
-            }
-        }
     }
 
     @Override
@@ -154,10 +129,6 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
         setCategoryId(event, editEventRequest.categoryId);
 
         eventDao.saveAndFlush(event);
-
-        saveEventContent(editEventRequest.images, event.eventId);
-        saveEventContent(editEventRequest.videos, event.eventId);
-
     }
 
     private void setCategoryId(Event event, String categoryId) {
@@ -276,7 +247,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                 "select client_id from event_participant where event_id = ?")) {
             ps.setString(1, eventResponse.eventId);
 
-            try(ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     eventResponse.participantList.add(rs.getString("client_id"));
                 }
@@ -291,7 +262,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
                 "select file_id from event_content where event_id = ?")) {
             ps.setString(1, eventResponse.eventId);
 
-            try(ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     ContentResponse response = new ContentResponse();
                     response.contentId = rs.getString("file_id");

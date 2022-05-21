@@ -1,14 +1,17 @@
 package kz.sueta.eventservice.register.impl;
 
 import kz.sueta.eventservice.dto.request.ClientEventRequest;
+import kz.sueta.eventservice.dto.request.SaveEventContentRequest;
 import kz.sueta.eventservice.dto.response.EventListResponse;
 import kz.sueta.eventservice.dto.response.EventResponse;
 import kz.sueta.eventservice.dto.response.MessageResponse;
 import kz.sueta.eventservice.entity.Event;
+import kz.sueta.eventservice.entity.EventContent;
 import kz.sueta.eventservice.entity.EventParticipant;
 import kz.sueta.eventservice.entity.id_class.EventCreatorId;
 import kz.sueta.eventservice.entity.id_class.EventParticipantId;
 import kz.sueta.eventservice.register.EventRegister;
+import kz.sueta.eventservice.repository.EventContentDao;
 import kz.sueta.eventservice.repository.EventCreatorDao;
 import kz.sueta.eventservice.repository.EventDao;
 import kz.sueta.eventservice.repository.EventParticipantDao;
@@ -33,16 +36,19 @@ public class EventRegisterImpl implements EventRegister {
     private final EventCreatorDao eventCreatorDao;
     private final EventParticipantDao eventParticipantDao;
     private final Environment environment;
+    private final EventContentDao eventContentDao;
 
     @Autowired
     public EventRegisterImpl(EventDao eventDao,
                              EventCreatorDao eventCreatorDao,
                              EventParticipantDao eventParticipantDao,
-                             Environment environment) {
+                             Environment environment,
+                             EventContentDao eventContentDao) {
         this.eventDao = eventDao;
         this.eventCreatorDao = eventCreatorDao;
         this.eventParticipantDao = eventParticipantDao;
         this.environment = environment;
+        this.eventContentDao = eventContentDao;
     }
 
     @Override
@@ -149,5 +155,21 @@ public class EventRegisterImpl implements EventRegister {
         }
 
         return EventListResponse.of(responses);
+    }
+
+    @Override
+    public Boolean isEventExists(String id) {
+        Event event = eventDao.findEventByEventIdAndActual(id, true);
+        return event != null;
+    }
+
+    @Override
+    public MessageResponse saveContent(SaveEventContentRequest request) {
+        EventContent eventContent = new EventContent();
+        eventContent.eventId = request.eventId;
+        eventContent.fileId = request.contentId;
+        eventContentDao.saveAndFlush(eventContent);
+
+        return MessageResponse.of("OwQoC41DJK :: content was successfully saved");
     }
 }

@@ -1,6 +1,7 @@
 package kz.sueta.eventservice.register;
 
 import kz.sueta.eventservice.dto.request.ClientEventRequest;
+import kz.sueta.eventservice.dto.request.SaveEventContentRequest;
 import kz.sueta.eventservice.dto.response.EventListResponse;
 import kz.sueta.eventservice.dto.response.MessageResponse;
 
@@ -13,4 +14,8 @@ public interface EventRegister {
     MessageResponse approveEvent(ClientEventRequest request);
 
     EventListResponse clientEvents(Boolean creator, String clientId) throws SQLException;
+
+    Boolean isEventExists(String id);
+
+    MessageResponse saveContent(SaveEventContentRequest request);
 }

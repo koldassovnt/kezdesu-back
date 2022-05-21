@@ -11,9 +11,10 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Data
 public class FileCreateRequest {
-    public MultipartFile file;
+    public byte[] byteArr;
+    public String type;
 
-    public static FileCreateRequest of(MultipartFile file) {
-        return new FileCreateRequest(file);
+    public static FileCreateRequest of(byte[] byteArr, String type) {
+        return new FileCreateRequest(byteArr, type);
     }
 }

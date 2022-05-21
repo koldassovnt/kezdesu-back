@@ -1,6 +1,7 @@
 package kz.sueta.eventservice.controller;
 
 import kz.sueta.eventservice.dto.request.ClientEventRequest;
+import kz.sueta.eventservice.dto.request.SaveEventContentRequest;
 import kz.sueta.eventservice.dto.response.EventListResponse;
 import kz.sueta.eventservice.dto.response.MessageResponse;
 import kz.sueta.eventservice.register.EventRegister;
@@ -39,6 +40,19 @@ public class EventController {
     public ResponseEntity<?> clientEvents(@RequestParam(value = "creator") Boolean creator,
                                           @RequestParam(value = "id") String id) {
         EventListResponse response = eventRegister.clientEvents(creator, id);
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @SneakyThrows
+    @GetMapping("/is-event-exists")
+    public ResponseEntity<?> isEventExists(@RequestParam(value = "id") String id) {
+        Boolean response = eventRegister.isEventExists(id);
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @PostMapping("/save-content")
+    public ResponseEntity<?> saveContent(@Valid @RequestBody SaveEventContentRequest request) {
+        MessageResponse response = eventRegister.saveContent(request);
         return ResponseEntity.status(200).body(response);
     }
 }
