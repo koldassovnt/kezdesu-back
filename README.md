@@ -44,6 +44,11 @@
    - offset (Integer)
    - actual (Boolean)
    - blocked (Boolean)
+
+#### 1.2.3 admin/action/unblock-client (POST) (NEED token)
+
+- Request body fields:
+    - id (String) - Required
    
 ### 1.3 Event managing
 
