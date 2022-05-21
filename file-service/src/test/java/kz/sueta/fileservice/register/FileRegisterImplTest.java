@@ -2,7 +2,6 @@ package kz.sueta.fileservice.register;
 
 import kz.greetgo.util.RND;
 import kz.sueta.fileservice.repository.FileDao;
-import kz.sueta.fileservice.dto.FileCreateRequest;
 import kz.sueta.fileservice.dto.FileIdModel;
 import kz.sueta.fileservice.dto.FileListRequest;
 import kz.sueta.fileservice.dto.FileListResponse;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -33,19 +33,17 @@ public class FileRegisterImplTest {
     public void saveFile() {
         fileDao.deleteAll();
 
-        FileCreateRequest fileCreateRequest = new FileCreateRequest();
+        MultipartFile multipartFile = new MockMultipartFile
+                ("file", RND.strEng(5), "image/jpeg", RND.byteArray(10));
 
-            fileCreateRequest.file = new MockMultipartFile
-                    ("file", RND.strEng(5), "image/jpeg", RND.byteArray(10));
+        //
+        //
+        FileIdModel fileIdModel = fileRegister.saveFile(multipartFile);
+        //
+        //
 
-            //
-            //
-            FileIdModel fileIdModel = fileRegister.saveFile(fileCreateRequest);
-            //
-            //
-
-            Assertions.assertNotNull(fileIdModel);
-            Assertions.assertNotNull(fileIdModel.fileId);
+        Assertions.assertNotNull(fileIdModel);
+        Assertions.assertNotNull(fileIdModel.fileId);
     }
 
     @Test
@@ -53,7 +51,7 @@ public class FileRegisterImplTest {
         fileDao.deleteAll();
 
         File file = new File();
-        file.mimeType = "image/jpeg";
+        file.mimeType = "image/png";
         file.fileId = RND.strInt(20);
         file.label = RND.strEng(10);
         file.content = Base64.getEncoder().encodeToString(RND.byteArray(10));
