@@ -1,20 +1,16 @@
 package kz.sueta.eventservice.register.impl;
 
 import kz.sueta.eventservice.dto.request.ClientEventRequest;
+import kz.sueta.eventservice.dto.request.ComplainEventRequest;
 import kz.sueta.eventservice.dto.request.SaveEventContentRequest;
 import kz.sueta.eventservice.dto.response.EventListResponse;
 import kz.sueta.eventservice.dto.response.EventResponse;
 import kz.sueta.eventservice.dto.response.MessageResponse;
-import kz.sueta.eventservice.entity.Event;
-import kz.sueta.eventservice.entity.EventContent;
-import kz.sueta.eventservice.entity.EventParticipant;
+import kz.sueta.eventservice.entity.*;
 import kz.sueta.eventservice.entity.id_class.EventCreatorId;
 import kz.sueta.eventservice.entity.id_class.EventParticipantId;
 import kz.sueta.eventservice.register.EventRegister;
-import kz.sueta.eventservice.repository.EventContentDao;
-import kz.sueta.eventservice.repository.EventCreatorDao;
-import kz.sueta.eventservice.repository.EventDao;
-import kz.sueta.eventservice.repository.EventParticipantDao;
+import kz.sueta.eventservice.repository.*;
 import kz.sueta.eventservice.util.DbUtil;
 import kz.sueta.eventservice.util.ServiceFallBackStatic;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class EventRegisterImpl implements EventRegister {
@@ -37,18 +34,24 @@ public class EventRegisterImpl implements EventRegister {
     private final EventParticipantDao eventParticipantDao;
     private final Environment environment;
     private final EventContentDao eventContentDao;
+    private final ComplainDao complainDao;
+    private final EventComplainDao eventComplainDao;
 
     @Autowired
     public EventRegisterImpl(EventDao eventDao,
                              EventCreatorDao eventCreatorDao,
                              EventParticipantDao eventParticipantDao,
                              Environment environment,
-                             EventContentDao eventContentDao) {
+                             EventContentDao eventContentDao,
+                             ComplainDao complainDao,
+                             EventComplainDao eventComplainDao) {
         this.eventDao = eventDao;
         this.eventCreatorDao = eventCreatorDao;
         this.eventParticipantDao = eventParticipantDao;
         this.environment = environment;
         this.eventContentDao = eventContentDao;
+        this.complainDao = complainDao;
+        this.eventComplainDao = eventComplainDao;
     }
 
     @Override
@@ -61,8 +64,9 @@ public class EventRegisterImpl implements EventRegister {
 
         try {
             eventCreatorDao.getById(EventCreatorId.of(request.eventId, request.clientId));
-        } catch (EntityNotFoundException ex) {
             return MessageResponse.of(ServiceFallBackStatic.CREATOR_ACTING_IN_HIS_EVENT);
+        } catch (EntityNotFoundException ignored) {
+
         }
 
         EventParticipant eventParticipant = new EventParticipant();
@@ -85,8 +89,9 @@ public class EventRegisterImpl implements EventRegister {
 
         try {
             eventCreatorDao.getById(EventCreatorId.of(request.eventId, request.clientId));
-        } catch (EntityNotFoundException ex) {
             return MessageResponse.of(ServiceFallBackStatic.CREATOR_ACTING_IN_HIS_EVENT);
+        } catch (EntityNotFoundException ignored) {
+
         }
 
         EventParticipant eventParticipant = eventParticipantDao
@@ -122,10 +127,10 @@ public class EventRegisterImpl implements EventRegister {
                         " from event e ";
 
         if (creator) {
-            sql  += " left join event_creator ec on ec.event_Id = e.event_Id " +
+            sql += " left join event_creator ec on ec.event_Id = e.event_Id " +
                     " where ec.client_id = ?";
         } else {
-            sql  += " left join event_participant ep on ep.event_Id = e.event_Id " +
+            sql += " left join event_participant ep on ep.event_Id = e.event_Id " +
                     " where ep.client_id = ?";
         }
 
@@ -171,5 +176,28 @@ public class EventRegisterImpl implements EventRegister {
         eventContentDao.saveAndFlush(eventContent);
 
         return MessageResponse.of("OwQoC41DJK :: content was successfully saved");
+    }
+
+    @Override
+    public MessageResponse complainEvent(ComplainEventRequest request) {
+        Event event = eventDao.findEventByEventId(request.eventId);
+
+        if (event == null) {
+            throw new RuntimeException("En3vNtOfZm :: event does not exists by this id=" + request.eventId);
+        }
+
+        Complain complain = new Complain();
+        complain.complainId = UUID.randomUUID().toString();
+        complain.clientId = request.clientId;
+        complain.complainText = request.complainText;
+
+        complainDao.saveAndFlush(complain);
+
+        EventComplain eventComplain = new EventComplain();
+        eventComplain.complainId = complain.complainId;
+        eventComplain.eventId = request.eventId;
+        eventComplainDao.saveAndFlush(eventComplain);
+
+        return MessageResponse.of("LpUkL30RWk :: event complain was successfully saved");
     }
 }

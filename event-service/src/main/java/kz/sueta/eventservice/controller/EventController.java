@@ -1,6 +1,7 @@
 package kz.sueta.eventservice.controller;
 
 import kz.sueta.eventservice.dto.request.ClientEventRequest;
+import kz.sueta.eventservice.dto.request.ComplainEventRequest;
 import kz.sueta.eventservice.dto.request.SaveEventContentRequest;
 import kz.sueta.eventservice.dto.response.EventListResponse;
 import kz.sueta.eventservice.dto.response.MessageResponse;
@@ -53,6 +54,12 @@ public class EventController {
     @PostMapping("/save-content")
     public ResponseEntity<?> saveContent(@Valid @RequestBody SaveEventContentRequest request) {
         MessageResponse response = eventRegister.saveContent(request);
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @PostMapping("/complain-event")
+    public ResponseEntity<?> complainEvent(@Valid @RequestBody ComplainEventRequest request) {
+        MessageResponse response = eventRegister.complainEvent(request);
         return ResponseEntity.status(200).body(response);
     }
 }
