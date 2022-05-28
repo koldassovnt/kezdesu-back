@@ -28,8 +28,8 @@ public class EventCrudController {
 
     @PostMapping(value = "/save")
     public ResponseEntity<?> saveEvent(@Valid @RequestBody SaveEventRequest saveRequest) {
-        eventCrudRegister.saveEvent(saveRequest);
-        return ResponseEntity.status(200).body(MessageResponse.of("Event successfully created!"));
+        String id = eventCrudRegister.saveEvent(saveRequest);
+        return ResponseEntity.status(200).body(MessageResponse.of("Event successfully created!", id));
     }
 
     @PostMapping(value = "/edit")

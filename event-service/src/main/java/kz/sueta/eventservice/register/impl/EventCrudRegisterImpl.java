@@ -58,7 +58,7 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
     }
 
     @Override
-    public void saveEvent(SaveEventRequest saveRequest) {
+    public String saveEvent(SaveEventRequest saveRequest) {
         Event event = new Event();
         event.eventId = UUID.randomUUID().toString();
         event.actual = true;
@@ -79,6 +79,8 @@ public class EventCrudRegisterImpl implements EventCrudRegister {
         eventCreator.eventId = event.eventId;
         eventCreator.clientId = saveRequest.creatorId;
         eventCreatorDao.saveAndFlush(eventCreator);
+
+        return event.eventId;
     }
 
     @Override

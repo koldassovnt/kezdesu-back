@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public interface EventCrudRegister {
 
-    void saveEvent(SaveEventRequest saveRequest);
+    String saveEvent(SaveEventRequest saveRequest);
 
     void editEvent(EditEventRequest editEventRequest);
 
