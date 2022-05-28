@@ -183,6 +183,12 @@
     - displayName (String)
     - phone (String)
 
+### 1.7 Complain managing (жалобы)
+
+#### 1.7.1 admin/action/list-complain (GET) (NEED token)
+
+- No request param
+
 ## 2 For Client
 
 ##### For client part working with JWT token is required. Except 2.1 Authorization part.
@@ -304,5 +310,13 @@
 
 - PathVariable:
     - id (String)
+
+### 2.6 Complain managing (жалобы)
+
+#### 2.6.1 client/action/complain-event (POST) (NEED token)
+
+- Request body:
+    - eventId (String) - Required
+    - complainText (String) - Required
 
 ###### Apis will be updated as it will changed
