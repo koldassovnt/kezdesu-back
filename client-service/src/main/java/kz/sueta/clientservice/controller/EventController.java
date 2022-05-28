@@ -1,9 +1,6 @@
 package kz.sueta.clientservice.controller;
 
-import kz.sueta.clientservice.dto.services.request.DetailRequest;
-import kz.sueta.clientservice.dto.services.request.EditEventRequest;
-import kz.sueta.clientservice.dto.services.request.EventListFilter;
-import kz.sueta.clientservice.dto.services.request.SaveEventRequest;
+import kz.sueta.clientservice.dto.services.request.*;
 import kz.sueta.clientservice.dto.services.response.EventListResponse;
 import kz.sueta.clientservice.dto.ui.response.ClientEventListResponse;
 import kz.sueta.clientservice.dto.ui.response.ClientEventResponse;
@@ -93,6 +90,13 @@ public class EventController {
                                               @RequestParam("file") MultipartFile file,
                                               Authentication authentication) {
         MessageResponse response = eventRegister.saveEventContent(file, id, authentication.getName());
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @PostMapping("/action/complain-event")
+    public ResponseEntity<?> complainEvent(@Valid @RequestBody ComplainEventRequest request,
+                                     Authentication authentication) {
+        MessageResponse response = eventRegister.complainEvent(request, authentication.getName());
         return ResponseEntity.status(200).body(response);
     }
 }

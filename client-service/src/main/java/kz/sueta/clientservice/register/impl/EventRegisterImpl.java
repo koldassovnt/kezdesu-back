@@ -241,6 +241,23 @@ public class EventRegisterImpl implements EventRegister {
         return response;
     }
 
+    @Override
+    public MessageResponse complainEvent(ComplainEventRequest request, String clientId) {
+        if (Strings.isNullOrEmpty(clientId)) {
+            throw new RestException("1PcjC4kkR4 :: Authorization is incorrect, please login again!");
+        }
+
+        request.clientId = clientId;
+
+        MessageResponse response = eventServiceClient.complainEvent(request);
+
+        if (ServiceFallbackStatic.SERVICE_CALL_ERROR_MESSAGE.equals(response.message)) {
+            throw new RuntimeException("N1naJ6QpMg :: event service calling returned error for COMPLAIN CONTENT");
+        }
+
+        return response;
+    }
+
     private ClientEventResponse mapClientEventResponse(EventResponse er) throws SQLException {
 
         if (er == null) {

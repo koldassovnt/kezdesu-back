@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
+
 import static kz.sueta.clientservice.util.ServiceFallbackStatic.SERVICE_CALL_ERROR_MESSAGE;
 
 @FeignClient(name = "event-ws")
@@ -183,6 +185,19 @@ public interface EventServiceClient {
 
     default MessageResponse saveContentFallback(SaveEventContentRequest request,
                                                 Throwable throwable) {
+        log.info("RequestBody = " + request);
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
+        return MessageResponse.of(SERVICE_CALL_ERROR_MESSAGE);
+    }
+
+    @PostMapping("/event/complain-event")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "complainEventFallback")
+    MessageResponse complainEvent(@Valid @RequestBody ComplainEventRequest request);
+
+    default MessageResponse complainEventFallback(ComplainEventRequest request,
+                                                  Throwable throwable) {
         log.info("RequestBody = " + request);
         log.info("Exception class=" + throwable.getClass().getName());
         log.info("Exception took place: " + throwable.getMessage());

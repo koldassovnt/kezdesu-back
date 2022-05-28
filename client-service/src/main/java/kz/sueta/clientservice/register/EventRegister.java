@@ -1,9 +1,6 @@
 package kz.sueta.clientservice.register;
 
-import kz.sueta.clientservice.dto.services.request.DetailRequest;
-import kz.sueta.clientservice.dto.services.request.EditEventRequest;
-import kz.sueta.clientservice.dto.services.request.EventListFilter;
-import kz.sueta.clientservice.dto.services.request.SaveEventRequest;
+import kz.sueta.clientservice.dto.services.request.*;
 import kz.sueta.clientservice.dto.services.response.CategoryListResponse;
 import kz.sueta.clientservice.dto.services.response.EventListResponse;
 import kz.sueta.clientservice.dto.ui.response.ClientEventListResponse;
@@ -33,4 +30,6 @@ public interface EventRegister {
     CategoryListResponse categoryList();
 
     MessageResponse saveEventContent(MultipartFile file, String id, String clientId);
+
+    MessageResponse complainEvent(ComplainEventRequest request, String clientId);
 }
