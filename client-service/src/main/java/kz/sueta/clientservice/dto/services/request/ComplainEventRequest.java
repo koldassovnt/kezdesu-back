@@ -12,7 +12,6 @@ import javax.validation.constraints.NotNull;
 @NotNull(message = "model can not be null")
 public class ComplainEventRequest {
 
-    @NotNull(message = "client id must not be null")
     public String clientId;
     @NotNull(message = "event id must not be null")
     public String eventId;
