@@ -2,10 +2,7 @@ package kz.sueta.adminservice.register.impl;
 
 import com.netflix.servo.util.Strings;
 import kz.sueta.adminservice.dto.services.request.*;
-import kz.sueta.adminservice.dto.services.response.ClientListResponse;
-import kz.sueta.adminservice.dto.services.response.ClientResponse;
-import kz.sueta.adminservice.dto.services.response.EventListResponse;
-import kz.sueta.adminservice.dto.services.response.EventResponse;
+import kz.sueta.adminservice.dto.services.response.*;
 import kz.sueta.adminservice.dto.ui.response.AdminEventListResponse;
 import kz.sueta.adminservice.dto.ui.response.AdminEventResponse;
 import kz.sueta.adminservice.dto.ui.response.ClientInfoResponse;
@@ -119,6 +116,28 @@ public class EventRegisterImpl implements EventRegister {
         }
 
         return mapAdminEventResponse(eventResponse);
+    }
+
+    @Override
+    public AdminComplainListResponse complainList() {
+        ComplainListResponse response = eventServiceClient.complainList();
+
+        List<AdminComplainResponse> adminComplainResponses = new ArrayList<>();
+
+        for (ComplainResponse cr : response.detailResponses) {
+            AdminComplainResponse acr = new AdminComplainResponse();
+            acr.complainId = cr.complainId;
+            acr.complainText = cr.complainText;
+            acr.eventId = cr.eventId;
+            acr.eventName = cr.eventName;
+            acr.clientId = cr.clientId;
+
+            ClientResponse clientResponse = clientServiceClient.detailClient(cr.clientId);
+            acr.clientPhone = clientResponse.phone;
+            adminComplainResponses.add(acr);
+        }
+
+        return AdminComplainListResponse.of(adminComplainResponses);
     }
 
     private AdminEventResponse mapAdminEventResponse(EventResponse er) {

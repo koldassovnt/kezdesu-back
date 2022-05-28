@@ -254,4 +254,15 @@ public interface EventServiceClient {
         log.info("Exception took place: " + throwable.getMessage());
         return null;
     }
+
+    @GetMapping("/complain/list")
+    @Retry(name = "event-ws")
+    @CircuitBreaker(name = "event-ws", fallbackMethod = "listComplainFallback")
+    ComplainListResponse complainList();
+
+    default ComplainListResponse listComplainFallback(Throwable throwable) {
+        log.info("Exception class=" + throwable.getClass().getName());
+        log.info("Exception took place: " + throwable.getMessage());
+        return new ComplainListResponse();
+    }
 }
