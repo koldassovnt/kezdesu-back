@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @NotNull(message = "Request body cannot be null")
 public class FileCreateRequest {
-    public byte[] byteArr;
+    public String content;
     public String type;
+    public String name;
 }

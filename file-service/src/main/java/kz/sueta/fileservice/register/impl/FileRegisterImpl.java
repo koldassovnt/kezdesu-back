@@ -1,10 +1,7 @@
 package kz.sueta.fileservice.register.impl;
 
 import com.google.common.base.Strings;
-import kz.sueta.fileservice.dto.FileDetailResponse;
-import kz.sueta.fileservice.dto.FileIdModel;
-import kz.sueta.fileservice.dto.FileListRequest;
-import kz.sueta.fileservice.dto.FileListResponse;
+import kz.sueta.fileservice.dto.*;
 import kz.sueta.fileservice.entity.File;
 import kz.sueta.fileservice.exception.FileGetException;
 import kz.sueta.fileservice.exception.FileSaveException;
@@ -29,27 +26,20 @@ public class FileRegisterImpl implements FileRegister {
     }
 
     @Override
-    public FileIdModel saveFile(MultipartFile multipartFile) {
+    public FileIdModel saveFile(FileCreateRequest request) {
 
-        if (multipartFile == null) {
+        if (request.content == null) {
             throw new FileSaveException("C45oJd9tGo :: multipartFile is null");
         }
 
-        if (Objects.equals(multipartFile.getContentType(), "image/png")
-                || Objects.equals(multipartFile.getContentType(), "video/mp4")) {
+        if (Objects.equals(request.type, "image/png")
+                || Objects.equals(request.type, "video/mp4")) {
 
-            Base64.Encoder encoder = Base64.getEncoder();
             File file = new File();
-
-            try {
-                 file.content = encoder.encodeToString(multipartFile.getBytes());
-            } catch (Exception exception) {
-                throw new RuntimeException("H8qVU3Fzw5 :: error during encoding byte[] to base64 string");
-            }
-
+            file.content = request.content;
             file.fileId = UUID.randomUUID().toString();
-            file.mimeType = multipartFile.getContentType();
-            file.label = multipartFile.getOriginalFilename();
+            file.mimeType = request.type;
+            file.label = request.name;
 
             fileDao.save(file);
 

@@ -12,7 +12,7 @@ services:
       - file_network
 
   file-api:
-    image: file-api:1.0.4
+    image: file-api:1.0.6
     container_name: file-api
     build:
       context: .

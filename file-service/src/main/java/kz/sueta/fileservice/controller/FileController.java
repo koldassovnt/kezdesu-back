@@ -1,11 +1,13 @@
 package kz.sueta.fileservice.controller;
 
+import kz.sueta.fileservice.dto.FileCreateRequest;
 import kz.sueta.fileservice.dto.FileIdModel;
 import kz.sueta.fileservice.register.FileRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/file")
@@ -18,10 +20,9 @@ public class FileController {
         this.fileRegister = fileRegister;
     }
 
-    @PostMapping(value = "/save-file",
-            consumes = {"multipart/form-data"})
-    public ResponseEntity<?> saveFile(@RequestParam("file") MultipartFile file) {
-        FileIdModel response = fileRegister.saveFile(file);
+    @PostMapping(value = "/save-file")
+    public ResponseEntity<?> saveFile(@Valid @RequestBody FileCreateRequest request) {
+        FileIdModel response = fileRegister.saveFile(request);
         return ResponseEntity.status(200).body(response);
     }
 
