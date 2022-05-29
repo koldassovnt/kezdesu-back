@@ -64,9 +64,8 @@ public class EventRegisterImpl implements EventRegister {
 
         try {
             eventCreatorDao.getById(EventCreatorId.of(request.eventId, request.clientId));
-            return MessageResponse.of(ServiceFallBackStatic.CREATOR_ACTING_IN_HIS_EVENT);
         } catch (EntityNotFoundException ignored) {
-
+            return MessageResponse.of(ServiceFallBackStatic.CREATOR_ACTING_IN_HIS_EVENT);
         }
 
         EventParticipant eventParticipant = new EventParticipant();
@@ -89,9 +88,8 @@ public class EventRegisterImpl implements EventRegister {
 
         try {
             eventCreatorDao.getById(EventCreatorId.of(request.eventId, request.clientId));
-            return MessageResponse.of(ServiceFallBackStatic.CREATOR_ACTING_IN_HIS_EVENT);
         } catch (EntityNotFoundException ignored) {
-
+            return MessageResponse.of(ServiceFallBackStatic.CREATOR_ACTING_IN_HIS_EVENT);
         }
 
         EventParticipant eventParticipant = eventParticipantDao
