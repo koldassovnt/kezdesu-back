@@ -1,10 +1,7 @@
 package kz.sueta.clientservice.register.impl;
 
 import com.google.common.base.Strings;
-import kz.sueta.clientservice.dto.services.request.ClientBlockRequest;
-import kz.sueta.clientservice.dto.services.request.ClientListFilter;
-import kz.sueta.clientservice.dto.services.request.DetailRequest;
-import kz.sueta.clientservice.dto.services.request.IdListRequest;
+import kz.sueta.clientservice.dto.services.request.*;
 import kz.sueta.clientservice.dto.services.response.ClientListResponse;
 import kz.sueta.clientservice.dto.services.response.ClientResponse;
 import kz.sueta.clientservice.dto.services.response.FileIdModel;
@@ -27,10 +24,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 @Component
 public class ClientRegisterImpl implements ClientRegister {
@@ -271,7 +266,19 @@ public class ClientRegisterImpl implements ClientRegister {
             throw new RestException("kB98jvQr1g :: Authorization is incorrect, please login again!");
         }
 
-        FileIdModel fileIdModel = fileServiceClient.saveFile(file);
+        FileCreateRequest fileCreateRequest = new FileCreateRequest();
+        fileCreateRequest.name = file.getName();
+        fileCreateRequest.type = file.getContentType();
+
+        Base64.Encoder encoder = Base64.getEncoder();
+
+        try {
+            fileCreateRequest.content = encoder.encodeToString(file.getBytes());
+        } catch (Exception exception) {
+            throw new RuntimeException("H8qVU3Fzw5 :: error during encoding byte[] to base64 string");
+        }
+
+        FileIdModel fileIdModel = fileServiceClient.saveFile(fileCreateRequest);
 
         if (fileIdModel == null) {
             throw new RuntimeException("w6gJF1whw4 :: file was not saved!");

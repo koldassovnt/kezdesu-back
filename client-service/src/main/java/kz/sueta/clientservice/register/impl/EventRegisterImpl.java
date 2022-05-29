@@ -29,6 +29,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @Component
@@ -220,7 +221,19 @@ public class EventRegisterImpl implements EventRegister {
             throw new RestException("zFWWxTDhAO :: event by this Id does not exists!");
         }
 
-        FileIdModel fileIdModel = fileServiceClient.saveFile(file);
+        FileCreateRequest fileCreateRequest = new FileCreateRequest();
+        fileCreateRequest.name = file.getName();
+        fileCreateRequest.type = file.getContentType();
+
+        Base64.Encoder encoder = Base64.getEncoder();
+
+        try {
+            fileCreateRequest.content = encoder.encodeToString(file.getBytes());
+        } catch (Exception exception) {
+            throw new RuntimeException("272SfVtMIM :: error during encoding byte[] to base64 string");
+        }
+
+        FileIdModel fileIdModel = fileServiceClient.saveFile(fileCreateRequest);
 
         if (fileIdModel == null) {
             throw new RuntimeException("5O7On2Bdd1 :: file was not saved!");
