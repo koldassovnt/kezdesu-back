@@ -1,4 +1,4 @@
-package kz.sueta.clientservice.bean;
+package kz.sueta.clientservice.beans;
 
 import org.springframework.context.annotation.Description;
 

@@ -1,8 +1,8 @@
-package kz.sueta.clientservice.bean_security;
+package kz.sueta.clientservice.beans;
 
-import kz.sueta.clientservice.bean_security.jwt.AuthEntryPointJwt;
-import kz.sueta.clientservice.bean_security.jwt.AuthTokenFilter;
-import kz.sueta.clientservice.bean_security.services.CustomUserDetailsService;
+import kz.sueta.clientservice.beans.jwt.AuthEntryPointJwt;
+import kz.sueta.clientservice.beans.jwt.AuthTokenFilter;
+import kz.sueta.clientservice.beans.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package kz.sueta.clientservice.bean_security.jwt;
+package kz.sueta.clientservice.beans.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

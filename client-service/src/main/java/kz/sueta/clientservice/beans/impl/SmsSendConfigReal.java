@@ -1,6 +1,6 @@
-package kz.sueta.clientservice.bean.impl;
+package kz.sueta.clientservice.beans.impl;
 
-import kz.sueta.clientservice.bean.SmsSendConfig;
+import kz.sueta.clientservice.beans.SmsSendConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;

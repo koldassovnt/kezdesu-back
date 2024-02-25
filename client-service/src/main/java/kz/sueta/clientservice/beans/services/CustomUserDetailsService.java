@@ -1,4 +1,4 @@
-package kz.sueta.clientservice.bean_security.services;
+package kz.sueta.clientservice.beans.services;
 
 import kz.sueta.clientservice.entity.Client;
 import kz.sueta.clientservice.repository.ClientDao;

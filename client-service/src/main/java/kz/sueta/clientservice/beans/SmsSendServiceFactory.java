@@ -1,4 +1,4 @@
-package kz.sueta.clientservice.bean;
+package kz.sueta.clientservice.beans;
 
 import kz.sueta.clientservice.in_service.SmsSendService;
 import kz.sueta.clientservice.in_service.fake.SmsSendServiceFake;

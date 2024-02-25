@@ -1,6 +1,6 @@
-package kz.sueta.clientservice.bean_security.jwt;
+package kz.sueta.clientservice.beans.jwt;
 
-import kz.sueta.clientservice.bean_security.services.CustomUserDetailsService;
+import kz.sueta.clientservice.beans.services.CustomUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

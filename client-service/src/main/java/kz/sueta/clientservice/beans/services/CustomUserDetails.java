@@ -1,4 +1,4 @@
-package kz.sueta.clientservice.bean_security.services;
+package kz.sueta.clientservice.beans.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import kz.sueta.clientservice.entity.Client;

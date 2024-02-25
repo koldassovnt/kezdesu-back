@@ -1,8 +1,8 @@
 package kz.sueta.clientservice.register.impl;
 
-import kz.sueta.clientservice.bean_security.jwt.JwtUtils;
-import kz.sueta.clientservice.bean_security.services.CustomUserDetails;
-import kz.sueta.clientservice.bean_security.services.RefreshTokenService;
+import kz.sueta.clientservice.beans.jwt.JwtUtils;
+import kz.sueta.clientservice.beans.services.CustomUserDetails;
+import kz.sueta.clientservice.beans.services.RefreshTokenService;
 import kz.sueta.clientservice.dto.ui.request.PhoneSmsRequest;
 import kz.sueta.clientservice.dto.ui.request.TokenRefreshRequest;
 import kz.sueta.clientservice.dto.ui.response.JwtResponse;
@@ -18,7 +18,6 @@ import kz.sueta.clientservice.register.AuthenticationRegister;
 import kz.sueta.clientservice.register.ClientRegister;
 import kz.sueta.clientservice.register.SmsRegister;
 import kz.sueta.clientservice.util.PhoneNumberUtil;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
