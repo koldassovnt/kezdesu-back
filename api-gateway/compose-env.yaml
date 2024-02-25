@@ -1,18 +1,18 @@
 version: '3'
 
-services:
-  gateway-api:
-    image: gateway-api:1.0.0
-    container_name: gateway-api
-    build:
-      context: .
-    environment:
-      - eureka.client.serviceUrl.defaultZone=http://eureka-api:8010/eureka
-    ports:
-      - 8082:8082
-    networks:
-      - sueta_network
-
-networks:
-  sueta_network:
-    external: true
+#services:
+#  gateway-api:
+#    image: gateway-api:1.0.0
+#    container_name: gateway-api
+#    build:
+#      context: .
+#    environment:
+#      - eureka.client.serviceUrl.defaultZone=http://eureka-api:8010/eureka
+#    ports:
+#      - "8082:8082"
+#    networks:
+#      - sueta_network
+#
+#networks:
+#  sueta_network:
+#    external: true
