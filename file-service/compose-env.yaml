@@ -1,36 +1,43 @@
-version: '3'
+version: '3.8'
 services:
   db-file-service:
     container_name: db-file-service
     image: postgres:12
     restart: always
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=file-service
-    networks:
-      - file_network
-
-  file-api:
-    image: file-api:1.0.6
-    container_name: file-api
-    build:
-      context: .
-    depends_on:
-      - db-file-service
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-file-service:5432/file-service
-      - SPRING_DATASOURCE_USERNAME=admin
-      - SPRING_DATASOURCE_PASSWORD=admin
-      - eureka.client.serviceUrl.defaultZone=http://eureka-api:8010/eureka
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - pg:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - 8052:8052
-    networks:
-      - file_network
-      - sueta_network
+      - "60019:5432"
+#    networks:
+#      - file_network
+#
+#  file-api:
+#    image: file-api:1.0.6
+#    container_name: file-api
+#    build:
+#      context: .
+#    depends_on:
+#      - db-file-service
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-file-service:5432/file_service
+#      - SPRING_DATASOURCE_USERNAME=admin
+#      - SPRING_DATASOURCE_PASSWORD=admin
+#      - eureka.client.serviceUrl.defaultZone=http://eureka-api:8010/eureka
+#    ports:
+#      - "8052:8052"
+#    networks:
+#      - file_network
+#      - sueta_network
+#
+#networks:
+#  sueta_network:
+#    external: true
+#  file_network:
+#    name: file_network
 
-networks:
-  sueta_network:
-    external: true
-  file_network:
-    name: file_network
+volumes:
+  pg:
+    driver: local
