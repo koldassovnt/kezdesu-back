@@ -1,6 +1,6 @@
-package kz.sueta.adminservice.bean_security.jwt;
+package kz.sueta.adminservice.beans.jwt;
 
-import kz.sueta.adminservice.bean_security.services.CustomAccountService;
+import kz.sueta.adminservice.beans.services.CustomAccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

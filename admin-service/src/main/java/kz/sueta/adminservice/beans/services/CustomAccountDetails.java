@@ -1,4 +1,4 @@
-package kz.sueta.adminservice.bean_security.services;
+package kz.sueta.adminservice.beans.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import kz.sueta.adminservice.entity.Account;

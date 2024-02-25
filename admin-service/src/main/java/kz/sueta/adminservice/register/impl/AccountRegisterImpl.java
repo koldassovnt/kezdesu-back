@@ -1,8 +1,8 @@
 package kz.sueta.adminservice.register.impl;
 
 import com.google.common.base.Strings;
-import kz.sueta.adminservice.bean_security.jwt.JwtUtils;
-import kz.sueta.adminservice.bean_security.services.CustomAccountDetails;
+import kz.sueta.adminservice.beans.jwt.JwtUtils;
+import kz.sueta.adminservice.beans.services.CustomAccountDetails;
 import kz.sueta.adminservice.dto.ui.request.AccountEditRequest;
 import kz.sueta.adminservice.dto.ui.request.LoginRequest;
 import kz.sueta.adminservice.dto.ui.request.RegisterRequest;
@@ -24,7 +24,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @Component

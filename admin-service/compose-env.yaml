@@ -6,32 +6,40 @@ services:
     image: postgres:12
     restart: always
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=admin-service
-    networks:
-      - admin_network
-
-  admin-api:
-    image: admin-api:1.0.18
-    container_name: 'admin-api'
-    build:
-      context: .
-    depends_on:
-      - db-admin-service
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-admin-service:5432/admin-service
-      - SPRING_DATASOURCE_USERNAME=admin
-      - SPRING_DATASOURCE_PASSWORD=admin
-      - eureka.client.serviceUrl.defaultZone=http://eureka-api:8010/eureka
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - pg:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - 8053:8053
-    networks:
-      - admin_network
-      - sueta_network
+      - "60020:5432"
 
-networks:
-  sueta_network:
-    external: true
-  admin_network:
-    name: admin_network
+#    networks:
+#      - admin_network
+#
+#  admin-api:
+#    image: admin-api:1.0.18
+#    container_name: 'admin-api'
+#    build:
+#      context: .
+#    depends_on:
+#      - db-admin-service
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-admin-service:5432/admin-service
+#      - SPRING_DATASOURCE_USERNAME=admin
+#      - SPRING_DATASOURCE_PASSWORD=admin
+#      - eureka.client.serviceUrl.defaultZone=http://eureka-api:8010/eureka
+#    ports:
+#      - 8053:8053
+#    networks:
+#      - admin_network
+#      - sueta_network
+#
+#networks:
+#  sueta_network:
+#    external: true
+#  admin_network:
+#    name: admin_network
+
+volumes:
+  pg:
+    driver: local

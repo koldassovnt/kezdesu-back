@@ -1,4 +1,4 @@
-package kz.sueta.adminservice.bean_security.services;
+package kz.sueta.adminservice.beans.services;
 
 import kz.sueta.adminservice.entity.Account;
 import kz.sueta.adminservice.repository.AccountDao;
