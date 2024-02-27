@@ -44,8 +44,6 @@ public class SwaggerConfig {
                 .build();
     }
 
-
-
     @Bean
     public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(WebEndpointsSupplier webEndpointsSupplier,
                                                                          ServletEndpointsSupplier servletEndpointsSupplier, ControllerEndpointsSupplier controllerEndpointsSupplier,
